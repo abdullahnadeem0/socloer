@@ -1,0 +1,198 @@
+/* src/Pages/NotFound/NotFound.css */
+
+.NotFound {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    perspective: 1000px;
+}
+
+/* ===== BACKGROUND SHAPES ===== */
+.NotFound .bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    opacity: 0.6;
+    z-index: 1;
+    transition: transform 0.2s ease-out;
+    pointer-events: none;
+}
+
+.NotFound .shape-1 {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    right: -100px;
+}
+
+.NotFound .shape-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -50px;
+    left: -50px;
+}
+
+.NotFound .shape-3 {
+    width: 150px;
+    height: 150px;
+    top: 20%;
+    left: 15%;
+    opacity: 0.4;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.NotFound .container {
+    text-align: center;
+    z-index: 10;
+    padding: 2rem;
+    max-width: 600px;
+    animation: NotFound_fadeInUp 1s ease-out;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+/* ===== CREATIVE 404 TYPOGRAPHY ===== */
+.NotFound .error-code {
+    font-size: 10rem;
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+    -webkit-text-stroke: 2px #e0e0e0;
+    position: relative;
+    display: inline-block;
+    animation: NotFound_float 6s ease-in-out infinite;
+    letter-spacing: -5px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.NotFound .error-code::after {
+    content: '404';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #1a1a1a;
+    -webkit-text-stroke: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(-4px, -4px);
+    opacity: 0.1;
+}
+
+.NotFound .error-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333333;
+}
+
+.NotFound .error-description {
+    font-size: 1rem;
+    color: #666666;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+/* ===== HOME BUTTON ===== */
+.NotFound .home-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 50px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid #1a1a1a;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.NotFound .home-btn:hover {
+    background-color: #ffffff;
+    color: #1a1a1a;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.NotFound .home-btn:active {
+    transform: translateY(-1px);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes NotFound_float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes NotFound_fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .NotFound .error-code {
+        font-size: 6rem;
+        letter-spacing: -3px;
+    }
+
+    .NotFound .error-message {
+        font-size: 1.25rem;
+    }
+
+    .NotFound .error-description {
+        font-size: 0.9rem;
+    }
+
+    .NotFound .shape-1 {
+        width: 250px;
+        height: 250px;
+    }
+
+    .NotFound .shape-2 {
+        width: 200px;
+        height: 200px;
+    }
+
+    .NotFound .shape-3 {
+        width: 100px;
+        height: 100px;
+    }
+
+    .NotFound .home-btn {
+        padding: 12px 28px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .NotFound .error-code {
+        font-size: 4.5rem;
+    }
+
+    .NotFound .error-message {
+        font-size: 1.1rem;
+    }
+
+    .NotFound .container {
+        padding: 1rem;
+    }
+}

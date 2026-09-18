@@ -1,0 +1,597 @@
+/* ============================================
+   SEND PAYMENT PAGE
+   Blue Theme - Modern Two-Column Layout
+   ============================================ */
+
+.Send-Payment-page {
+    min-height: 100vh;
+    background: var(--bg-gradient);
+    padding: 2rem 1.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    width: 100%;
+}
+
+.Send-Payment-page .send-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.Send-Payment-page .send-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--color-bg);
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.08);
+    width: 100%;
+}
+
+.Send-Payment-page .back-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--bg-gradient);
+    border: none;
+    color: var(--color-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.Send-Payment-page .back-icon-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-text-white);
+    transform: translateX(-3px);
+}
+
+.Send-Payment-page .header-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.Send-Payment-page .header-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--color-text-white);
+    flex-shrink: 0;
+}
+
+.Send-Payment-page .header-icon-wrapper.sent {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.Send-Payment-page .send-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-text-black);
+    font-weight: 700;
+}
+
+.Send-Payment-page .send-header p {
+    margin: 0.2rem 0 0;
+    color: var(--color-text-gray);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+.Send-Payment-page .success-message,
+.Send-Payment-page .error-message {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: SendPayment_slideDown 0.3s ease;
+    background: var(--color-bg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.Send-Payment-page .success-message {
+    color: var(--color-success);
+    border-left: 4px solid var(--color-success);
+}
+
+.Send-Payment-page .error-message {
+    color: var(--color-error);
+    border-left: 4px solid var(--color-error);
+}
+
+/* ============================================
+   ⭐ MAIN LAYOUT - 2 COLUMN GRID
+   ============================================ */
+.Send-Payment-page .send-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    align-items: start;
+}
+
+/* Left column: main content */
+.Send-Payment-page .form-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Right column: sidebar/summary */
+.Send-Payment-page .form-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: 2rem;
+}
+
+/* ============================================
+   FORM SECTIONS
+   ============================================ */
+.Send-Payment-page .form-section {
+    background: var(--color-bg);
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.06);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    width: 100%;
+}
+
+.Send-Payment-page .form-section.highlight {
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    border-color: var(--color-primary-light);
+}
+
+.Send-Payment-page .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-black);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+}
+
+.Send-Payment-page .section-icon {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   SIMPLE AMOUNT INPUT
+   ============================================ */
+.Send-Payment-page .simple-amount-wrapper {
+    display: flex;
+    align-items: stretch;
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--color-bg);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    max-width: 100%;
+}
+
+.Send-Payment-page .simple-amount-wrapper:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.Send-Payment-page .simple-currency-label {
+    padding: 0.65rem 1rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-text-white);
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.Send-Payment-page .simple-amount-input {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border: none;
+    outline: none;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text-black);
+    background: transparent;
+    font-family: 'Segoe UI', sans-serif;
+    min-width: 0;
+}
+
+.Send-Payment-page .simple-amount-input::placeholder {
+    color: var(--color-text-gray);
+    opacity: 0.4;
+    font-weight: 500;
+}
+
+.Send-Payment-page .simple-amount-input.error {
+    color: var(--color-error);
+}
+
+.Send-Payment-page .simple-amount-input::-webkit-outer-spin-button,
+.Send-Payment-page .simple-amount-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.Send-Payment-page .simple-amount-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.Send-Payment-page .simple-currency-code {
+    padding: 0.65rem 1rem;
+    background: var(--bg-gradient);
+    color: var(--color-primary-dark);
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 2px solid var(--color-primary);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   FORM ROWS & GROUPS
+   ============================================ */
+.Send-Payment-page .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.Send-Payment-page .form-row:last-child {
+    margin-bottom: 0;
+}
+
+.Send-Payment-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.Send-Payment-page .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.Send-Payment-page .form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-black);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.Send-Payment-page .form-group input,
+.Send-Payment-page .form-group select,
+.Send-Payment-page .form-group textarea {
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(37, 99, 235, 0.15);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    background: var(--color-bg);
+    color: var(--color-text-black);
+    font-family: inherit;
+    width: 100%;
+}
+
+.Send-Payment-page .form-group input:focus,
+.Send-Payment-page .form-group select:focus,
+.Send-Payment-page .form-group textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    outline: none;
+}
+
+.Send-Payment-page .form-group input.error,
+.Send-Payment-page .form-group select.error {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 4px rgba(252, 129, 129, 0.15);
+}
+
+.Send-Payment-page .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.Send-Payment-page .error-text {
+    color: var(--color-error);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.3rem;
+}
+
+.Send-Payment-page .char-count {
+    color: var(--color-text-gray);
+    font-size: 0.75rem;
+    text-align: right;
+    display: block;
+    margin-top: 0.2rem;
+}
+
+/* ============================================
+   ⭐ SUMMARY CARD (Right Sidebar)
+   ============================================ */
+.Send-Payment-page .summary-card {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: var(--color-text-white);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.Send-Payment-page .summary-card::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.Send-Payment-page .summary-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.85;
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+}
+
+.Send-Payment-page .summary-amount {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.5px;
+    position: relative;
+    z-index: 1;
+}
+
+.Send-Payment-page .summary-currency {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin: 0 0 1.25rem;
+    position: relative;
+    z-index: 1;
+}
+
+.Send-Payment-page .summary-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 1rem 0;
+    position: relative;
+    z-index: 1;
+}
+
+.Send-Payment-page .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 0.6rem;
+    position: relative;
+    z-index: 1;
+}
+
+.Send-Payment-page .summary-item:last-child {
+    margin-bottom: 0;
+}
+
+.Send-Payment-page .summary-item-label {
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.Send-Payment-page .summary-item-value {
+    font-weight: 700;
+    text-align: right;
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+.Send-Payment-page .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    width: 100%;
+}
+
+.Send-Payment-page .cancel-btn,
+.Send-Payment-page .submit-btn {
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.25s ease;
+    border: none;
+    font-family: inherit;
+    width: 100%;
+}
+
+.Send-Payment-page .cancel-btn {
+    background: var(--color-bg);
+    color: var(--color-text-black);
+    border: 2px solid rgba(37, 99, 235, 0.15);
+}
+
+.Send-Payment-page .cancel-btn:hover:not(:disabled) {
+    background: var(--bg-gradient);
+    border-color: var(--color-primary);
+}
+
+.Send-Payment-page .submit-btn.sent {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-text-white);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.Send-Payment-page .submit-btn.sent:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+.Send-Payment-page .submit-btn:disabled,
+.Send-Payment-page .cancel-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.Send-Payment-page .spinner {
+    animation: SendPayment_spin 1s linear infinite;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes SendPayment_spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes SendPayment_slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 968px) {
+    .Send-Payment-page .send-form {
+        grid-template-columns: 1fr;
+    }
+
+    .Send-Payment-page .form-sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .Send-Payment-page {
+        padding: 1rem;
+    }
+
+    .Send-Payment-page .send-header {
+        padding: 1rem;
+    }
+
+    .Send-Payment-page .form-section {
+        padding: 1.25rem;
+    }
+
+    .Send-Payment-page .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .Send-Payment-page .send-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .Send-Payment-page .simple-amount-wrapper {
+        max-width: 100%;
+    }
+
+    .Send-Payment-page .summary-amount {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .Send-Payment-page {
+        padding: 0.75rem;
+    }
+
+    .Send-Payment-page .form-section {
+        padding: 1rem;
+    }
+
+    .Send-Payment-page .simple-amount-input {
+        font-size: 1rem;
+        padding: 0.6rem 0.75rem;
+    }
+
+    .Send-Payment-page .simple-currency-label {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .Send-Payment-page .simple-currency-code {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+    }
+
+    .Send-Payment-page .header-icon-wrapper {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+    }
+
+    .Send-Payment-page .send-header h1 {
+        font-size: 1.05rem;
+    }
+
+    .Send-Payment-page .summary-amount {
+        font-size: 1.5rem;
+    }
+}

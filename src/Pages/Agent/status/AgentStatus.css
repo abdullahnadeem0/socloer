@@ -1,0 +1,473 @@
+/* ============================================
+   CONTAINER
+   ============================================ */
+.agent-status-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    background: #f7fafc;
+}
+
+.status-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1;
+}
+
+/* ============================================
+   STATUS CARD
+   ============================================ */
+.agent-status-card {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.5s ease;
+    text-align: center;
+}
+
+.agent-status-card.pending {
+    border-top: 6px solid #ed8936;
+}
+
+.agent-status-card.rejected {
+    border-top: 6px solid #e53e3e;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   STATUS ICON
+   ============================================ */
+.status-icon-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 48px;
+}
+
+.status-icon-wrapper.pending {
+    background: #fffaf0;
+    color: #ed8936;
+}
+
+.status-icon-wrapper.rejected {
+    background: #fff5f5;
+    color: #e53e3e;
+}
+
+.status-icon {
+    position: relative;
+    z-index: 2;
+}
+
+/* Pending Pulse Animation */
+.status-icon-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #ed8936;
+    opacity: 0.3;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.15;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+}
+
+/* ============================================
+   CONTENT
+   ============================================ */
+.status-content {
+    text-align: left;
+}
+
+.status-content h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 8px 0;
+    text-align: center;
+}
+
+.status-subtitle {
+    font-size: 15px;
+    color: #718096;
+    text-align: center;
+    margin: 0 0 28px 0;
+    line-height: 1.5;
+}
+
+/* ============================================
+   INFO BOX
+   ============================================ */
+.status-info-box {
+    display: flex;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.status-info-box.pending {
+    background: #fffaf0;
+    border-left: 4px solid #ed8936;
+}
+
+.status-info-box.rejected {
+    background: #fff5f5;
+    border-left: 4px solid #e53e3e;
+}
+
+.status-info-box .info-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.status-info-box.pending .info-icon {
+    color: #ed8936;
+}
+
+.status-info-box.rejected .info-icon {
+    color: #e53e3e;
+}
+
+.status-info-box strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #1a202c;
+}
+
+.status-info-box p {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ============================================
+   STATUS DETAILS
+   ============================================ */
+.status-details {
+    background: #f7fafc;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #1a202c;
+    font-weight: 500;
+    word-break: break-word;
+    max-width: 60%;
+    text-align: right;
+}
+
+.pending-badge,
+.rejected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pending-badge {
+    background: #fef3c7;
+    color: #c05621;
+}
+
+.rejected-badge {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+/* ============================================
+   STATUS MESSAGE
+   ============================================ */
+.status-message {
+    background: #f7fafc;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.status-message h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 12px 0;
+}
+
+.status-message ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style: none;
+}
+
+.status-message li {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.8;
+    position: relative;
+    padding-left: 20px;
+}
+
+.status-message li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #e53e3e;
+    font-weight: 700;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+.status-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.btn-refresh,
+.btn-logout,
+.btn-reapply {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    text-decoration: none;
+}
+
+.btn-refresh {
+    background: #ed8936;
+    color: #ffffff;
+}
+
+.btn-refresh:hover {
+    background: #dd6b20;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(237, 137, 54, 0.3);
+}
+
+.btn-logout {
+    background: #ffffff;
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-logout:hover {
+    background: #f7fafc;
+    color: #1a202c;
+}
+
+.btn-reapply {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.btn-reapply:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+/* ============================================
+   FOOTER TEXT
+   ============================================ */
+.status-footer-text {
+    text-align: center;
+    font-size: 13px;
+    color: #a0aec0;
+    margin: 0;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.status-footer-text a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.status-footer-text a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   CONTACT SUPPORT
+   ============================================ */
+.contact-support {
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.contact-support p {
+    font-size: 13px;
+    color: #718096;
+    margin: 0 0 12px 0;
+}
+
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contact-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: #f7fafc;
+    border-radius: 8px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.contact-links a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+/* ============================================
+   SPINNER
+   ============================================ */
+.agent-status-card .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.agent-status-card > p {
+    text-align: center;
+    color: #718096;
+    font-size: 14px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 600px) {
+    .agent-status-card {
+        padding: 36px 24px;
+        border-radius: 20px;
+    }
+
+    .status-content h1 {
+        font-size: 22px;
+    }
+
+    .status-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        font-size: 38px;
+    }
+
+    .status-actions {
+        flex-direction: column;
+    }
+
+    .detail-value {
+        max-width: 55%;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 400px) {
+    .agent-status-card {
+        padding: 28px 18px;
+    }
+
+    .status-content h1 {
+        font-size: 20px;
+    }
+}

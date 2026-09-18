@@ -1,0 +1,581 @@
+/* ============================================
+   ADMIN NAVBAR - CLEAN DESIGN
+   ============================================ */
+.admin-navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    z-index: 50;
+    height: 70px;
+}
+
+.navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 100%;
+    gap: 16px;
+}
+
+/* ============================================
+   LEFT SECTION
+   ============================================ */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+}
+
+.navbar-toggle-btn {
+    background: none;
+    border: none;
+    color: #4a5568;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.navbar-toggle-btn:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+/* ============================================
+   ACTION BUTTONS
+   ============================================ */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid;
+    white-space: nowrap;
+}
+
+/* Primary Button - Blue */
+.action-btn.primary {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+.action-btn.primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+/* Secondary Button - White with Blue border */
+.action-btn.secondary {
+    background: #ffffff;
+    color: #2563eb;
+    border-color: #2563eb;
+}
+
+.action-btn.secondary:hover {
+    background: #eff6ff;
+}
+
+/* Tertiary Button - Light Blue */
+.action-btn.tertiary {
+    background: #eff6ff;
+    color: #2563eb;
+    border-color: #eff6ff;
+}
+
+.action-btn.tertiary:hover {
+    background: #dbeafe;
+    border-color: #dbeafe;
+}
+
+.action-btn svg {
+    font-size: 14px;
+}
+
+/* ============================================
+   RIGHT SECTION
+   ============================================ */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   ICON BUTTONS
+   ============================================ */
+.navbar-icon-btn {
+    position: relative;
+    background: none;
+    border: none;
+    color: #4a5568;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.navbar-icon-btn:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+/* ============================================
+   NOTIFICATIONS
+   ============================================ */
+.notification-btn {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: #e53e3e;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+}
+
+/* ============================================
+   PROFILE BUTTON
+   ============================================ */
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+
+.profile-btn:hover {
+    background: #eff6ff;
+}
+
+.profile-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a202c;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-role {
+    font-size: 11px;
+    color: #718096;
+    white-space: nowrap;
+}
+
+.profile-arrow {
+    font-size: 12px;
+    color: #a0aec0;
+    transition: transform 0.2s;
+}
+
+.profile-arrow.rotate {
+    transform: rotate(180deg);
+}
+
+/* ============================================
+   DROPDOWN WRAPPER
+   ============================================ */
+.navbar-dropdown-wrapper {
+    position: relative;
+}
+
+/* ============================================
+   DROPDOWN
+   ============================================ */
+.navbar-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    border: 1px solid #e2e8f0;
+    min-width: 320px;
+    max-width: 400px;
+    z-index: 1000;
+    animation: dropdownFade 0.2s ease;
+    overflow: hidden;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   NOTIFICATIONS DROPDOWN
+   ============================================ */
+.notifications-dropdown {
+    width: 380px;
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.dropdown-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+}
+
+.mark-read-btn {
+    background: none;
+    border: none;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.mark-read-btn:hover {
+    background: #eff6ff;
+}
+
+.notifications-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f7fafc;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+}
+
+.notification-item:hover {
+    background: #f7fafc;
+}
+
+.notification-item.unread {
+    background: #eff6ff;
+}
+
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #2563eb;
+}
+
+.notification-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+
+.notification-dot.agent {
+    background: #48bb78;
+}
+
+.notification-dot.approval {
+    background: #ed8936;
+}
+
+.notification-dot.user {
+    background: #4299e1;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-content h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a202c;
+    margin: 0 0 4px 0;
+}
+
+.notification-content p {
+    font-size: 13px;
+    color: #718096;
+    margin: 0 0 4px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.notification-time {
+    font-size: 11px;
+    color: #a0aec0;
+}
+
+.empty-notifications {
+    padding: 40px 20px;
+    text-align: center;
+    color: #a0aec0;
+    font-size: 14px;
+}
+
+.dropdown-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.dropdown-footer a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dropdown-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   PROFILE DROPDOWN
+   ============================================ */
+.profile-dropdown {
+    width: 280px;
+}
+
+.profile-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    background: #eff6ff;
+}
+
+.profile-avatar-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 auto 12px;
+    overflow: hidden;
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.profile-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-details h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 4px 0;
+}
+
+.profile-details p {
+    font-size: 13px;
+    color: #718096;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-menu {
+    padding: 8px;
+}
+
+.profile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.profile-menu-item:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.profile-menu-item svg {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.profile-footer {
+    padding: 8px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.logout-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    color: #e53e3e;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.logout-menu-btn:hover {
+    background: #fff5f5;
+}
+
+.logout-menu-btn svg {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .action-btn span {
+        display: none;
+    }
+
+    .action-btn {
+        padding: 10px 12px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .navbar-inner {
+        padding: 0 16px;
+    }
+
+    .profile-info {
+        display: none;
+    }
+
+    .profile-arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-navbar {
+        height: 64px;
+    }
+
+    .navbar-inner {
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .navbar-actions {
+        gap: 6px;
+    }
+}

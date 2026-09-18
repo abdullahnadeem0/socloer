@@ -1,0 +1,453 @@
+/* ============================================
+   STUDENT APPLICATION FORM
+   ============================================ */
+
+.StudentApplication {
+    min-height: 100vh;
+    background: var(--bg-gradient, linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%));
+    padding: 2rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.StudentApplication .application-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--color-bg, #ffffff);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* ===== HEADER ===== */
+.StudentApplication .app-header {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    color: #ffffff;
+}
+
+.StudentApplication .header-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.StudentApplication .header-icon {
+    font-size: 2rem;
+    color: #ffffff;
+}
+
+.StudentApplication .app-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.5px;
+}
+
+.StudentApplication .app-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+/* ===== MESSAGES ===== */
+.StudentApplication .success-message,
+.StudentApplication .error-message {
+    margin: 1.5rem 2rem 0;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: StudentApp_slideDown 0.3s ease;
+}
+
+.StudentApplication .success-message {
+    background: linear-gradient(135deg, #f0fff4, #dcfce7);
+    color: #48bb78;
+    border-left: 4px solid #48bb78;
+}
+
+.StudentApplication .error-message {
+    background: linear-gradient(135deg, #fff5f5, #fee2e2);
+    color: #fc8181;
+    border-left: 4px solid #fc8181;
+}
+
+/* ===== FORM ===== */
+.StudentApplication .application-form {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.StudentApplication .form-section {
+    background: linear-gradient(135deg, #fafbfc, #f8fafc);
+    border-radius: 16px;
+    padding: 1.75rem;
+    border: 1px solid #eef2f6;
+    transition: all 0.3s ease;
+}
+
+.StudentApplication .form-section:hover {
+    border-color: #c7d2fe;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06);
+}
+
+.StudentApplication .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a202c;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #eef2f6;
+}
+
+.StudentApplication .section-icon {
+    color: #2563eb;
+    font-size: 1.1rem;
+}
+
+.StudentApplication .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.StudentApplication .form-row:last-child {
+    margin-bottom: 0;
+}
+
+.StudentApplication .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.StudentApplication .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.StudentApplication .form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.StudentApplication .form-group input,
+.StudentApplication .form-group select,
+.StudentApplication .form-group textarea {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    background: #ffffff;
+    color: #1a202c;
+    font-family: inherit;
+    width: 100%;
+}
+
+.StudentApplication .form-group input:hover,
+.StudentApplication .form-group select:hover,
+.StudentApplication .form-group textarea:hover {
+    border-color: #cbd5e1;
+}
+
+.StudentApplication .form-group input:focus,
+.StudentApplication .form-group select:focus,
+.StudentApplication .form-group textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.StudentApplication .form-group input.error,
+.StudentApplication .form-group select.error,
+.StudentApplication .form-group textarea.error {
+    border-color: #fc8181;
+    box-shadow: 0 0 0 4px rgba(252, 129, 129, 0.1);
+}
+
+.StudentApplication .form-group input:disabled,
+.StudentApplication .form-group select:disabled {
+    background: #f7fafc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.StudentApplication .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+}
+
+.StudentApplication .error-text {
+    color: #fc8181;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.StudentApplication .helper-text {
+    color: #718096;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+}
+
+.StudentApplication .char-count {
+    font-size: 0.75rem;
+    color: #718096;
+    text-align: right;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* ===== FILE UPLOAD ===== */
+.StudentApplication .file-drop-zone {
+    position: relative;
+    border: 2px dashed #dce3ec;
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #ffffff;
+}
+
+.StudentApplication .file-drop-zone:hover {
+    border-color: #2563eb;
+    background: #f0f7ff;
+}
+
+.StudentApplication .file-drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.StudentApplication .upload-icon {
+    font-size: 1.75rem;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+}
+
+.StudentApplication .file-drop-zone p {
+    color: #1a202c;
+    font-weight: 600;
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+}
+
+.StudentApplication .file-drop-zone small {
+    color: #718096;
+    font-size: 0.75rem;
+}
+
+.StudentApplication .file-preview {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #e8edf3;
+    background: #fafbfc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    min-height: 120px;
+}
+
+.StudentApplication .file-preview img {
+    max-width: 100%;
+    max-height: 180px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.StudentApplication .file-preview-simple {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #eef2ff;
+    border: 1.5px solid #c7d2fe;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #1a202c;
+    font-weight: 500;
+}
+
+.StudentApplication .file-preview-simple svg {
+    color: #2563eb;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.StudentApplication .file-preview-simple span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.StudentApplication .remove-file-btn {
+    background: #fc8181;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+}
+
+.StudentApplication .file-preview .remove-file-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+}
+
+.StudentApplication .remove-file-btn:hover {
+    background: #e53e3e;
+    transform: scale(1.1);
+}
+
+/* ===== FORM ACTIONS ===== */
+.StudentApplication .form-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #eef2f6;
+}
+
+.StudentApplication .cancel-btn,
+.StudentApplication .submit-btn {
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.25s ease;
+    border: none;
+}
+
+.StudentApplication .cancel-btn {
+    flex: 1;
+    background: #f1f5f9;
+    color: #1a202c;
+    border: 2px solid #e8edf3;
+}
+
+.StudentApplication .cancel-btn:hover:not(:disabled) {
+    background: #e8edf3;
+    transform: translateY(-1px);
+}
+
+.StudentApplication .submit-btn {
+    flex: 2;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.StudentApplication .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+.StudentApplication .submit-btn:disabled,
+.StudentApplication .cancel-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.StudentApplication .spinner {
+    animation: StudentApp_spin 1s linear infinite;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes StudentApp_spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes StudentApp_slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .StudentApplication {
+        padding: 1rem 0.5rem;
+    }
+
+    .StudentApplication .app-header {
+        padding: 1.5rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .StudentApplication .app-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .StudentApplication .application-form {
+        padding: 1rem;
+    }
+
+    .StudentApplication .form-section {
+        padding: 1.25rem;
+    }
+
+    .StudentApplication .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .StudentApplication .form-actions {
+        flex-direction: column;
+    }
+
+    .StudentApplication .cancel-btn,
+    .StudentApplication .submit-btn {
+        flex: 1;
+    }
+}

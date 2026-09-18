@@ -1,0 +1,788 @@
+/* src/Pages/Admin/private/Applications/AdminApplications.css */
+
+.AdminApplications {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    padding: 2rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.AdminApplications .admin-apps-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ===== HEADER ===== */
+.AdminApplications .admin-apps-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.AdminApplications .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.AdminApplications .header-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+
+.AdminApplications .header-icon {
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+.AdminApplications h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+}
+
+.AdminApplications .admin-apps-header p {
+    color: #718096;
+    font-size: 0.9rem;
+    margin: 0.2rem 0 0;
+}
+
+.AdminApplications .refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #f1f5f9;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    color: #1a202c;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.AdminApplications .refresh-btn:hover {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+/* ===== MESSAGES ===== */
+.AdminApplications .success-message,
+.AdminApplications .error-message {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+}
+
+.AdminApplications .success-message {
+    background: #f0fff4;
+    color: #276749;
+    border-left: 4px solid #48bb78;
+}
+
+.AdminApplications .error-message {
+    background: #fff5f5;
+    color: #c53030;
+    border-left: 4px solid #fc8181;
+}
+
+/* ===== STATS ===== */
+.AdminApplications .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.AdminApplications .stat-card {
+    background: #ffffff;
+    padding: 1.25rem;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid;
+    transition: all 0.25s ease;
+}
+
+.AdminApplications .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.AdminApplications .stat-total { border-left-color: #2563eb; }
+.AdminApplications .stat-pending { border-left-color: #f6ad55; }
+.AdminApplications .stat-approved { border-left-color: #48bb78; }
+.AdminApplications .stat-rejected { border-left-color: #fc8181; }
+
+.AdminApplications .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.AdminApplications .stat-total .stat-icon { background: #eef2ff; color: #2563eb; }
+.AdminApplications .stat-pending .stat-icon { background: #fffaf0; color: #f6ad55; }
+.AdminApplications .stat-approved .stat-icon { background: #f0fff4; color: #48bb78; }
+.AdminApplications .stat-rejected .stat-icon { background: #fff5f5; color: #fc8181; }
+
+.AdminApplications .stat-content h3 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.AdminApplications .stat-content p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #718096;
+    font-weight: 500;
+}
+
+/* ===== FILTERS ===== */
+.AdminApplications .filters-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.AdminApplications .search-box {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+
+.AdminApplications .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #718096;
+}
+
+.AdminApplications .search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: #ffffff;
+    transition: all 0.25s ease;
+}
+
+.AdminApplications .search-box input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.AdminApplications .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.AdminApplications .filter-icon {
+    color: #718096;
+}
+
+.AdminApplications .filter-group select {
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: #1a202c;
+    cursor: pointer;
+    font-weight: 500;
+    outline: none;
+}
+
+/* ===== LIST HEADER ===== */
+.AdminApplications .apps-list-header {
+    padding: 0.75rem 0;
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.AdminApplications .apps-list-header strong {
+    color: #2563eb;
+}
+
+/* ===== APPS GRID ===== */
+.AdminApplications .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.25rem;
+}
+
+.AdminApplications .app-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eef2f6;
+}
+
+.AdminApplications .app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    border-color: #c7d2fe;
+}
+
+.AdminApplications .app-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #fafbfc, #f8fafc);
+    border-bottom: 1px solid #eef2f6;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.AdminApplications .app-number {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+}
+
+/* ===== STATUS BADGES ===== */
+.AdminApplications .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.AdminApplications .status-draft { background: #edf2f7; color: #4a5568; }
+.AdminApplications .status-submitted { background: #ebf8ff; color: #2b6cb0; }
+.AdminApplications .status-review { background: #fefcbf; color: #975a16; }
+.AdminApplications .status-pending { background: #fffaf0; color: #c05621; }
+.AdminApplications .status-approved { background: #f0fff4; color: #276749; }
+.AdminApplications .status-rejected { background: #fff5f5; color: #c53030; }
+.AdminApplications .status-disbursed { background: #e6fffa; color: #285e61; }
+
+/* ===== CARD BODY ===== */
+.AdminApplications .app-card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+}
+
+.AdminApplications .info-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.AdminApplications .row-icon {
+    color: #2563eb;
+    font-size: 1rem;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+}
+
+.AdminApplications .info-row > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.AdminApplications .row-label {
+    font-size: 0.7rem;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.AdminApplications .info-row strong {
+    color: #1a202c;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.AdminApplications .info-row small {
+    color: #718096;
+    font-size: 0.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.AdminApplications .agent-row {
+    padding: 0.65rem 0.85rem;
+    background: #f0f7ff;
+    border-radius: 10px;
+    border-left: 3px solid #2563eb;
+}
+
+.AdminApplications .agent-row .agent-icon {
+    color: #2563eb;
+}
+
+/* ===== CARD ACTIONS ===== */
+.AdminApplications .app-card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.85rem 1.25rem;
+    background: #f8fafc;
+    border-top: 1px solid #eef2f6;
+}
+
+.AdminApplications .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.75rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.AdminApplications .view-btn {
+    background: #eef2ff;
+    color: #2563eb;
+}
+
+.AdminApplications .view-btn:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.AdminApplications .edit-btn {
+    background: #fefcbf;
+    color: #975a16;
+}
+
+.AdminApplications .edit-btn:hover {
+    background: #f6ad55;
+    color: #ffffff;
+}
+
+.AdminApplications .delete-btn {
+    background: #fff5f5;
+    color: #c53030;
+}
+
+.AdminApplications .delete-btn:hover:not(:disabled) {
+    background: #fc8181;
+    color: #ffffff;
+}
+
+.AdminApplications .action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== QUICK ACTIONS ===== */
+.AdminApplications .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.4rem;
+    padding: 0.5rem 1.25rem 0.85rem;
+    background: #f8fafc;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.AdminApplications .quick-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.45rem 0.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.AdminApplications .quick-btn.approve {
+    background: #f0fff4;
+    color: #276749;
+    border: 1px solid #c6f6d5;
+}
+
+.AdminApplications .quick-btn.approve:hover {
+    background: #48bb78;
+    color: #ffffff;
+}
+
+.AdminApplications .quick-btn.review {
+    background: #fffaf0;
+    color: #c05621;
+    border: 1px solid #feebc8;
+}
+
+.AdminApplications .quick-btn.review:hover {
+    background: #f6ad55;
+    color: #ffffff;
+}
+
+.AdminApplications .quick-btn.reject {
+    background: #fff5f5;
+    color: #c53030;
+    border: 1px solid #fed7d7;
+}
+
+.AdminApplications .quick-btn.reject:hover {
+    background: #fc8181;
+    color: #ffffff;
+}
+
+/* ===== LOADING / EMPTY ===== */
+.AdminApplications .loading-state,
+.AdminApplications .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.AdminApplications .spinner-large {
+    font-size: 2.5rem;
+    color: #2563eb;
+    animation: AdminApps_spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+.AdminApplications .empty-icon {
+    font-size: 4rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
+/* ===== MODAL ===== */
+.AdminApplications .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.AdminApplications .modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 550px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: AdminApps_slideUp 0.3s ease;
+}
+
+.AdminApplications .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    color: #ffffff;
+}
+
+.AdminApplications .modal-header.approve { background: linear-gradient(135deg, #48bb78, #38a169); }
+.AdminApplications .modal-header.reject { background: linear-gradient(135deg, #fc8181, #e53e3e); }
+.AdminApplications .modal-header.review { background: linear-gradient(135deg, #f6ad55, #ed8936); }
+.AdminApplications .modal-header.delete { background: linear-gradient(135deg, #fc8181, #e53e3e); }
+
+.AdminApplications .modal-header h2 {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.AdminApplications .close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.AdminApplications .close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.AdminApplications .modal-body {
+    padding: 1.5rem;
+}
+
+.AdminApplications .modal-app-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+}
+
+.AdminApplications .modal-app-info .info-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.AdminApplications .modal-app-info span {
+    color: #718096;
+}
+
+.AdminApplications .modal-app-info strong {
+    color: #1a202c;
+    text-align: right;
+}
+
+.AdminApplications .modal-message {
+    margin-bottom: 1.25rem;
+}
+
+.AdminApplications .info-text,
+.AdminApplications .warning-text,
+.AdminApplications .review-text {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.AdminApplications .info-text {
+    background: #f0fff4;
+    color: #276749;
+    border-left: 4px solid #48bb78;
+}
+
+.AdminApplications .warning-text {
+    background: #fff5f5;
+    color: #c53030;
+    border-left: 4px solid #fc8181;
+}
+
+.AdminApplications .review-text {
+    background: #fffaf0;
+    color: #c05621;
+    border-left: 4px solid #f6ad55;
+}
+
+.AdminApplications .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.AdminApplications .form-group label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.AdminApplications .form-group textarea {
+    padding: 0.85rem 1rem;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 90px;
+}
+
+.AdminApplications .form-group textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.AdminApplications .modal-footer {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    border-top: 2px solid #eef2f6;
+    background: #f8fafc;
+}
+
+.AdminApplications .modal-btn {
+    flex: 1;
+    padding: 0.85rem 1.25rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.25s ease;
+}
+
+.AdminApplications .modal-btn.cancel {
+    background: #ffffff;
+    color: #1a202c;
+    border: 2px solid #e8edf3;
+}
+
+.AdminApplications .modal-btn.cancel:hover {
+    background: #f1f5f9;
+}
+
+.AdminApplications .modal-btn.primary.approve {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: #ffffff;
+}
+
+.AdminApplications .modal-btn.primary.reject {
+    background: linear-gradient(135deg, #fc8181, #e53e3e);
+    color: #ffffff;
+}
+
+.AdminApplications .modal-btn.primary.review {
+    background: linear-gradient(135deg, #f6ad55, #ed8936);
+    color: #ffffff;
+}
+
+.AdminApplications .modal-btn.primary.delete {
+    background: linear-gradient(135deg, #fc8181, #e53e3e);
+    color: #ffffff;
+}
+
+.AdminApplications .modal-btn.primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.AdminApplications .modal-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.AdminApplications .spinner {
+    animation: AdminApps_spin 1s linear infinite;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes AdminApps_spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes AdminApps_slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .AdminApplications .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .AdminApplications {
+        padding: 1rem 0.5rem;
+    }
+
+    .AdminApplications .admin-apps-header {
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .AdminApplications .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .AdminApplications .filters-bar {
+        flex-direction: column;
+    }
+
+    .AdminApplications .filter-group {
+        width: 100%;
+    }
+
+    .AdminApplications .filter-group select {
+        flex: 1;
+    }
+
+    .AdminApplications .apps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .AdminApplications .app-card-actions {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .AdminApplications .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .AdminApplications .modal-footer {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,725 @@
+/* src/Pages/Agent/private/Application/MyApplications.css */
+
+.MyApplications {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    padding: 2rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.MyApplications .my-apps-container {
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* ===== HEADER ===== */
+.MyApplications .my-apps-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.MyApplications .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.MyApplications .header-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+
+.MyApplications .header-icon {
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+.MyApplications .my-apps-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+}
+
+.MyApplications .my-apps-header p {
+    color: #718096;
+    font-size: 0.9rem;
+    margin: 0.2rem 0 0;
+}
+
+.MyApplications .new-app-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.MyApplications .new-app-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+/* ===== MESSAGES ===== */
+.MyApplications .success-message,
+.MyApplications .error-message {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: MyApps_slideDown 0.3s ease;
+}
+
+.MyApplications .success-message {
+    background: #f0fff4;
+    color: #48bb78;
+    border-left: 4px solid #48bb78;
+}
+
+.MyApplications .error-message {
+    background: #fff5f5;
+    color: #fc8181;
+    border-left: 4px solid #fc8181;
+}
+
+/* ===== STATS ===== */
+.MyApplications .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.MyApplications .stat-card {
+    background: #ffffff;
+    padding: 1.25rem;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
+    border-left: 4px solid;
+}
+
+.MyApplications .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.MyApplications .stat-total { border-left-color: #2563eb; }
+.MyApplications .stat-pending { border-left-color: #f6ad55; }
+.MyApplications .stat-approved { border-left-color: #48bb78; }
+.MyApplications .stat-rejected { border-left-color: #fc8181; }
+
+.MyApplications .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.MyApplications .stat-total .stat-icon { background: #eef2ff; color: #2563eb; }
+.MyApplications .stat-pending .stat-icon { background: #fffaf0; color: #f6ad55; }
+.MyApplications .stat-approved .stat-icon { background: #f0fff4; color: #48bb78; }
+.MyApplications .stat-rejected .stat-icon { background: #fff5f5; color: #fc8181; }
+
+.MyApplications .stat-content h3 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.MyApplications .stat-content p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #718096;
+    font-weight: 500;
+}
+
+/* ===== FILTERS ===== */
+.MyApplications .filters-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.MyApplications .search-box {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+
+.MyApplications .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #718096;
+    font-size: 0.95rem;
+}
+
+.MyApplications .search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: #ffffff;
+    transition: all 0.25s ease;
+}
+
+.MyApplications .search-box input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.MyApplications .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.MyApplications .filter-icon {
+    color: #718096;
+}
+
+.MyApplications .filter-group select {
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: #1a202c;
+    cursor: pointer;
+    font-weight: 500;
+    outline: none;
+}
+
+/* ===== LIST HEADER ===== */
+.MyApplications .apps-list-header {
+    padding: 0.75rem 0;
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.MyApplications .apps-list-header strong {
+    color: #2563eb;
+}
+
+/* ===== APPS GRID ===== */
+.MyApplications .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.25rem;
+}
+
+.MyApplications .app-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eef2f6;
+}
+
+.MyApplications .app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    border-color: #c7d2fe;
+}
+
+/* Card Header */
+.MyApplications .app-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #fafbfc, #f8fafc);
+    border-bottom: 1px solid #eef2f6;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.MyApplications .app-number {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+}
+
+/* Status Badges */
+.MyApplications .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.MyApplications .status-draft { background: #edf2f7; color: #4a5568; }
+.MyApplications .status-submitted { background: #ebf8ff; color: #2b6cb0; }
+.MyApplications .status-review { background: #fefcbf; color: #975a16; }
+.MyApplications .status-pending { background: #fffaf0; color: #c05621; }
+.MyApplications .status-approved { background: #f0fff4; color: #276749; }
+.MyApplications .status-rejected { background: #fff5f5; color: #c53030; }
+.MyApplications .status-disbursed { background: #e6fffa; color: #285e61; }
+
+/* Card Body */
+.MyApplications .app-card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+}
+
+.MyApplications .info-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.MyApplications .row-icon {
+    color: #2563eb;
+    font-size: 1rem;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+}
+
+.MyApplications .info-row > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.MyApplications .row-label {
+    font-size: 0.7rem;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.MyApplications .info-row strong {
+    color: #1a202c;
+    font-size: 0.9rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.MyApplications .info-row small {
+    color: #718096;
+    font-size: 0.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Card Actions */
+.MyApplications .app-card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.85rem 1.25rem;
+    background: #f8fafc;
+    border-top: 1px solid #eef2f6;
+}
+
+.MyApplications .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.75rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.MyApplications .view-btn {
+    background: #eef2ff;
+    color: #2563eb;
+}
+
+.MyApplications .view-btn:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.MyApplications .edit-btn {
+    background: #fefcbf;
+    color: #975a16;
+}
+
+.MyApplications .edit-btn:hover:not(:disabled) {
+    background: #f6ad55;
+    color: #ffffff;
+}
+
+.MyApplications .delete-btn {
+    background: #fff5f5;
+    color: #c53030;
+}
+
+.MyApplications .delete-btn:hover:not(:disabled) {
+    background: #fc8181;
+    color: #ffffff;
+}
+
+.MyApplications .action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== LOADING / EMPTY ===== */
+.MyApplications .loading-state,
+.MyApplications .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.MyApplications .spinner-large {
+    font-size: 2.5rem;
+    color: #2563eb;
+    animation: MyApps_spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+.MyApplications .empty-icon {
+    font-size: 4rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
+.MyApplications .empty-state h3 {
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+}
+
+.MyApplications .empty-state p {
+    color: #718096;
+    margin-bottom: 1.5rem;
+}
+
+.MyApplications .empty-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.MyApplications .empty-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+/* ===== MODAL ===== */
+.MyApplications .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: MyApps_fadeIn 0.2s ease;
+}
+
+.MyApplications .modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: MyApps_slideUp 0.3s ease;
+}
+
+.MyApplications .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 2px solid #eef2f6;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 1;
+}
+
+.MyApplications .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1a202c;
+}
+
+.MyApplications .close-btn {
+    background: #f1f5f9;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #718096;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.MyApplications .close-btn:hover {
+    background: #fc8181;
+    color: #ffffff;
+    transform: rotate(90deg);
+}
+
+.MyApplications .modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.MyApplications .modal-section {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.MyApplications .modal-section:last-child {
+    border-bottom: none;
+}
+
+.MyApplications .modal-section h3 {
+    font-size: 0.9rem;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+}
+
+.MyApplications .modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.MyApplications .modal-grid > div {
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.MyApplications .modal-grid strong {
+    color: #1a202c;
+    margin-right: 0.3rem;
+}
+
+.MyApplications .statement-text {
+    font-size: 0.9rem;
+    color: #4a5568;
+    line-height: 1.6;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 3px solid #2563eb;
+}
+
+.MyApplications .modal-footer {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    border-top: 2px solid #eef2f6;
+    background: #f8fafc;
+    position: sticky;
+    bottom: 0;
+}
+
+.MyApplications .modal-btn {
+    flex: 1;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.25s ease;
+    border: none;
+}
+
+.MyApplications .modal-btn.cancel {
+    background: #ffffff;
+    color: #1a202c;
+    border: 2px solid #e8edf3;
+}
+
+.MyApplications .modal-btn.cancel:hover {
+    background: #f1f5f9;
+}
+
+.MyApplications .modal-btn.primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+}
+
+.MyApplications .modal-btn.primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+.MyApplications .modal-btn.primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.MyApplications .spinner {
+    animation: MyApps_spin 1s linear infinite;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes MyApps_spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes MyApps_slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes MyApps_fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes MyApps_slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .MyApplications .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .MyApplications .apps-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .MyApplications {
+        padding: 1rem 0.5rem;
+    }
+
+    .MyApplications .my-apps-header {
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .MyApplications .header-left {
+        flex-direction: column;
+    }
+
+    .MyApplications .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .MyApplications .filters-bar {
+        flex-direction: column;
+    }
+
+    .MyApplications .filter-group {
+        width: 100%;
+    }
+
+    .MyApplications .filter-group select {
+        flex: 1;
+    }
+
+    .MyApplications .apps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .MyApplications .modal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .MyApplications .app-card-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .MyApplications .modal-footer {
+        flex-direction: column;
+    }
+}

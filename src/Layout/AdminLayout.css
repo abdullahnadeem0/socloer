@@ -1,0 +1,208 @@
+/* ============================================
+   ADMIN LAYOUT
+   ============================================ */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f7fafc;
+    position: relative;
+}
+
+/* ============================================
+   SIDEBAR CONTAINER
+   - WHITE background (no dark gradient!)
+   ============================================ */
+.admin-sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+    transition: transform 0.3s ease, width 0.3s ease;
+    background: #ffffff; /* ✅ white, no black/dark peek */
+    overflow: hidden;
+    border-right: 1px solid #e2e8f0;
+}
+
+/* Desktop: Sidebar open */
+.admin-sidebar-container.open {
+    width: 260px;
+    transform: translateX(0);
+}
+
+/* Desktop: Sidebar collapsed */
+.admin-sidebar-container.closed {
+    width: 80px;
+    transform: translateX(0);
+}
+
+/* Mobile: Sidebar hidden by default */
+@media (max-width: 768px) {
+    .admin-sidebar-container {
+        width: 260px !important;
+        transform: translateX(-100%);
+        background: #ffffff;
+        box-shadow: none;
+    }
+
+    .admin-sidebar-container.mobile-open {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+    }
+}
+
+/* ============================================
+   MOBILE: SHOW SIDEBAR BUTTON
+   ============================================ */
+.admin-sidebar-show-btn {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+    transition: all 0.25s ease;
+}
+
+.admin-sidebar-show-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
+}
+
+.admin-sidebar-show-btn:active {
+    transform: scale(0.97);
+}
+
+/* ============================================
+   MAIN CONTAINER
+   ============================================ */
+.admin-main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+    width: 100%;
+}
+
+/* Desktop: Main content shifts based on sidebar */
+@media (min-width: 769px) {
+    .admin-main-container.sidebar-open {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+    }
+
+    .admin-main-container.sidebar-closed {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+    }
+}
+
+/* Mobile: No margin */
+@media (max-width: 768px) {
+    .admin-main-container {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+}
+
+/* ============================================
+   CONTENT AREA
+   ============================================ */
+.admin-content {
+    flex: 1;
+    padding: 24px;
+    overflow-x: hidden;
+    background: #f7fafc;
+    min-height: calc(100vh - 70px);
+}
+
+.admin-content-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ============================================
+   MOBILE OVERLAY - LIGHT (NO BLACK!)
+   ============================================ */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.35); /* ✅ light, not black */
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 99;
+    animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .admin-content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-content {
+        padding: 16px;
+        padding-top: 80px; /* space for the floating Menu button */
+    }
+
+    .admin-content-inner {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-content {
+        padding: 12px;
+        padding-top: 76px;
+    }
+
+    .admin-sidebar-show-btn {
+        top: 0.85rem;
+        left: 0.85rem;
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+.admin-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.admin-content::-webkit-scrollbar-track {
+    background: #e2e8f0;
+}
+
+.admin-content::-webkit-scrollbar-thumb {
+    background: #a0aec0;
+    border-radius: 4px;
+}
+
+.admin-content::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+}

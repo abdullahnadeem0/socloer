@@ -1,0 +1,478 @@
+/* ============================================
+   RECEIVE PAYMENT PAGE
+   Blue Theme - Full Width - Simple Amount
+   ============================================ */
+
+.Receive-Payment-page {
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    width: 100%;
+}
+
+.Receive-Payment-page .receive-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.Receive-Payment-page .receive-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--color-bg);
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.08);
+    width: 100%;
+}
+
+.Receive-Payment-page .back-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--bg-gradient);
+    border: none;
+    color: var(--color-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.Receive-Payment-page .back-icon-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-text-white);
+    transform: translateX(-3px);
+}
+
+.Receive-Payment-page .header-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.Receive-Payment-page .header-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--color-text-white);
+    flex-shrink: 0;
+}
+
+.Receive-Payment-page .header-icon-wrapper.received {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.Receive-Payment-page .receive-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-text-black);
+    font-weight: 700;
+}
+
+.Receive-Payment-page .receive-header p {
+    margin: 0.2rem 0 0;
+    color: var(--color-text-gray);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+.Receive-Payment-page .success-message,
+.Receive-Payment-page .error-message {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: ReceivePayment_slideDown 0.3s ease;
+    background: var(--color-bg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.Receive-Payment-page .success-message {
+    color: var(--color-success);
+    border-left: 4px solid var(--color-success);
+}
+
+.Receive-Payment-page .error-message {
+    color: var(--color-error);
+    border-left: 4px solid var(--color-error);
+}
+
+/* ============================================
+   FORM
+   ============================================ */
+.Receive-Payment-page .receive-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.Receive-Payment-page .form-section {
+    background: var(--color-bg);
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.06);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    width: 100%;
+}
+
+.Receive-Payment-page .form-section.highlight {
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    border-color: var(--color-primary-light);
+}
+
+.Receive-Payment-page .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-black);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+}
+
+.Receive-Payment-page .section-icon {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   ⭐ SIMPLE AMOUNT INPUT (SMALL & CLEAN)
+   ============================================ */
+.Receive-Payment-page .simple-amount-wrapper {
+    display: flex;
+    align-items: stretch;
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--color-bg);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    max-width: 400px;
+}
+
+.Receive-Payment-page .simple-amount-wrapper:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.Receive-Payment-page .simple-currency-label {
+    padding: 0.65rem 1rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-text-white);
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.Receive-Payment-page .simple-amount-input {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border: none;
+    outline: none;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text-black);
+    background: transparent;
+    font-family: 'Segoe UI', sans-serif;
+    min-width: 0;
+}
+
+.Receive-Payment-page .simple-amount-input::placeholder {
+    color: var(--color-text-gray);
+    opacity: 0.4;
+    font-weight: 500;
+}
+
+.Receive-Payment-page .simple-amount-input.error {
+    color: var(--color-error);
+}
+
+/* Remove spinner arrows */
+.Receive-Payment-page .simple-amount-input::-webkit-outer-spin-button,
+.Receive-Payment-page .simple-amount-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.Receive-Payment-page .simple-amount-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.Receive-Payment-page .simple-currency-code {
+    padding: 0.65rem 1rem;
+    background: var(--bg-gradient);
+    color: var(--color-primary-dark);
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 2px solid var(--color-primary);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   FORM ROWS & GROUPS
+   ============================================ */
+.Receive-Payment-page .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.Receive-Payment-page .form-row:last-child {
+    margin-bottom: 0;
+}
+
+.Receive-Payment-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.Receive-Payment-page .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.Receive-Payment-page .form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-black);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.Receive-Payment-page .form-group input,
+.Receive-Payment-page .form-group select,
+.Receive-Payment-page .form-group textarea {
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(37, 99, 235, 0.15);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    background: var(--color-bg);
+    color: var(--color-text-black);
+    font-family: inherit;
+    width: 100%;
+}
+
+.Receive-Payment-page .form-group input:focus,
+.Receive-Payment-page .form-group select:focus,
+.Receive-Payment-page .form-group textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    outline: none;
+}
+
+.Receive-Payment-page .form-group input.error,
+.Receive-Payment-page .form-group select.error {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 4px rgba(252, 129, 129, 0.15);
+}
+
+.Receive-Payment-page .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.Receive-Payment-page .error-text {
+    color: var(--color-error);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.3rem;
+}
+
+.Receive-Payment-page .char-count {
+    color: var(--color-text-gray);
+    font-size: 0.75rem;
+    text-align: right;
+    display: block;
+    margin-top: 0.2rem;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+.Receive-Payment-page .form-actions {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    width: 100%;
+}
+
+.Receive-Payment-page .cancel-btn,
+.Receive-Payment-page .submit-btn {
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.25s ease;
+    border: none;
+    font-family: inherit;
+}
+
+.Receive-Payment-page .cancel-btn {
+    flex: 1;
+    background: var(--color-bg);
+    color: var(--color-text-black);
+    border: 2px solid rgba(37, 99, 235, 0.15);
+}
+
+.Receive-Payment-page .cancel-btn:hover:not(:disabled) {
+    background: var(--bg-gradient);
+    border-color: var(--color-primary);
+}
+
+.Receive-Payment-page .submit-btn.received {
+    flex: 2;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-text-white);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.Receive-Payment-page .submit-btn.received:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+.Receive-Payment-page .submit-btn:disabled,
+.Receive-Payment-page .cancel-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.Receive-Payment-page .spinner {
+    animation: ReceivePayment_spin 1s linear infinite;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes ReceivePayment_spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes ReceivePayment_slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .Receive-Payment-page {
+        padding: 1rem;
+    }
+
+    .Receive-Payment-page .receive-header {
+        padding: 1rem;
+    }
+
+    .Receive-Payment-page .form-section {
+        padding: 1.25rem;
+    }
+
+    .Receive-Payment-page .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .Receive-Payment-page .receive-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .Receive-Payment-page .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .Receive-Payment-page .cancel-btn,
+    .Receive-Payment-page .submit-btn {
+        flex: 1;
+        width: 100%;
+    }
+
+    .Receive-Payment-page .simple-amount-wrapper {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .Receive-Payment-page {
+        padding: 0.75rem;
+    }
+
+    .Receive-Payment-page .form-section {
+        padding: 1rem;
+    }
+
+    .Receive-Payment-page .simple-amount-input {
+        font-size: 1rem;
+        padding: 0.6rem 0.75rem;
+    }
+
+    .Receive-Payment-page .simple-currency-label {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .Receive-Payment-page .simple-currency-code {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+    }
+
+    .Receive-Payment-page .header-icon-wrapper {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+    }
+
+    .Receive-Payment-page .receive-header h1 {
+        font-size: 1.05rem;
+    }
+}

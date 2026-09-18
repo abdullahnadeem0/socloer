@@ -1,0 +1,750 @@
+/* src/Pages/Agent/private/Application/ViewApplication.css */
+
+.ViewApplication {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    padding: 2rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ViewApplication .view-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ===== HEADER ===== */
+.ViewApplication .view-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #ffffff;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    flex-wrap: wrap;
+}
+
+.ViewApplication .back-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    border: none;
+    color: #4a5568;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ViewApplication .back-icon-btn:hover {
+    background: #2563eb;
+    color: #ffffff;
+    transform: translateX(-3px);
+}
+
+.ViewApplication .header-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.ViewApplication .header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.ViewApplication .header-title h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.ViewApplication .app-number {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Courier New', monospace;
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: #eef2ff;
+    padding: 0.3rem 0.75rem;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.ViewApplication .header-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.ViewApplication .edit-action-btn,
+.ViewApplication .print-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.ViewApplication .edit-action-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.ViewApplication .edit-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+.ViewApplication .print-action-btn {
+    background: #f1f5f9;
+    color: #1a202c;
+    border: 2px solid #e8edf3;
+}
+
+.ViewApplication .print-action-btn:hover {
+    background: #e8edf3;
+}
+
+/* ===== STATUS BADGES ===== */
+.ViewApplication .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.ViewApplication .status-draft { background: #edf2f7; color: #4a5568; }
+.ViewApplication .status-submitted { background: #ebf8ff; color: #2b6cb0; }
+.ViewApplication .status-review { background: #fefcbf; color: #975a16; }
+.ViewApplication .status-pending { background: #fffaf0; color: #c05621; }
+.ViewApplication .status-approved { background: #f0fff4; color: #276749; }
+.ViewApplication .status-rejected { background: #fff5f5; color: #c53030; }
+.ViewApplication .status-disbursed { background: #e6fffa; color: #285e61; }
+
+/* ===== TIMELINE ===== */
+.ViewApplication .timeline-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #ffffff;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+}
+
+.ViewApplication .timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.ViewApplication .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #cbd5e0;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.ViewApplication .timeline-dot.active {
+    background: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+.ViewApplication .timeline-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.ViewApplication .timeline-content span {
+    font-size: 0.7rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.ViewApplication .timeline-content strong {
+    font-size: 0.85rem;
+    color: #1a202c;
+}
+
+.ViewApplication .timeline-line {
+    width: 40px;
+    height: 2px;
+    background: #e2e8f0;
+    flex-shrink: 0;
+}
+
+/* ===== INFO CARDS ===== */
+.ViewApplication .info-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eef2f6;
+    transition: all 0.3s ease;
+}
+
+.ViewApplication .info-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.ViewApplication .info-card.highlight {
+    background: linear-gradient(135deg, #f0f7ff, #eef2ff);
+    border-color: #c7d2fe;
+}
+
+.ViewApplication .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid #eef2f6;
+}
+
+.ViewApplication .card-icon {
+    color: #2563eb;
+    font-size: 1.25rem;
+}
+
+.ViewApplication .card-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+/* ===== STUDENT PROFILE ===== */
+.ViewApplication .student-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed #e2e8f0;
+    flex-wrap: wrap;
+}
+
+.ViewApplication .student-photo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #eef2ff;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
+    flex-shrink: 0;
+}
+
+.ViewApplication .student-photo.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef2ff;
+    color: #2563eb;
+    font-size: 2rem;
+}
+
+.ViewApplication .student-basic {
+    flex: 1;
+    min-width: 0;
+}
+
+.ViewApplication .student-basic h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    color: #1a202c;
+    font-weight: 700;
+}
+
+.ViewApplication .basic-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.ViewApplication .basic-info span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #718096;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.ViewApplication .basic-info svg {
+    color: #2563eb;
+    flex-shrink: 0;
+}
+
+/* ===== INFO GRID ===== */
+.ViewApplication .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.ViewApplication .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    border-left: 3px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.ViewApplication .info-item:hover {
+    border-left-color: #2563eb;
+    background: #f0f7ff;
+}
+
+.ViewApplication .info-label {
+    font-size: 0.7rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.ViewApplication .info-value {
+    font-size: 0.95rem;
+    color: #1a202c;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+/* ===== ADDRESS ===== */
+.ViewApplication .address-section {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.ViewApplication .section-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.ViewApplication .address-text {
+    margin: 0;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    border-left: 3px solid #2563eb;
+    color: #4a5568;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* ===== UNIVERSITY INFO ===== */
+.ViewApplication .university-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.ViewApplication .uni-block,
+.ViewApplication .program-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    border-left: 4px solid #2563eb;
+}
+
+.ViewApplication .uni-block h3,
+.ViewApplication .program-block h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #1a202c;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.ViewApplication .program-block h3 svg {
+    color: #2563eb;
+}
+
+.ViewApplication .uni-location {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #718096;
+    font-size: 0.85rem;
+    margin-top: 0.15rem;
+}
+
+/* ===== STATEMENT ===== */
+.ViewApplication .statement-block {
+    margin-bottom: 1.25rem;
+}
+
+.ViewApplication .statement-block:last-child {
+    margin-bottom: 0;
+}
+
+.ViewApplication .statement-text {
+    margin: 0.5rem 0 0;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid #2563eb;
+    color: #4a5568;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+}
+
+/* ===== DOCUMENTS ===== */
+.ViewApplication .docs-section {
+    margin-bottom: 1.5rem;
+}
+
+.ViewApplication .docs-section:last-child {
+    margin-bottom: 0;
+}
+
+.ViewApplication .docs-subtitle {
+    margin: 0 0 0.85rem;
+    font-size: 0.8rem;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.ViewApplication .docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.75rem;
+}
+
+.ViewApplication .doc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 2px solid #e8edf3;
+    text-decoration: none;
+    color: #1a202c;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.ViewApplication .doc-item.uploaded {
+    border-color: #c6f6d5;
+    background: #f0fff4;
+}
+
+.ViewApplication .doc-item.uploaded:hover {
+    border-color: #48bb78;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(72, 187, 120, 0.15);
+}
+
+.ViewApplication .doc-item.empty {
+    border-style: dashed;
+    border-color: #e2e8f0;
+    background: #fafbfc;
+    opacity: 0.7;
+    cursor: default;
+}
+
+.ViewApplication .doc-icon {
+    font-size: 1.25rem;
+    color: #2563eb;
+    flex-shrink: 0;
+}
+
+.ViewApplication .doc-item.uploaded .doc-icon {
+    color: #48bb78;
+}
+
+.ViewApplication .doc-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.ViewApplication .doc-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1a202c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ViewApplication .doc-status {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.ViewApplication .uploaded-text {
+    color: #48bb78;
+}
+
+.ViewApplication .empty-text {
+    color: #a0aec0;
+}
+
+.ViewApplication .download-icon {
+    color: #2563eb;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.ViewApplication .doc-item.uploaded:hover .download-icon {
+    opacity: 1;
+    color: #48bb78;
+}
+
+/* ===== REMARKS CARD ===== */
+.ViewApplication .remarks-card {
+    border-left: 4px solid #f6ad55;
+    background: #fffaf0;
+}
+
+.ViewApplication .remarks-text {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+    border-radius: 10px;
+    color: #744210;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.ViewApplication .remarks-text.rejection {
+    margin-top: 0.75rem;
+    color: #c53030;
+    background: #fff5f5;
+    border-left: 3px solid #fc8181;
+}
+
+/* ===== FOOTER ACTIONS ===== */
+.ViewApplication .footer-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 1.5rem 0;
+}
+
+.ViewApplication .back-btn,
+.ViewApplication .edit-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.ViewApplication .back-btn {
+    background: #ffffff;
+    color: #1a202c;
+    border: 2px solid #e8edf3;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.ViewApplication .back-btn:hover {
+    background: #f1f5f9;
+    transform: translateX(-2px);
+}
+
+.ViewApplication .edit-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.ViewApplication .edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+/* ===== LOADING / ERROR STATES ===== */
+.ViewApplication .loading-state,
+.ViewApplication .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.ViewApplication .spinner-large {
+    font-size: 3rem;
+    color: #2563eb;
+    animation: ViewApp_spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+.ViewApplication .error-icon-large {
+    font-size: 4rem;
+    color: #fc8181;
+    margin-bottom: 1rem;
+}
+
+.ViewApplication .error-state h2 {
+    color: #1a202c;
+    margin: 0 0 0.5rem;
+}
+
+.ViewApplication .error-state p {
+    color: #718096;
+    margin: 0 0 1.5rem;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .ViewApplication {
+        background: #ffffff;
+        padding: 0;
+    }
+
+    .ViewApplication .view-header,
+    .ViewApplication .footer-actions,
+    .ViewApplication .header-actions,
+    .ViewApplication .back-icon-btn {
+        display: none !important;
+    }
+
+    .ViewApplication .info-card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+        page-break-inside: avoid;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes ViewApp_spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .ViewApplication {
+        padding: 1rem 0.5rem;
+    }
+
+    .ViewApplication .view-header {
+        padding: 1rem;
+    }
+
+    .ViewApplication .header-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ViewApplication .header-title h1 {
+        font-size: 1.15rem;
+    }
+
+    .ViewApplication .header-actions {
+        width: 100%;
+    }
+
+    .ViewApplication .header-actions button {
+        flex: 1;
+    }
+
+    .ViewApplication .info-card {
+        padding: 1.25rem;
+    }
+
+    .ViewApplication .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ViewApplication .docs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ViewApplication .student-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .ViewApplication .basic-info span {
+        justify-content: center;
+    }
+
+    .ViewApplication .footer-actions {
+        flex-direction: column-reverse;
+    }
+
+    .ViewApplication .back-btn,
+    .ViewApplication .edit-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

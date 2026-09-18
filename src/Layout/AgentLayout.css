@@ -1,0 +1,164 @@
+
+/* ============================================
+   AGENT LAYOUT
+   ============================================ */
+.agent-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f7fafc;
+    position: relative;
+}
+
+/* ============================================
+   SIDEBAR CONTAINER
+   ============================================ */
+.agent-sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+    transition: transform 0.3s ease, width 0.3s ease;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+/* Desktop: Sidebar open */
+.agent-sidebar-container.agent-sidebar-open {
+    width: 260px;
+    transform: translateX(0);
+}
+
+/* Desktop: Sidebar closed */
+.agent-sidebar-container.agent-sidebar-closed {
+    width: 80px;
+    transform: translateX(0);
+}
+
+/* Mobile: Sidebar hidden by default */
+@media (max-width: 768px) {
+    .agent-sidebar-container {
+        width: 260px !important;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .agent-sidebar-container.agent-sidebar-mobile-open {
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   MAIN CONTAINER
+   ============================================ */
+.agent-main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+    width: 100%;
+}
+
+/* Desktop: Main content shifts based on sidebar */
+@media (min-width: 769px) {
+    .agent-main-container.agent-sidebar-open {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+    }
+
+    .agent-main-container.agent-sidebar-closed {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+    }
+}
+
+/* Mobile: No margin */
+@media (max-width: 768px) {
+    .agent-main-container {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+}
+
+/* ============================================
+   CONTENT AREA
+   ============================================ */
+.agent-content {
+    flex: 1;
+    padding: 24px;
+    overflow-x: hidden;
+    background: #f7fafc;
+    min-height: calc(100vh - 70px);
+}
+
+.agent-content-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ============================================
+   MOBILE OVERLAY
+   ============================================ */
+.agent-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    animation: agentFadeIn 0.3s ease;
+}
+
+@keyframes agentFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .agent-content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .agent-content {
+        padding: 16px;
+    }
+
+    .agent-content-inner {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .agent-content {
+        padding: 12px;
+    }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+.agent-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.agent-content::-webkit-scrollbar-track {
+    background: #e2e8f0;
+}
+
+.agent-content::-webkit-scrollbar-thumb {
+    background: #a0aec0;
+    border-radius: 4px;
+}
+
+.agent-content::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+}
