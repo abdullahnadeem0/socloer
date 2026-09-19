@@ -10,13 +10,12 @@ import {
     FaChevronDown,
     FaChevronRight,
     FaTimes,
-    FaBars,
     FaUserTie,
     FaPlusCircle
 } from 'react-icons/fa';
 import './AgentSidebar.css';
 
-const AgentSidebar = ({ isOpen, onClose, isMobile, onToggle }) => {
+const AgentSidebar = ({ isOpen, onClose, isMobile }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [expandedMenus, setExpandedMenus] = useState({});
@@ -39,6 +38,7 @@ const AgentSidebar = ({ isOpen, onClose, isMobile, onToggle }) => {
         if (isMobile && isOpen) {
             onClose();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname]);
 
     // ===== MENU ITEMS =====
@@ -86,132 +86,131 @@ const AgentSidebar = ({ isOpen, onClose, isMobile, onToggle }) => {
     };
 
     return (
-        <>
-            {/* ===== MOBILE HAMBURGER BUTTON ===== */}
-            {isMobile && (
-                <button
-                    className="agent_sidebar_hamburger"
-                    onClick={onToggle}
-                    aria-label="Toggle Menu"
-                >
-                    {isOpen ? <FaTimes /> : <FaBars />}
-                </button>
-            )}
-
-            {/* ===== SIDEBAR ===== */}
-            <aside className={`
-                agent_sidebar
-                ${isOpen ? 'agent_sidebar_open' : 'agent_sidebar_closed'}
-                ${isMobile ? 'agent_sidebar_mobile' : 'agent_sidebar_desktop'}
-            `}>
-                {/* ===== HEADER ===== */}
-                <div className="agent_sidebar_header">
-                    <div className="agent_sidebar_logo">
-                        <div className="agent_sidebar_logo_icon_wrapper">
-                            <FaUserTie className="agent_sidebar_logo_icon" />
-                        </div>
-                        <div className="agent_sidebar_title_wrapper">
-                            <span className="agent_sidebar_title">Agent</span>
-                            <span className="agent_sidebar_subtitle">Portal</span>
-                        </div>
+        <aside className={`
+            agent_sidebar
+            ${isOpen ? 'agent_sidebar_open' : 'agent_sidebar_closed'}
+            ${isMobile ? 'agent_sidebar_mobile' : 'agent_sidebar_desktop'}
+        `}>
+            {/* ===== HEADER ===== */}
+            <div className="agent_sidebar_header">
+                <div className="agent_sidebar_logo">
+                    <div className="agent_sidebar_logo_icon_wrapper">
+                        <FaUserTie className="agent_sidebar_logo_icon" />
+                    </div>
+                    <div className="agent_sidebar_title_wrapper">
+                        <span className="agent_sidebar_title">Agent</span>
+                        <span className="agent_sidebar_subtitle">Portal</span>
                     </div>
                 </div>
 
-                {/* ===== AGENT INFO ===== */}
-                {agentData && (
-                    <div className="agent_sidebar_user_card">
-                        <div className="agent_sidebar_user_avatar">
-                            {agentData.profileImage ? (
-                                <img
-                                    src={agentData.profileImage}
-                                    alt={agentData.name}
-                                    className="agent_sidebar_user_img"
-                                />
-                            ) : (
-                                <span className="agent_sidebar_user_initials">
-                                    {agentData.name?.charAt(0)?.toUpperCase() || 'A'}
-                                </span>
-                            )}
-                        </div>
-                        <div className="agent_sidebar_user_info">
-                            <span className="agent_sidebar_user_name">
-                                {agentData.name || 'Agent'}
-                            </span>
-                            <span className="agent_sidebar_user_email">
-                                {agentData.email || ''}
-                            </span>
-                        </div>
-                    </div>
+                {/* ===== MOBILE: CLOSE (X) BUTTON ===== */}
+                {isMobile && (
+                    <button
+                        className="agent_sidebar_close_btn"
+                        onClick={onClose}
+                        aria-label="Close Sidebar"
+                    >
+                        <FaTimes />
+                    </button>
                 )}
+            </div>
 
-                {/* ===== MENU ===== */}
-                <nav className="agent_sidebar_menu">
-                    {menuItems.map((item, index) => (
-                        <div key={index} className="agent_sidebar_menu_item_wrapper">
-                            {item.submenu ? (
-                                <>
-                                    <button
-                                        className={`agent_sidebar_menu_item ${expandedMenus[item.title] ? 'agent_sidebar_expanded' : ''}`}
-                                        onClick={() => toggleSubmenu(item.title)}
-                                    >
-                                        <span className="agent_sidebar_menu_icon">{item.icon}</span>
-                                        <span className="agent_sidebar_menu_text">{item.title}</span>
-                                        <span className="agent_sidebar_menu_arrow">
-                                            {expandedMenus[item.title]
-                                                ? <FaChevronDown />
-                                                : <FaChevronRight />
-                                            }
-                                        </span>
-                                    </button>
+            {/* ===== AGENT INFO ===== */}
+            {agentData && (
+                <div className="agent_sidebar_user_card">
+                    <div className="agent_sidebar_user_avatar">
+                        {agentData.profileImage ? (
+                            <img
+                                src={agentData.profileImage}
+                                alt={agentData.name}
+                                className="agent_sidebar_user_img"
+                            />
+                        ) : (
+                            <span className="agent_sidebar_user_initials">
+                                {agentData.name?.charAt(0)?.toUpperCase() || 'A'}
+                            </span>
+                        )}
+                    </div>
+                    <div className="agent_sidebar_user_info">
+                        <span className="agent_sidebar_user_name">
+                            {agentData.name || 'Agent'}
+                        </span>
+                        <span className="agent_sidebar_user_email">
+                            {agentData.email || ''}
+                        </span>
+                    </div>
+                </div>
+            )}
 
-                                    {expandedMenus[item.title] && (
-                                        <div className="agent_sidebar_submenu">
-                                            {item.submenu.map((subItem, subIndex) => (
-                                                <NavLink
-                                                    key={subIndex}
-                                                    to={subItem.path}
-                                                    className={({ isActive }) =>
-                                                        `agent_sidebar_submenu_item ${isActive ? 'agent_sidebar_submenu_active' : ''}`
-                                                    }
-                                                    end={subItem.exact}
-                                                >
-                                                    <span className="agent_sidebar_submenu_dot"></span>
-                                                    {subItem.title}
-                                                </NavLink>
-                                            ))}
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <NavLink
-                                    to={item.path}
-                                    className={({ isActive }) =>
-                                        `agent_sidebar_menu_item ${isActive ? 'agent_sidebar_menu_active' : ''}`
-                                    }
-                                    end={item.exact}
+            {/* ===== MENU ===== */}
+            <nav className="agent_sidebar_menu">
+                {menuItems.map((item, index) => (
+                    <div key={index} className="agent_sidebar_menu_item_wrapper">
+                        {item.submenu ? (
+                            <>
+                                <button
+                                    className={`agent_sidebar_menu_item ${expandedMenus[item.title] ? 'agent_sidebar_expanded' : ''}`}
+                                    onClick={() => toggleSubmenu(item.title)}
                                 >
                                     <span className="agent_sidebar_menu_icon">{item.icon}</span>
                                     <span className="agent_sidebar_menu_text">{item.title}</span>
-                                </NavLink>
-                            )}
-                        </div>
-                    ))}
-                </nav>
+                                    <span className="agent_sidebar_menu_arrow">
+                                        {expandedMenus[item.title]
+                                            ? <FaChevronDown />
+                                            : <FaChevronRight />
+                                        }
+                                    </span>
+                                </button>
 
-                {/* ===== FOOTER ===== */}
-                <div className="agent_sidebar_footer">
-                    <button
-                        className="agent_sidebar_logout_btn"
-                        onClick={handleLogout}
-                    >
-                        <span className="agent_sidebar_logout_icon_wrapper">
-                            <FaSignOutAlt className="agent_sidebar_logout_icon" />
-                        </span>
-                        <span className="agent_sidebar_logout_text">Logout</span>
-                    </button>
-                </div>
-            </aside>
-        </>
+                                {expandedMenus[item.title] && (
+                                    <div className="agent_sidebar_submenu">
+                                        {item.submenu.map((subItem, subIndex) => (
+                                            <NavLink
+                                                key={subIndex}
+                                                to={subItem.path}
+                                                className={({ isActive }) =>
+                                                    `agent_sidebar_submenu_item ${isActive ? 'agent_sidebar_submenu_active' : ''}`
+                                                }
+                                                onClick={isMobile ? onClose : undefined}
+                                                end={subItem.exact}
+                                            >
+                                                <span className="agent_sidebar_submenu_dot"></span>
+                                                {subItem.title}
+                                            </NavLink>
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <NavLink
+                                to={item.path}
+                                className={({ isActive }) =>
+                                    `agent_sidebar_menu_item ${isActive ? 'agent_sidebar_menu_active' : ''}`
+                                }
+                                onClick={isMobile ? onClose : undefined}
+                                end={item.exact}
+                            >
+                                <span className="agent_sidebar_menu_icon">{item.icon}</span>
+                                <span className="agent_sidebar_menu_text">{item.title}</span>
+                            </NavLink>
+                        )}
+                    </div>
+                ))}
+            </nav>
+
+            {/* ===== FOOTER ===== */}
+            <div className="agent_sidebar_footer">
+                <button
+                    className="agent_sidebar_logout_btn"
+                    onClick={handleLogout}
+                >
+                    <span className="agent_sidebar_logout_icon_wrapper">
+                        <FaSignOutAlt className="agent_sidebar_logout_icon" />
+                    </span>
+                    <span className="agent_sidebar_logout_text">Logout</span>
+                </button>
+            </div>
+        </aside>
     );
 };
 

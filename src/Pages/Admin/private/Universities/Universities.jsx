@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import adminApi from '../../../../api/adminApi';
+import api, { API_URL, SERVER_URL, getFileUrl } from '../../../../api/config';
 import { 
     FaSearch, FaPlus, FaEye, FaEdit, FaTrash,
     FaCheckCircle, FaTimesCircle, FaToggleOn, FaToggleOff,
@@ -321,7 +322,7 @@ const Universities = () => {
                                             <div className="uni-logo">
                                                 {uni.logo ? (
                                                     <img 
-                                                        src={`http://localhost:5000${uni.logo}`} 
+                                                        src={`${SERVER_URL}${uni.logo}`} 
                                                         alt={uni.name} 
                                                     />
                                                 ) : (

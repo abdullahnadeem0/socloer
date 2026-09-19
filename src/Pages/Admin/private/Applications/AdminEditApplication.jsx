@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './AdminEditApplication.css';
 import adminApi from '../../../../api/adminApi';
+import api, { API_URL, SERVER_URL, getFileUrl } from '../../../../api/config';
+
 import {
     FaArrowLeft, FaSave, FaUser, FaGraduationCap, FaUniversity,
     FaFileAlt, FaMoneyBillWave, FaMapMarkerAlt, FaSpinner,
@@ -60,7 +62,6 @@ const AdminEditApplication = () => {
         deferralAdmissionPortfolio: useRef(null)
     };
 
-    const API_URL = 'http://localhost:5000';
 
     // ===== FORM DATA =====
     const [formData, setFormData] = useState({

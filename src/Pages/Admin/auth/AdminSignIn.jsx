@@ -1,3 +1,4 @@
+// src/Pages/Admin/private/AdminSignIn.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminSignIn.css';
@@ -92,10 +93,9 @@ const AdminSignIn = () => {
     };
 
     // ============================================
-    // ✅ HANDLE OTP CHANGE - FIXED
+    // HANDLE OTP CHANGE
     // ============================================
     const handleOtpChange = (index, value) => {
-        // Only allow numbers
         if (!/^\d*$/.test(value)) return;
         
         const newOtp = [...otp];
@@ -103,16 +103,13 @@ const AdminSignIn = () => {
         setOtp(newOtp);
         setOtpError('');
 
-        // Auto focus next input
         if (value && index < 5) {
             otpInputs.current[index + 1]?.focus();
         }
 
-        // ✅ Auto verify when all 6 digits are filled
         const allFilled = newOtp.every(digit => digit !== '');
         if (allFilled && index === 5) {
             console.log('✅ All OTP filled:', newOtp.join(''));
-            // Small delay to ensure state is updated
             setTimeout(() => {
                 const otpValue = newOtp.join('');
                 if (otpValue.length === 6) {
@@ -196,10 +193,9 @@ const AdminSignIn = () => {
     };
 
     // ============================================
-    // ✅ VERIFY LOGIN OTP - FIXED
+    // VERIFY LOGIN OTP
     // ============================================
     const handleVerifyLoginOTP = async (otpValue) => {
-        // If otpValue is not passed, get from state
         if (!otpValue) {
             otpValue = otp.join('');
         }
@@ -282,23 +278,23 @@ const AdminSignIn = () => {
     // RENDER
     // ============================================
     return (
-        <div className="signin-container">
-            <div className="signin-card">
+        <div className="admin-signin-container">
+            <div className="admin-signin-card">
                 {/* ===== LOGO SECTION ===== */}
-                <div className="logo-container">
-                    <div className="logo-icon">
+                <div className="admin-signin-logo-container">
+                    <div className="admin-signin-logo-icon">
                         <FaBuilding size={36} color="#ffffff" />
                     </div>
-                    <h1 className="company-name">Admin Portal</h1>
-                    <p className="company-tagline">
+                    <h1 className="admin-signin-company-name">Admin Portal</h1>
+                    <p className="admin-signin-company-tagline">
                         {showOTP ? 'Verify to login' : 'Sign in to your account'}
                     </p>
                 </div>
 
                 {/* ===== SUCCESS MESSAGE ===== */}
                 {successMessage && (
-                    <div className="success-message">
-                        <FaCheckCircle className="success-icon" />
+                    <div className="admin-signin-success-message">
+                        <FaCheckCircle className="admin-signin-success-icon" />
                         {successMessage}
                     </div>
                 )}
@@ -309,17 +305,17 @@ const AdminSignIn = () => {
                 {!showOTP ? (
                     <>
                         {serverError && (
-                            <div className="error-message server-error">
-                                <FaExclamationTriangle className="error-icon" />
+                            <div className="admin-signin-error-message admin-signin-server-error">
+                                <FaExclamationTriangle className="admin-signin-error-icon" />
                                 {serverError}
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className="admin-signin-form">
                             {/* Email Field */}
-                            <div className="form-group">
+                            <div className="admin-signin-form-group">
                                 <label htmlFor="email">
-                                    <FaEnvelope className="input-icon" />
+                                    <FaEnvelope className="admin-signin-input-icon" />
                                     Email Address
                                 </label>
                                 <input
@@ -334,17 +330,17 @@ const AdminSignIn = () => {
                                     disabled={loading}
                                 />
                                 {touched.email && errors.email && (
-                                    <span className="error-text">{errors.email}</span>
+                                    <span className="admin-signin-error-text">{errors.email}</span>
                                 )}
                             </div>
 
                             {/* Password Field */}
-                            <div className="form-group">
+                            <div className="admin-signin-form-group">
                                 <label htmlFor="password">
-                                    <FaLock className="input-icon" />
+                                    <FaLock className="admin-signin-input-icon" />
                                     Password
                                 </label>
-                                <div className="password-input-wrapper">
+                                <div className="admin-signin-password-input-wrapper">
                                     <input
                                         type={showPassword ? 'text' : 'password'}
                                         id="password"
@@ -358,7 +354,7 @@ const AdminSignIn = () => {
                                     />
                                     <button
                                         type="button"
-                                        className="password-toggle"
+                                        className="admin-signin-password-toggle"
                                         onClick={() => setShowPassword(!showPassword)}
                                         disabled={loading}
                                     >
@@ -366,13 +362,13 @@ const AdminSignIn = () => {
                                     </button>
                                 </div>
                                 {touched.password && errors.password && (
-                                    <span className="error-text">{errors.password}</span>
+                                    <span className="admin-signin-error-text">{errors.password}</span>
                                 )}
                             </div>
 
                             {/* Remember Me & Forgot Password */}
-                            <div className="form-options">
-                                <label className="remember-me">
+                            <div className="admin-signin-form-options">
+                                <label className="admin-signin-remember-me">
                                     <input
                                         type="checkbox"
                                         checked={rememberMe}
@@ -380,7 +376,7 @@ const AdminSignIn = () => {
                                     />
                                     <span>Remember me</span>
                                 </label>
-                                <a href="/forgot-password" className="forgot-link">
+                                <a href="/forgot-password" className="admin-signin-forgot-link">
                                     Forgot password?
                                 </a>
                             </div>
@@ -388,12 +384,12 @@ const AdminSignIn = () => {
                             {/* Submit Button */}
                             <button 
                                 type="submit" 
-                                className="signin-button"
+                                className="admin-signin-button"
                                 disabled={loading}
                             >
                                 {loading ? (
                                     <>
-                                        <span className="spinner"></span>
+                                        <span className="admin-signin-spinner"></span>
                                         Sending Code...
                                     </>
                                 ) : (
@@ -405,7 +401,7 @@ const AdminSignIn = () => {
                             </button>
                         </form>
 
-                        <p className="signup-link">
+                        <p className="admin-signin-signup-link">
                             Don't have an account? <a href="/signup">Sign Up</a>
                         </p>
                     </>
@@ -414,10 +410,10 @@ const AdminSignIn = () => {
                     /* STEP 2: OTP VERIFICATION */
                     /* ============================================ */
                     <>
-                        <div className="otp-section">
-                            <div className="otp-header">
-                                <FaEnvelopeOpen className="otp-icon" />
-                                <p className="otp-message">
+                        <div className="admin-signin-otp-section">
+                            <div className="admin-signin-otp-header">
+                                <FaEnvelopeOpen className="admin-signin-otp-icon" />
+                                <p className="admin-signin-otp-message">
                                     We sent a verification code to <strong>{userEmail}</strong>
                                 </p>
                                 <p style={{ 
@@ -430,40 +426,40 @@ const AdminSignIn = () => {
                             </div>
 
                             {/* 6 OTP Inputs */}
-                            <div className="otp-inputs">
+                            <div className="admin-signin-otp-inputs">
                                 {otp.map((digit, index) => (
                                     <input
                                         key={index}
                                         ref={(ref) => (otpInputs.current[index] = ref)}
-                                        id={`otp-${index}`}
+                                        id={`admin-signin-otp-${index}`}
                                         type="text"
                                         maxLength={1}
                                         value={digit}
                                         onChange={(e) => handleOtpChange(index, e.target.value)}
                                         onKeyDown={(e) => handleOtpKeyDown(index, e)}
                                         onPaste={handleOtpPaste}
-                                        className={`otp-digit ${otpError ? 'error' : ''}`}
+                                        className={`admin-signin-otp-digit ${otpError ? 'error' : ''}`}
                                         disabled={otpLoading}
                                     />
                                 ))}
                             </div>
 
                             {otpError && (
-                                <span className="error-text otp-error">{otpError}</span>
+                                <span className="admin-signin-error-text admin-signin-otp-error">{otpError}</span>
                             )}
 
                             {/* Timer */}
-                            <div className="otp-timer">
-                                <FaClock className="timer-icon" />
+                            <div className="admin-signin-otp-timer">
+                                <FaClock className="admin-signin-timer-icon" />
                                 <span>
                                     {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}
                                 </span>
-                                <span className="timer-label">remaining</span>
+                                <span className="admin-signin-timer-label">remaining</span>
                             </div>
 
                             {/* Resend */}
                             <button
-                                className="resend-btn"
+                                className="admin-signin-resend-btn"
                                 onClick={handleResendOTP}
                                 disabled={resendDisabled || otpLoading}
                             >
@@ -471,10 +467,10 @@ const AdminSignIn = () => {
                             </button>
 
                             {/* Verify & Back */}
-                            <div className="otp-actions">
+                            <div className="admin-signin-otp-actions">
                                 <button
                                     type="button"
-                                    className="back-btn"
+                                    className="admin-signin-back-btn"
                                     onClick={handleBackToForm}
                                     disabled={otpLoading}
                                 >
@@ -482,13 +478,13 @@ const AdminSignIn = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className="verify-btn"
+                                    className="admin-signin-verify-btn"
                                     onClick={() => handleVerifyLoginOTP(otp.join(''))}
                                     disabled={otpLoading}
                                 >
                                     {otpLoading ? (
                                         <>
-                                            <span className="spinner"></span>
+                                            <span className="admin-signin-spinner"></span>
                                             Verifying...
                                         </>
                                     ) : (

@@ -1,7 +1,11 @@
 /* ============================================
+   ADMIN SIGN UP - Unique admin-signup- prefix
+   ============================================ */
+
+/* ============================================
    SIGN UP CONTAINER - Center Only
    ============================================ */
-.signup-container {
+.admin-signup-container {
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -13,7 +17,7 @@
 /* ============================================
    SIGN UP CARD - No Scrollbar
    ============================================ */
-.signup-card {
+.admin-signup-card {
     background: var(--color-text-white);
     border-radius: 24px;
     padding: 48px 44px;
@@ -24,29 +28,23 @@
         0 8px 24px rgba(37, 99, 235, 0.06);
     transition: all 0.3s ease;
     border: 1px solid rgba(37, 99, 235, 0.06);
-    /* ❌ REMOVED: max-height and overflow */
 }
 
-.signup-card:hover {
+.admin-signup-card:hover {
     box-shadow: 
         0 24px 72px rgba(37, 99, 235, 0.16),
         0 8px 28px rgba(37, 99, 235, 0.08);
 }
 
 /* ============================================
-   ❌ REMOVED - Card Scrollbar
-   ============================================ */
-/* signup-card::-webkit-scrollbar - REMOVED */
-
-/* ============================================
    LOGO SECTION
    ============================================ */
-.logo-container {
+.admin-signup-logo-container {
     text-align: center;
     margin-bottom: 32px;
 }
 
-.logo-icon {
+.admin-signup-logo-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -59,11 +57,11 @@
     transition: all 0.3s ease;
 }
 
-.logo-icon:hover {
+.admin-signup-logo-icon:hover {
     transform: scale(1.05) rotate(-4deg);
 }
 
-.company-name {
+.admin-signup-company-name {
     font-size: 26px;
     font-weight: 800;
     color: var(--color-text-black);
@@ -71,7 +69,7 @@
     letter-spacing: -0.5px;
 }
 
-.company-tagline {
+.admin-signup-company-tagline {
     color: var(--color-text-gray);
     font-size: 14px;
     margin-top: 6px;
@@ -81,7 +79,7 @@
 /* ============================================
    ERROR & SUCCESS MESSAGES
    ============================================ */
-.error-message {
+.admin-signup-error-message {
     padding: 14px 18px;
     border-radius: 12px;
     margin-bottom: 20px;
@@ -93,12 +91,12 @@
     border: 1px solid #fecaca;
 }
 
-.error-icon {
+.admin-signup-error-icon {
     font-size: 20px;
     flex-shrink: 0;
 }
 
-.success-message {
+.admin-signup-success-message {
     padding: 14px 18px;
     border-radius: 12px;
     margin-bottom: 20px;
@@ -110,7 +108,7 @@
     border: 1px solid #bbf7d0;
 }
 
-.success-icon {
+.admin-signup-success-icon {
     font-size: 20px;
     flex-shrink: 0;
 }
@@ -118,19 +116,19 @@
 /* ============================================
    FORM
    ============================================ */
-.signup-form {
+.admin-signup-form {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-.form-group {
+.admin-signup-form-group {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.form-group label {
+.admin-signup-form-group label {
     font-size: 14px;
     font-weight: 600;
     color: var(--color-text-black);
@@ -139,12 +137,12 @@
     gap: 8px;
 }
 
-.input-icon {
+.admin-signup-input-icon {
     color: var(--color-text-gray);
     font-size: 15px;
 }
 
-.form-group input {
+.admin-signup-form-group input {
     padding: 13px 16px;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
@@ -157,28 +155,28 @@
     font-family: inherit;
 }
 
-.form-group input::placeholder {
+.admin-signup-form-group input::placeholder {
     color: #9ca3af;
     font-size: 14px;
 }
 
-.form-group input:focus {
+.admin-signup-form-group input:focus {
     border-color: var(--color-primary);
     background: var(--color-text-white);
     box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
 }
 
-.form-group input.error {
+.admin-signup-form-group input.error {
     border-color: var(--color-error);
     background: #fef2f2;
 }
 
-.form-group input.error:focus {
+.admin-signup-form-group input.error:focus {
     border-color: var(--color-error);
     box-shadow: 0 0 0 4px rgba(252, 129, 129, 0.08);
 }
 
-.form-group input:disabled {
+.admin-signup-form-group input:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     background: #f3f4f6;
@@ -187,16 +185,16 @@
 /* ============================================
    PASSWORD INPUT
    ============================================ */
-.password-input-wrapper {
+.admin-signup-password-input-wrapper {
     position: relative;
     width: 100%;
 }
 
-.password-input-wrapper input {
+.admin-signup-password-input-wrapper input {
     padding-right: 48px;
 }
 
-.password-toggle {
+.admin-signup-password-toggle {
     position: absolute;
     right: 12px;
     top: 50%;
@@ -214,12 +212,12 @@
     border-radius: 8px;
 }
 
-.password-toggle:hover {
+.admin-signup-password-toggle:hover {
     color: var(--color-primary);
     background: #f3f4f6;
 }
 
-.password-toggle:disabled {
+.admin-signup-password-toggle:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
@@ -227,13 +225,13 @@
 /* ============================================
    ERROR & SUCCESS TEXT
    ============================================ */
-.error-text {
+.admin-signup-error-text {
     font-size: 13px;
     color: var(--color-error);
     padding-left: 4px;
 }
 
-.success-text {
+.admin-signup-success-text {
     font-size: 13px;
     color: var(--color-success);
     padding-left: 4px;
@@ -242,21 +240,21 @@
 /* ============================================
    PASSWORD REQUIREMENTS
    ============================================ */
-.password-requirements {
+.admin-signup-password-requirements {
     background: #f8fafc;
     padding: 12px 16px;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
 }
 
-.password-requirements p {
+.admin-signup-password-requirements p {
     font-size: 13px;
     font-weight: 600;
     color: var(--color-text-black);
     margin: 0 0 6px 0;
 }
 
-.password-requirements ul {
+.admin-signup-password-requirements ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -265,7 +263,7 @@
     gap: 4px;
 }
 
-.password-requirements li {
+.admin-signup-password-requirements li {
     font-size: 12px;
     color: #9ca3af;
     padding: 2px 0;
@@ -275,17 +273,17 @@
     transition: all 0.3s ease;
 }
 
-.password-requirements li::before {
+.admin-signup-password-requirements li::before {
     content: '○';
     font-size: 14px;
     transition: all 0.3s ease;
 }
 
-.password-requirements li.met {
+.admin-signup-password-requirements li.met {
     color: var(--color-success);
 }
 
-.password-requirements li.met::before {
+.admin-signup-password-requirements li.met::before {
     content: '✓';
     color: var(--color-success);
     font-weight: bold;
@@ -294,11 +292,11 @@
 /* ============================================
    TERMS & CONDITIONS
    ============================================ */
-.terms-group {
+.admin-signup-terms-group {
     margin-top: -4px;
 }
 
-.terms-checkbox {
+.admin-signup-terms-checkbox {
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -308,7 +306,7 @@
     line-height: 1.5;
 }
 
-.terms-checkbox input[type="checkbox"] {
+.admin-signup-terms-checkbox input[type="checkbox"] {
     width: 18px;
     height: 18px;
     accent-color: var(--color-primary);
@@ -317,19 +315,19 @@
     flex-shrink: 0;
 }
 
-.terms-checkbox a {
+.admin-signup-terms-checkbox a {
     color: var(--color-primary);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
-.terms-checkbox a:hover {
+.admin-signup-terms-checkbox a:hover {
     color: var(--color-primary-dark);
     text-decoration: underline;
 }
 
-.terms-group .error-text {
+.admin-signup-terms-group .admin-signup-error-text {
     display: block;
     margin-top: 4px;
 }
@@ -337,7 +335,7 @@
 /* ============================================
    SIGN UP BUTTON
    ============================================ */
-.signup-button {
+.admin-signup-button {
     padding: 15px 24px;
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: var(--color-text-white);
@@ -358,7 +356,7 @@
     overflow: hidden;
 }
 
-.signup-button::before {
+.admin-signup-button::before {
     content: '';
     position: absolute;
     top: 0;
@@ -369,38 +367,38 @@
     transition: left 0.6s ease;
 }
 
-.signup-button:hover:not(:disabled)::before {
+.admin-signup-button:hover:not(:disabled)::before {
     left: 100%;
 }
 
-.signup-button:hover:not(:disabled) {
+.admin-signup-button:hover:not(:disabled) {
     transform: translateY(-3px);
     box-shadow: 0 12px 36px rgba(37, 99, 235, 0.4);
 }
 
-.signup-button:active:not(:disabled) {
+.admin-signup-button:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
 }
 
-.signup-button:disabled {
+.admin-signup-button:disabled {
     background: #9ca3af;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-.spinner {
+.admin-signup-spinner {
     display: inline-block;
     width: 22px;
     height: 22px;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     border-top-color: var(--color-text-white);
-    animation: spin 0.8s linear infinite;
+    animation: adminSignupSpin 0.8s linear infinite;
 }
 
-@keyframes spin {
+@keyframes adminSignupSpin {
     to {
         transform: rotate(360deg);
     }
@@ -409,288 +407,29 @@
 /* ============================================
    SIGN IN LINK
    ============================================ */
-.signin-link {
+.admin-signup-signin-link {
     text-align: center;
     font-size: 14px;
     color: var(--color-text-gray);
     margin-top: 20px;
 }
 
-.signin-link a {
+.admin-signup-signin-link a {
     color: var(--color-primary);
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
 }
 
-.signin-link a:hover {
+.admin-signup-signin-link a:hover {
     color: var(--color-primary-dark);
     text-decoration: underline;
 }
 
 /* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (max-width: 480px) {
-    .signup-container {
-        padding: 16px;
-    }
-
-    .signup-card {
-        padding: 32px 24px;
-        border-radius: 20px;
-    }
-
-    .logo-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 16px;
-    }
-
-    .logo-icon svg {
-        font-size: 28px;
-    }
-
-    .company-name {
-        font-size: 22px;
-    }
-
-    .company-tagline {
-        font-size: 13px;
-    }
-
-    .form-group input {
-        padding: 11px 14px;
-        font-size: 14px;
-    }
-
-    .form-group label {
-        font-size: 13px;
-    }
-
-    .signup-button {
-        font-size: 14px;
-        min-height: 50px;
-        padding: 12px 16px;
-    }
-
-    .signin-link {
-        font-size: 13px;
-    }
-
-    .password-requirements ul {
-        grid-template-columns: 1fr;
-    }
-
-    .terms-checkbox {
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 360px) {
-    .signup-card {
-        padding: 24px 16px;
-        border-radius: 16px;
-    }
-
-    .company-name {
-        font-size: 20px;
-    }
-
-    .logo-icon {
-        width: 56px;
-        height: 56px;
-    }
-
-    .logo-icon svg {
-        font-size: 24px;
-    }
-
-    .signup-button {
-        font-size: 13px;
-        min-height: 46px;
-    }
-}
-
-/* ============================================
-   TOUCH DEVICES
-   ============================================ */
-@media (hover: none) and (pointer: coarse) {
-    .signup-button {
-        min-height: 56px;
-    }
-
-    .password-toggle {
-        padding: 12px;
-    }
-
-    .form-group input {
-        font-size: 16px;
-    }
-
-    .terms-checkbox input[type="checkbox"] {
-        width: 22px;
-        height: 22px;
-    }
-}
-
-/* ============================================
-   DARK MODE
-   ============================================ */
-@media (prefers-color-scheme: dark) {
-    .signup-container {
-        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-    }
-
-    .signup-card {
-        background: #1e293b;
-        border-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .company-name {
-        color: #f1f5f9;
-    }
-
-    .company-tagline {
-        color: #94a3b8;
-    }
-
-    .form-group label {
-        color: #e2e8f0;
-    }
-
-    .form-group input {
-        background: #0f172a;
-        border-color: #334155;
-        color: #f1f5f9;
-    }
-
-    .form-group input:focus {
-        background: #0f172a;
-        border-color: var(--color-primary);
-    }
-
-    .form-group input::placeholder {
-        color: #64748b;
-    }
-
-    .form-group input.error {
-        border-color: var(--color-error);
-        background: #0f172a;
-    }
-
-    .password-toggle {
-        color: #64748b;
-    }
-
-    .password-toggle:hover {
-        color: var(--color-primary);
-        background: #1e293b;
-    }
-
-    .signin-link {
-        color: #94a3b8;
-    }
-
-    .signin-link a {
-        color: #60a5fa;
-    }
-
-    .signin-link a:hover {
-        color: #93bbfc;
-    }
-
-    .error-message {
-        background: #1e293b;
-        color: #f87171;
-        border-color: #7f1d1d;
-    }
-
-    .success-message {
-        background: #1e293b;
-        color: #4ade80;
-        border-color: #166534;
-    }
-
-    .password-requirements {
-        background: #0f172a;
-        border-color: #334155;
-    }
-
-    .password-requirements p {
-        color: #e2e8f0;
-    }
-
-    .password-requirements li {
-        color: #64748b;
-    }
-
-    .password-requirements li.met {
-        color: #4ade80;
-    }
-
-    .terms-checkbox {
-        color: #94a3b8;
-    }
-
-    .terms-checkbox a {
-        color: #60a5fa;
-    }
-
-    .terms-checkbox a:hover {
-        color: #93bbfc;
-    }
-
-    .terms-checkbox input[type="checkbox"] {
-        accent-color: var(--color-primary);
-    }
-
-    .error-text {
-        color: #f87171;
-    }
-
-    .success-text {
-        color: #4ade80;
-    }
-}
-
-/* ============================================
-   REDUCED MOTION
-   ============================================ */
-@media (prefers-reduced-motion: reduce) {
-    .signup-card {
-        transition: none;
-    }
-
-    .logo-icon {
-        transition: none;
-    }
-
-    .signup-button::before {
-        display: none;
-    }
-
-    .signup-button {
-        transition: none;
-    }
-
-    .form-group input {
-        transition: none;
-    }
-
-    .password-toggle {
-        transition: none;
-    }
-}/* ============================================
-   EXISTING STYLES + OTP STYLES
-   ============================================ */
-
-/* ... (previous styles remain same) ... */
-
-/* ============================================
    OTP SECTION STYLES
    ============================================ */
-.otp-section {
+.admin-signup-otp-section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -698,35 +437,35 @@
     padding: 10px 0;
 }
 
-.otp-header {
+.admin-signup-otp-header {
     text-align: center;
 }
 
-.otp-icon {
+.admin-signup-otp-icon {
     font-size: 48px;
     color: var(--color-primary);
     margin-bottom: 8px;
 }
 
-.otp-message {
+.admin-signup-otp-message {
     font-size: 15px;
     color: var(--color-text-gray);
     margin: 0;
 }
 
-.otp-message strong {
+.admin-signup-otp-message strong {
     color: var(--color-text-black);
 }
 
 /* OTP Inputs */
-.otp-inputs {
+.admin-signup-otp-inputs {
     display: flex;
     gap: 12px;
     justify-content: center;
     margin: 8px 0;
 }
 
-.otp-digit {
+.admin-signup-otp-digit {
     width: 48px;
     height: 56px;
     text-align: center;
@@ -740,41 +479,41 @@
     font-family: inherit;
 }
 
-.otp-digit:focus {
+.admin-signup-otp-digit:focus {
     border-color: var(--color-primary);
     background: var(--color-text-white);
     box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
     outline: none;
 }
 
-.otp-digit.error {
+.admin-signup-otp-digit.error {
     border-color: var(--color-error);
     background: #fef2f2;
 }
 
-.otp-digit.error:focus {
+.admin-signup-otp-digit.error:focus {
     border-color: var(--color-error);
     box-shadow: 0 0 0 4px rgba(252, 129, 129, 0.08);
 }
 
-.otp-digit:disabled {
+.admin-signup-otp-digit:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.otp-digit::-webkit-inner-spin-button,
-.otp-digit::-webkit-outer-spin-button {
+.admin-signup-otp-digit::-webkit-inner-spin-button,
+.admin-signup-otp-digit::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.otp-error {
+.admin-signup-otp-error {
     text-align: center;
     display: block;
 }
 
 /* Timer */
-.otp-timer {
+.admin-signup-otp-timer {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -782,16 +521,16 @@
     color: var(--color-text-gray);
 }
 
-.timer-icon {
+.admin-signup-timer-icon {
     color: var(--color-warning);
 }
 
-.timer-label {
+.admin-signup-timer-label {
     font-size: 14px;
 }
 
 /* Resend Button */
-.resend-btn {
+.admin-signup-resend-btn {
     background: none;
     border: none;
     color: var(--color-primary);
@@ -804,25 +543,25 @@
     font-family: inherit;
 }
 
-.resend-btn:hover:not(:disabled) {
+.admin-signup-resend-btn:hover:not(:disabled) {
     background: #f1f5f9;
     text-decoration: underline;
 }
 
-.resend-btn:disabled {
+.admin-signup-resend-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
 /* OTP Actions */
-.otp-actions {
+.admin-signup-otp-actions {
     display: flex;
     gap: 12px;
     width: 100%;
     margin-top: 4px;
 }
 
-.back-btn {
+.admin-signup-back-btn {
     flex: 1;
     padding: 12px 16px;
     border: 2px solid #e5e7eb;
@@ -836,17 +575,17 @@
     font-family: inherit;
 }
 
-.back-btn:hover:not(:disabled) {
+.admin-signup-back-btn:hover:not(:disabled) {
     border-color: var(--color-text-gray);
     background: #f8fafc;
 }
 
-.back-btn:disabled {
+.admin-signup-back-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.verify-btn {
+.admin-signup-verify-btn {
     flex: 2;
     padding: 12px 16px;
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
@@ -864,46 +603,123 @@
     font-family: inherit;
 }
 
-.verify-btn:hover:not(:disabled) {
+.admin-signup-verify-btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
 }
 
-.verify-btn:disabled {
+.admin-signup-verify-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
 }
 
 /* ============================================
-   RESPONSIVE OTP
+   RESPONSIVE
    ============================================ */
 @media (max-width: 480px) {
-    .otp-inputs {
+    .admin-signup-container {
+        padding: 16px;
+    }
+
+    .admin-signup-card {
+        padding: 32px 24px;
+        border-radius: 20px;
+    }
+
+    .admin-signup-logo-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+    }
+
+    .admin-signup-logo-icon svg {
+        font-size: 28px;
+    }
+
+    .admin-signup-company-name {
+        font-size: 22px;
+    }
+
+    .admin-signup-company-tagline {
+        font-size: 13px;
+    }
+
+    .admin-signup-form-group input {
+        padding: 11px 14px;
+        font-size: 14px;
+    }
+
+    .admin-signup-form-group label {
+        font-size: 13px;
+    }
+
+    .admin-signup-button {
+        font-size: 14px;
+        min-height: 50px;
+        padding: 12px 16px;
+    }
+
+    .admin-signup-signin-link {
+        font-size: 13px;
+    }
+
+    .admin-signup-password-requirements ul {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-signup-terms-checkbox {
+        font-size: 12px;
+    }
+
+    .admin-signup-otp-inputs {
         gap: 8px;
     }
 
-    .otp-digit {
+    .admin-signup-otp-digit {
         width: 40px;
         height: 48px;
         font-size: 20px;
     }
 
-    .otp-actions {
+    .admin-signup-otp-actions {
         flex-direction: column;
     }
 
-    .verify-btn, .back-btn {
+    .admin-signup-verify-btn, .admin-signup-back-btn {
         padding: 14px 16px;
     }
 }
 
 @media (max-width: 360px) {
-    .otp-inputs {
+    .admin-signup-card {
+        padding: 24px 16px;
+        border-radius: 16px;
+    }
+
+    .admin-signup-company-name {
+        font-size: 20px;
+    }
+
+    .admin-signup-logo-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .admin-signup-logo-icon svg {
+        font-size: 24px;
+    }
+
+    .admin-signup-button {
+        font-size: 13px;
+        min-height: 46px;
+    }
+
+    .admin-signup-otp-inputs {
         gap: 6px;
     }
 
-    .otp-digit {
+    .admin-signup-otp-digit {
         width: 34px;
         height: 42px;
         font-size: 18px;
@@ -911,45 +727,211 @@
 }
 
 /* ============================================
-   DARK MODE OTP
+   TOUCH DEVICES
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    .admin-signup-button {
+        min-height: 56px;
+    }
+
+    .admin-signup-password-toggle {
+        padding: 12px;
+    }
+
+    .admin-signup-form-group input {
+        font-size: 16px;
+    }
+
+    .admin-signup-terms-checkbox input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* ============================================
+   DARK MODE
    ============================================ */
 @media (prefers-color-scheme: dark) {
-    .otp-digit {
+    .admin-signup-container {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    }
+
+    .admin-signup-card {
+        background: #1e293b;
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .admin-signup-company-name {
+        color: #f1f5f9;
+    }
+
+    .admin-signup-company-tagline {
+        color: #94a3b8;
+    }
+
+    .admin-signup-form-group label {
+        color: #e2e8f0;
+    }
+
+    .admin-signup-form-group input {
         background: #0f172a;
         border-color: #334155;
         color: #f1f5f9;
     }
 
-    .otp-digit:focus {
+    .admin-signup-form-group input:focus {
         background: #0f172a;
         border-color: var(--color-primary);
     }
 
-    .otp-digit.error {
+    .admin-signup-form-group input::placeholder {
+        color: #64748b;
+    }
+
+    .admin-signup-form-group input.error {
         border-color: var(--color-error);
         background: #0f172a;
     }
 
-    .otp-message {
+    .admin-signup-password-toggle {
+        color: #64748b;
+    }
+
+    .admin-signup-password-toggle:hover {
+        color: var(--color-primary);
+        background: #1e293b;
+    }
+
+    .admin-signup-signin-link {
         color: #94a3b8;
     }
 
-    .otp-message strong {
+    .admin-signup-signin-link a {
+        color: #60a5fa;
+    }
+
+    .admin-signup-signin-link a:hover {
+        color: #93bbfc;
+    }
+
+    .admin-signup-error-message {
+        background: #1e293b;
+        color: #f87171;
+        border-color: #7f1d1d;
+    }
+
+    .admin-signup-success-message {
+        background: #1e293b;
+        color: #4ade80;
+        border-color: #166534;
+    }
+
+    .admin-signup-password-requirements {
+        background: #0f172a;
+        border-color: #334155;
+    }
+
+    .admin-signup-password-requirements p {
+        color: #e2e8f0;
+    }
+
+    .admin-signup-password-requirements li {
+        color: #64748b;
+    }
+
+    .admin-signup-password-requirements li.met {
+        color: #4ade80;
+    }
+
+    .admin-signup-terms-checkbox {
+        color: #94a3b8;
+    }
+
+    .admin-signup-terms-checkbox a {
+        color: #60a5fa;
+    }
+
+    .admin-signup-terms-checkbox a:hover {
+        color: #93bbfc;
+    }
+
+    .admin-signup-terms-checkbox input[type="checkbox"] {
+        accent-color: var(--color-primary);
+    }
+
+    .admin-signup-error-text {
+        color: #f87171;
+    }
+
+    .admin-signup-success-text {
+        color: #4ade80;
+    }
+
+    .admin-signup-otp-digit {
+        background: #0f172a;
+        border-color: #334155;
         color: #f1f5f9;
     }
 
-    .back-btn {
+    .admin-signup-otp-digit:focus {
+        background: #0f172a;
+        border-color: var(--color-primary);
+    }
+
+    .admin-signup-otp-digit.error {
+        border-color: var(--color-error);
+        background: #0f172a;
+    }
+
+    .admin-signup-otp-message {
+        color: #94a3b8;
+    }
+
+    .admin-signup-otp-message strong {
+        color: #f1f5f9;
+    }
+
+    .admin-signup-back-btn {
         border-color: #334155;
         background: #1e293b;
         color: #e2e8f0;
     }
 
-    .back-btn:hover:not(:disabled) {
+    .admin-signup-back-btn:hover:not(:disabled) {
         border-color: #475569;
         background: #0f172a;
     }
 
-    .resend-btn:hover:not(:disabled) {
+    .admin-signup-resend-btn:hover:not(:disabled) {
         background: #1e293b;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    .admin-signup-card {
+        transition: none;
+    }
+
+    .admin-signup-logo-icon {
+        transition: none;
+    }
+
+    .admin-signup-button::before {
+        display: none;
+    }
+
+    .admin-signup-button {
+        transition: none;
+    }
+
+    .admin-signup-form-group input {
+        transition: none;
+    }
+
+    .admin-signup-password-toggle {
+        transition: none;
     }
 }

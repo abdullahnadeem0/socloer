@@ -1,17 +1,19 @@
+// src/Layout/AgentLayout.jsx
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import AgentSidebar from '../Components/Agent/Sidebar/AgentSidebar';
 import AgentNavbar from '../Components/Agent/Navbar/AgentNavbar';
+import { FaBars } from 'react-icons/fa';
 import './AgentLayout.css';
 
 const AgentLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     // ===== STATE =====
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(true);              // desktop: full / icon-only
     const [isMobile, setIsMobile] = useState(false);
-    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false); // mobile: hidden by default
 
     // ============================================
     // CHECK AUTHENTICATION
@@ -19,14 +21,13 @@ const AgentLayout = () => {
     useEffect(() => {
         const token = localStorage.getItem('agentToken');
         const agentData = localStorage.getItem('agentData');
-        
+
         if (!token || !agentData) {
             console.log('❌ No agent token found, redirecting to login');
             navigate('/agent/login');
             return;
         }
 
-        // Check approval status
         try {
             const agent = JSON.parse(agentData);
             if (agent.approvalStatus !== 'approved') {
@@ -45,14 +46,16 @@ const AgentLayout = () => {
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
-            setIsMobile(width < 768);
-            
-            if (width < 768) {
-                setSidebarOpen(false);
+            const mobile = width < 768;
+            setIsMobile(mobile);
+
+            if (mobile) {
+                // ✅ MOBILE: sidebar always starts fully hidden
+                setMobileSidebarOpen(false);
             } else if (width < 1024) {
-                setSidebarOpen(false);
+                setSidebarOpen(false); // tablet: icon-only
             } else {
-                setSidebarOpen(true);
+                setSidebarOpen(true);  // desktop: full
             }
         };
 
@@ -75,9 +78,9 @@ const AgentLayout = () => {
     // ============================================
     const toggleSidebar = () => {
         if (isMobile) {
-            setMobileSidebarOpen(!mobileSidebarOpen);
+            setMobileSidebarOpen(prev => !prev); // mobile: full open <-> fully closed
         } else {
-            setSidebarOpen(!sidebarOpen);
+            setSidebarOpen(prev => !prev);       // desktop: full <-> icon-only
         }
     };
 
@@ -85,41 +88,61 @@ const AgentLayout = () => {
         setMobileSidebarOpen(false);
     };
 
+    // ============================================
+    // EFFECTIVE OPEN STATE
+    // Mobile → true/false only (never icon-only)
+    // ============================================
+    const effectiveOpen = isMobile ? mobileSidebarOpen : sidebarOpen;
+
     return (
         <div className="agent-layout">
-            {/* ===== MOBILE OVERLAY ===== */}
-            {isMobile && mobileSidebarOpen && (
-                <div 
-                    className="agent-sidebar-overlay" 
-                    onClick={closeMobileSidebar}
-                ></div>
+            {/* ===== MOBILE: SHOW SIDEBAR BUTTON (only when closed) ===== */}
+            {isMobile && !mobileSidebarOpen && (
+                <button
+                    className="agent-sidebar-show-btn"
+                    onClick={() => setMobileSidebarOpen(true)}
+                    aria-label="Show Sidebar"
+                >
+                    <FaBars />
+                    <span>Menu</span>
+                </button>
             )}
 
-            {/* ===== SIDEBAR ===== */}
-            <aside 
+            {/* ===== MOBILE: LIGHT OVERLAY (no black) ===== */}
+            {isMobile && mobileSidebarOpen && (
+                <div
+                    className="agent-sidebar-overlay"
+                    onClick={closeMobileSidebar}
+                    aria-hidden="true"
+                />
+            )}
+
+            {/* ===== SIDEBAR CONTAINER ===== */}
+            <aside
                 className={`agent-sidebar-container ${
-                    sidebarOpen ? 'agent-sidebar-open' : 'agent-sidebar-closed'
-                } ${isMobile && mobileSidebarOpen ? 'agent-sidebar-mobile-open' : ''}`}
+                    isMobile
+                        ? (mobileSidebarOpen ? 'agent-sidebar-mobile-open' : 'agent-sidebar-mobile-closed')
+                        : (sidebarOpen ? 'agent-sidebar-open' : 'agent-sidebar-closed')
+                }`}
             >
-                <AgentSidebar 
-                    isOpen={sidebarOpen} 
+                <AgentSidebar
+                    isOpen={effectiveOpen}
                     onClose={closeMobileSidebar}
                     isMobile={isMobile}
+                    onToggle={toggleSidebar}
                 />
             </aside>
 
             {/* ===== MAIN CONTENT ===== */}
             <div className={`agent-main-container ${
-                sidebarOpen ? 'agent-sidebar-open' : 'agent-sidebar-closed'
+                !isMobile && sidebarOpen ? 'agent-sidebar-open' : 'agent-sidebar-closed'
             }`}>
-                {/* ===== NAVBAR ===== */}
-                <AgentNavbar 
+                <AgentNavbar
                     onToggleSidebar={toggleSidebar}
                     isMobile={isMobile}
-                    sidebarOpen={isMobile ? mobileSidebarOpen : sidebarOpen}
+                    sidebarOpen={effectiveOpen}
                 />
 
-                {/* ===== PAGE CONTENT ===== */}
                 <main className="agent-content">
                     <div className="agent-content-inner">
                         <Outlet />

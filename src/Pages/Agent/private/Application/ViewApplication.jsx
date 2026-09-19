@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ViewApplication.css';
 import agentApi from '../../../../api/agentApi';
+import api, { API_URL, SERVER_URL, getFileUrl } from '../../../../api/config';
 import {
     FaArrowLeft, FaEdit, FaUserGraduate, FaUniversity,
     FaGraduationCap, FaFileAlt, FaMoneyBillWave,
@@ -24,7 +25,6 @@ const ViewApplication = () => {
     // ============================================
     // ✅ FIXED: BACKEND URL (Hardcoded for now)
     // ============================================
-    const API_URL = 'http://localhost:5000';
 
     // ============================================
     // FETCH APPLICATION

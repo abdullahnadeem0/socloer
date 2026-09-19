@@ -1,3 +1,4 @@
+// src/Pages/Agent/private/AgentSignIn.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
@@ -101,7 +102,6 @@ const AgentSignIn = () => {
             console.log('📥 Login response:', response);
             
             if (response.success) {
-                // ✅ APPROVED AGENT - Save token and go to dashboard
                 setSuccessMessage('✅ Login successful! Redirecting to dashboard...');
                 
                 if (response.token) {
@@ -120,17 +120,12 @@ const AgentSignIn = () => {
             const errorData = error.response?.data;
             const status = errorData?.status;
             
-            // ✅ Handle pending/rejected status
             if (status === 'pending' || status === 'rejected') {
-                // Save basic info to show on status page
                 localStorage.setItem('agentStatusEmail', formData.email);
                 localStorage.setItem('agentStatusMessage', errorData?.message || '');
                 localStorage.setItem('agentStatus', status);
-                
-                // Redirect to status page
                 navigate('/agent/status');
             } else {
-                // Show error for invalid credentials
                 setServerError(errorData?.message || 'Invalid email or password');
             }
         } finally {
@@ -145,8 +140,8 @@ const AgentSignIn = () => {
         <div className="agent-signin-container">
             <div className="agent-signin-card">
                 {/* ===== HEADER ===== */}
-                <div className="signin-header">
-                    <div className="header-icon">
+                <div className="agent-signin-header">
+                    <div className="agent-signin-header-icon">
                         <FaBuilding size={32} color="#ffffff" />
                     </div>
                     <h1>Agent Login</h1>
@@ -155,7 +150,7 @@ const AgentSignIn = () => {
 
                 {/* ===== SUCCESS MESSAGE ===== */}
                 {successMessage && (
-                    <div className="success-message">
+                    <div className="agent-signin-success-message">
                         <FaCheckCircle />
                         {successMessage}
                     </div>
@@ -163,7 +158,7 @@ const AgentSignIn = () => {
 
                 {/* ===== SERVER ERROR ===== */}
                 {serverError && (
-                    <div className="error-message">
+                    <div className="agent-signin-error-message">
                         <FaExclamationTriangle />
                         <span>{serverError}</span>
                     </div>
@@ -172,9 +167,9 @@ const AgentSignIn = () => {
                 {/* ===== FORM ===== */}
                 <form onSubmit={handleSubmit}>
                     {/* Email Field */}
-                    <div className="form-group">
+                    <div className="agent-signin-form-group">
                         <label htmlFor="email">
-                            <FaEnvelope className="input-icon" />
+                            <FaEnvelope className="agent-signin-input-icon" />
                             Email Address
                         </label>
                         <input
@@ -190,17 +185,17 @@ const AgentSignIn = () => {
                             autoComplete="email"
                         />
                         {touched.email && errors.email && (
-                            <span className="error-text">{errors.email}</span>
+                            <span className="agent-signin-error-text">{errors.email}</span>
                         )}
                     </div>
 
                     {/* Password Field */}
-                    <div className="form-group">
+                    <div className="agent-signin-form-group">
                         <label htmlFor="password">
-                            <FaLock className="input-icon" />
+                            <FaLock className="agent-signin-input-icon" />
                             Password
                         </label>
-                        <div className="password-wrapper">
+                        <div className="agent-signin-password-wrapper">
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
@@ -215,7 +210,7 @@ const AgentSignIn = () => {
                             />
                             <button
                                 type="button"
-                                className="password-toggle"
+                                className="agent-signin-password-toggle"
                                 onClick={() => setShowPassword(!showPassword)}
                                 disabled={loading}
                             >
@@ -223,13 +218,13 @@ const AgentSignIn = () => {
                             </button>
                         </div>
                         {touched.password && errors.password && (
-                            <span className="error-text">{errors.password}</span>
+                            <span className="agent-signin-error-text">{errors.password}</span>
                         )}
                     </div>
 
                     {/* Forgot Password */}
-                    <div className="form-options">
-                        <Link to="/agent/forgot-password" className="forgot-link">
+                    <div className="agent-signin-form-options">
+                        <Link to="/agent/forgot-password" className="agent-signin-forgot-link">
                             Forgot password?
                         </Link>
                     </div>
@@ -237,12 +232,12 @@ const AgentSignIn = () => {
                     {/* Submit Button */}
                     <button 
                         type="submit" 
-                        className="signin-button"
+                        className="agent-signin-button"
                         disabled={loading}
                     >
                         {loading ? (
                             <>
-                                <span className="spinner"></span>
+                                <span className="agent-signin-spinner"></span>
                                 Signing In...
                             </>
                         ) : (
@@ -255,7 +250,7 @@ const AgentSignIn = () => {
                 </form>
 
                 {/* ===== SIGN UP LINK ===== */}
-                <p className="signup-link">
+                <p className="agent-signin-signup-link">
                     Don't have an account? <Link to="/agent/signup">Sign Up</Link>
                 </p>
             </div>

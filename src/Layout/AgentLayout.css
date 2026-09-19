@@ -1,4 +1,3 @@
-
 /* ============================================
    AGENT LAYOUT
    ============================================ */
@@ -10,13 +9,14 @@
 }
 
 /* ============================================
-   SIDEBAR CONTAINER
+   SIDEBAR CONTAINER - WHITE BACKGROUND
    ============================================ */
 .agent-sidebar-container {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
+    height: 100dvh;
     z-index: 100;
     transition: transform 0.3s ease, width 0.3s ease;
     background: #ffffff;
@@ -24,29 +24,77 @@
     overflow: hidden;
 }
 
-/* Desktop: Sidebar open */
+/* ===== DESKTOP: FULL OPEN (260px) ===== */
 .agent-sidebar-container.agent-sidebar-open {
     width: 260px;
     transform: translateX(0);
 }
 
-/* Desktop: Sidebar closed */
+/* ===== DESKTOP: ICON-ONLY COLLAPSED (80px) — allowed on desktop/tablet ===== */
 .agent-sidebar-container.agent-sidebar-closed {
     width: 80px;
     transform: translateX(0);
 }
 
-/* Mobile: Sidebar hidden by default */
+/* ============================================
+   MOBILE - ONLY 2 STATES: FULL OPEN or FULLY HIDDEN
+   Icon-only collapsed state is DISABLED on mobile
+   ============================================ */
 @media (max-width: 768px) {
-    .agent-sidebar-container {
-        width: 260px !important;
+    /* Mobile CLOSED → fully hidden, zero width, no peek */
+    .agent-sidebar-container.agent-sidebar-mobile-closed {
+        width: 0 !important;
+        max-width: 0 !important;
+        min-width: 0 !important;
         transform: translateX(-100%);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        background: transparent;
+        border-right: none;
+        box-shadow: none;
+        overflow: hidden;
     }
 
+    /* Mobile OPEN → full 260px white sidebar */
     .agent-sidebar-container.agent-sidebar-mobile-open {
+        width: 260px !important;
+        max-width: 260px !important;
         transform: translateX(0);
+        background: #ffffff;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
     }
+}
+
+/* ============================================
+   MOBILE: SHOW SIDEBAR BUTTON
+   ============================================ */
+.agent-sidebar-show-btn {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+    transition: all 0.25s ease;
+}
+
+.agent-sidebar-show-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
+}
+
+.agent-sidebar-show-btn:active {
+    transform: scale(0.97);
 }
 
 /* ============================================
@@ -61,7 +109,7 @@
     width: 100%;
 }
 
-/* Desktop: Main content shifts based on sidebar */
+/* Desktop: content shifts */
 @media (min-width: 769px) {
     .agent-main-container.agent-sidebar-open {
         margin-left: 260px;
@@ -74,7 +122,7 @@
     }
 }
 
-/* Mobile: No margin */
+/* Mobile: NO margin ever */
 @media (max-width: 768px) {
     .agent-main-container {
         margin-left: 0 !important;
@@ -100,17 +148,16 @@
 }
 
 /* ============================================
-   MOBILE OVERLAY
+   MOBILE OVERLAY - LIGHT (NO BLACK)
    ============================================ */
 .agent-sidebar-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    inset: 0;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     z-index: 99;
-    animation: agentFadeIn 0.3s ease;
+    animation: agentFadeIn 0.25s ease;
 }
 
 @keyframes agentFadeIn {
@@ -130,6 +177,7 @@
 @media (max-width: 768px) {
     .agent-content {
         padding: 16px;
+        padding-top: 80px; /* space for floating Menu button */
     }
 
     .agent-content-inner {
@@ -140,25 +188,30 @@
 @media (max-width: 480px) {
     .agent-content {
         padding: 12px;
+        padding-top: 76px;
+    }
+
+    .agent-sidebar-show-btn {
+        top: 0.85rem;
+        left: 0.85rem;
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
     }
 }
 
 /* ============================================
-   SCROLLBAR STYLING
+   SCROLLBAR
    ============================================ */
 .agent-content::-webkit-scrollbar {
     width: 8px;
 }
-
 .agent-content::-webkit-scrollbar-track {
     background: #e2e8f0;
 }
-
 .agent-content::-webkit-scrollbar-thumb {
     background: #a0aec0;
     border-radius: 4px;
 }
-
 .agent-content::-webkit-scrollbar-thumb:hover {
     background: #718096;
 }

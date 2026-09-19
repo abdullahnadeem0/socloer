@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import adminApi from '../../../../api/adminApi';
+import api, { API_URL, SERVER_URL, getFileUrl } from '../../../../api/config';
 import { 
     FaSearch, FaEye, FaCheck, FaTimes, 
     FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt,
@@ -678,13 +679,13 @@ const ViewApplications = () => {
                                         <div className="document-preview">
                                             {selectedAgent.idFile.match(/\.(jpg|jpeg|png)$/i) ? (
                                                 <img 
-                                                    src={`http://localhost:5000${selectedAgent.idFile}`}
+                                                    src={`${SERVER_URL}${selectedAgent.idFile}`}
                                                     alt="ID Document"
-                                                    onClick={() => window.open(`http://localhost:5000${selectedAgent.idFile}`, '_blank')}
+                                                    onClick={() => window.open(`${SERVER_URL}${selectedAgent.idFile}`, '_blank')}
                                                 />
                                             ) : (
                                                 <a 
-                                                    href={`http://localhost:5000${selectedAgent.idFile}`}
+                                                    href={`${SERVER_URL}${selectedAgent.idFile}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="document-link"

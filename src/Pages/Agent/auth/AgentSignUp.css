@@ -1,230 +1,420 @@
 /* ============================================
-   AGENT SIGN UP STYLES
-   Using ONLY 10 CSS Variables
+   AGENT SIGN UP - WHITE THEME
+   Floating circles + clean white card
+   All classes prefixed with agent-signup-
    ============================================ */
 
-.agent-signup-container {
+/* ============================================
+   PAGE
+   ============================================ */
+.agent-signup-page {
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem 1rem;
-    background: var(--bg-gradient);
+    position: relative;
+    overflow: hidden;
+    background: #f8fafc;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.agent-signup-card {
-    background: var(--color-bg);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    width: 100%;
-    padding: 2.5rem;
-    transition: all 0.3s ease;
+/* ============================================
+   BACKGROUND GRADIENT (LIGHT)
+   ============================================ */
+.agent-signup-bg-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 35%, #eef2ff 70%, #faf5ff 100%);
+    background-size: 200% 200%;
+    animation: agentSignupBgShift 20s ease infinite;
+    z-index: 0;
 }
 
-/* ===== HEADER ===== */
-.signup-header {
-    text-align: center;
-    margin-bottom: 2rem;
+@keyframes agentSignupBgShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
 }
 
-.header-icon {
-    width: 64px;
-    height: 64px;
-    background: var(--color-primary);
+/* ============================================
+   FLOATING CIRCLES (SOFT PASTEL)
+   ============================================ */
+.agent-signup-bg-circles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.agent-signup-bg-circle {
+    position: absolute;
     border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.9;
+    animation-name: agentSignupCircleFloat;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    will-change: transform;
+}
+
+@keyframes agentSignupCircleFloat {
+    0%   { transform: translate(0, 0) scale(1); }
+    25%  { transform: translate(50px, -70px) scale(1.1); }
+    50%  { transform: translate(-40px, 50px) scale(0.92); }
+    75%  { transform: translate(70px, 40px) scale(1.08); }
+    100% { transform: translate(-30px, -50px) scale(1); }
+}
+
+/* ============================================
+   CARD
+   ============================================ */
+.agent-signup-card {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    width: 100%;
+    max-width: 1080px;
+    max-height: 92vh;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow:
+        0 30px 80px rgba(37, 99, 235, 0.10),
+        0 8px 24px rgba(15, 23, 42, 0.06),
+        0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    border: 1px solid rgba(37, 99, 235, 0.08);
+    overflow: hidden;
+    animation: agentSignupCardIn 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes agentSignupCardIn {
+    from { opacity: 0; transform: translateY(40px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============================================
+   LEFT: BRAND PANEL (WHITE + BLUE ACCENT)
+   ============================================ */
+.agent-signup-brand-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 3rem 2.5rem;
+    background: linear-gradient(160deg, #eff6ff 0%, #eef2ff 55%, #faf5ff 100%);
+    color: #0f172a;
+    overflow: hidden;
+    border-right: 1px solid rgba(37, 99, 235, 0.06);
+}
+
+.agent-signup-brand-panel::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.35), transparent 70%);
+    top: -80px;
+    right: -80px;
+    filter: blur(20px);
+    animation: agentSignupCircleFloat 12s ease-in-out infinite;
+}
+
+.agent-signup-brand-panel::after {
+    content: '';
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(167, 139, 250, 0.28), transparent 70%);
+    bottom: -60px;
+    left: -60px;
+    filter: blur(20px);
+    animation: agentSignupCircleFloat 15s ease-in-out infinite reverse;
+}
+
+.agent-signup-brand-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1rem;
-    transition: transform 0.3s ease;
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.3);
+    animation: agentSignupFloatIcon 4s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
 }
 
-.header-icon:hover {
-    transform: scale(1.05);
+@keyframes agentSignupFloatIcon {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-8px) rotate(3deg); }
 }
 
-.signup-header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-text-black);
-    margin-bottom: 0.25rem;
+.agent-signup-brand-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    color: #0f172a;
+    position: relative;
+    z-index: 1;
 }
 
-.signup-header p {
-    color: var(--color-text-gray);
-    font-size: 1rem;
+.agent-signup-brand-text {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0;
+    max-width: 320px;
+    position: relative;
+    z-index: 1;
 }
 
-/* ===== MESSAGES ===== */
-.success-message {
-    background: #f0fff4;
-    color: var(--color-success);
+.agent-signup-brand-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.agent-signup-brand-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.3);
+    animation: agentSignupDotPulse 1.8s ease-in-out infinite;
+}
+
+.agent-signup-brand-dots span:nth-child(2) { animation-delay: 0.2s; background: rgba(124, 58, 237, 0.3); }
+.agent-signup-brand-dots span:nth-child(3) { animation-delay: 0.4s; background: rgba(59, 130, 246, 0.3); }
+.agent-signup-brand-dots span:nth-child(4) { animation-delay: 0.6s; background: rgba(99, 102, 241, 0.3); }
+
+@keyframes agentSignupDotPulse {
+    0%, 100% { transform: scale(1);   opacity: 0.7; }
+    50%      { transform: scale(1.4); opacity: 1; }
+}
+
+/* ============================================
+   RIGHT: FORM PANEL
+   ============================================ */
+.agent-signup-form-panel {
+    padding: 2.5rem 2.5rem;
+    overflow-y: auto;
+    max-height: 92vh;
+    background: #ffffff;
+}
+
+.agent-signup-form-panel::-webkit-scrollbar { width: 6px; }
+.agent-signup-form-panel::-webkit-scrollbar-track { background: transparent; }
+.agent-signup-form-panel::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.agent-signup-form-panel::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+.agent-signup-form-header { margin-bottom: 1.5rem; }
+
+.agent-signup-form-header h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.4px;
+}
+
+.agent-signup-form-header p {
+    font-size: 0.92rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+.agent-signup-success-message {
+    background: #f0fdf4;
+    color: #16a34a;
     padding: 0.75rem 1rem;
     border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid var(--color-success);
-    animation: slideDown 0.3s ease;
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #16a34a;
+    font-size: 0.9rem;
+    animation: agentSignupSlideDown 0.3s ease;
 }
 
-.success-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.error-message {
-    background: #fff5f5;
-    color: var(--color-error);
+.agent-signup-error-message {
+    background: #fef2f2;
+    color: #dc2626;
     padding: 0.75rem 1rem;
     border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid var(--color-error);
-    animation: slideDown 0.3s ease;
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #dc2626;
+    font-size: 0.9rem;
+    animation: agentSignupSlideDown 0.3s ease;
 }
 
-.server-error {
-    background: #fff5f5;
+.agent-signup-success-icon,
+.agent-signup-error-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+@keyframes agentSignupSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.error-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-/* ===== FORM ===== */
-.agent-form {
+/* ============================================
+   FORM
+   ============================================ */
+.agent-signup-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.form-section {
+.agent-signup-form-section {
     background: #f8fafc;
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 14px;
+    padding: 1.25rem 1.25rem 1.5rem;
     border: 1px solid #e2e8f0;
+    transition: all 0.25s ease;
 }
 
-.section-title {
+.agent-signup-form-section:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.06);
+}
+
+.agent-signup-section-title {
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-black);
+    font-weight: 700;
+    color: #0f172a;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    gap: 0.6rem;
+    margin: 0 0 1.1rem;
     padding-bottom: 0.75rem;
     border-bottom: 2px solid #e2e8f0;
 }
 
-.section-icon {
-    color: var(--color-primary);
-    font-size: 1.1rem;
-}
+.agent-signup-section-icon { color: #2563eb; font-size: 1.05rem; }
 
-.form-row {
+.agent-signup-form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
 
-.form-group {
+.agent-signup-form-group {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    margin-bottom: 0.9rem;
+}
+.agent-signup-form-group:last-child { margin-bottom: 0; }
+
+.agent-signup-form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e293b;
 }
 
-.form-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-black);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
+.agent-signup-form-group input,
+.agent-signup-form-group select,
+.agent-signup-form-group textarea {
     padding: 0.7rem 0.9rem;
     border: 1.5px solid #e2e8f0;
     border-radius: 10px;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     transition: all 0.2s ease;
-    background: var(--color-bg);
-    color: var(--color-text-black);
+    background: #ffffff;
+    color: #0f172a;
     font-family: inherit;
     width: 100%;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.agent-signup-form-group input::placeholder,
+.agent-signup-form-group textarea::placeholder {
+    color: #94a3b8;
+}
+
+.agent-signup-form-group input:focus,
+.agent-signup-form-group select:focus,
+.agent-signup-form-group textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     outline: none;
+    background: #ffffff;
 }
 
-.form-group input.error,
-.form-group select.error,
-.form-group textarea.error {
-    border-color: var(--color-error);
-}
+.agent-signup-form-group input.error,
+.agent-signup-form-group select.error,
+.agent-signup-form-group textarea.error { border-color: #dc2626; }
 
-.form-group textarea {
+.agent-signup-form-group textarea {
     resize: vertical;
     min-height: 60px;
 }
 
-/* ===== PASSWORD INPUT ===== */
-.password-input-wrapper {
+/* ============================================
+   PASSWORD
+   ============================================ */
+.agent-signup-password-wrapper {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.password-input-wrapper input {
-    padding-right: 2.8rem;
-}
+.agent-signup-password-wrapper input { padding-right: 2.8rem; }
 
-.password-toggle {
+.agent-signup-password-toggle {
     position: absolute;
     right: 12px;
     background: none;
     border: none;
-    color: var(--color-text-gray);
+    color: #64748b;
     cursor: pointer;
     padding: 0.3rem;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     transition: color 0.2s;
 }
 
-.password-toggle:hover {
-    color: var(--color-text-black);
-}
+.agent-signup-password-toggle:hover { color: #0f172a; }
 
-/* ===== ERROR TEXT ===== */
-.error-text {
-    color: var(--color-error);
-    font-size: 0.8rem;
+/* ============================================
+   ERROR TEXT
+   ============================================ */
+.agent-signup-error-text {
+    color: #dc2626;
+    font-size: 0.78rem;
     margin-top: 0.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
 }
 
-/* ===== FILE UPLOAD ===== */
-.file-upload-container {
-    width: 100%;
-}
+/* ============================================
+   FILE UPLOAD
+   ============================================ */
+.agent-signup-file-upload { width: 100%; }
 
-.file-drop-zone {
-    border: 2px dashed #e2e8f0;
+.agent-signup-file-drop {
+    border: 2px dashed #cbd5e1;
     border-radius: 12px;
-    padding: 2rem 1rem;
+    padding: 1.75rem 1rem;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -232,43 +422,43 @@
     position: relative;
 }
 
-.file-drop-zone:hover {
-    border-color: var(--color-primary);
+.agent-signup-file-drop:hover {
+    border-color: #2563eb;
     background: #f0f7ff;
+    transform: translateY(-2px);
 }
 
-.file-drop-zone input[type="file"] {
+.agent-signup-file-drop input[type="file"] {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
     cursor: pointer;
 }
 
-.file-drop-zone input[type="file"].error {
-    border-color: var(--color-error);
-}
-
-.upload-icon {
-    font-size: 2.5rem;
-    color: var(--color-primary);
+.agent-signup-upload-icon {
+    font-size: 2.2rem;
+    color: #2563eb;
     margin-bottom: 0.5rem;
+    animation: agentSignupUploadFloat 2.5s ease-in-out infinite;
 }
 
-.file-drop-zone p {
-    color: var(--color-text-black);
+@keyframes agentSignupUploadFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+}
+
+.agent-signup-file-drop p {
+    color: #0f172a;
     font-weight: 500;
     margin: 0.25rem 0;
+    font-size: 0.9rem;
 }
 
-.file-drop-zone small {
-    color: var(--color-text-gray);
-    font-size: 0.8rem;
-}
+.agent-signup-file-drop small { color: #64748b; font-size: 0.78rem; }
 
-.file-preview {
+.agent-signup-file-preview {
     position: relative;
     border-radius: 12px;
     overflow: hidden;
@@ -280,35 +470,35 @@
     min-height: 150px;
 }
 
-.preview-image {
+.agent-signup-preview-image {
     max-width: 100%;
     max-height: 200px;
     object-fit: contain;
 }
 
-.file-icon-preview {
+.agent-signup-file-icon-preview {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
     padding: 1.5rem;
-    color: var(--color-text-gray);
+    color: #64748b;
 }
 
-.file-icon-preview p {
-    font-size: 0.9rem;
+.agent-signup-file-icon-preview p {
+    font-size: 0.85rem;
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.remove-file-btn {
+.agent-signup-remove-file {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: var(--color-error);
-    color: var(--color-text-white);
+    background: #dc2626;
+    color: #ffffff;
     border: none;
     border-radius: 50%;
     width: 32px;
@@ -320,299 +510,281 @@
     transition: all 0.2s ease;
 }
 
-.remove-file-btn:hover {
-    transform: scale(1.1);
+.agent-signup-remove-file:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
 }
 
-/* ===== TAGS (Languages & Skills) ===== */
-.tag-input-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
+/* ============================================
+   TAGS
+   ============================================ */
+.agent-signup-tag-input { display: flex; gap: 0.5rem; margin-bottom: 0.6rem; }
 
-.tag-input {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.tag-input input {
+.agent-signup-tag-input input {
     flex: 1;
     padding: 0.6rem 0.9rem;
     border: 1.5px solid #e2e8f0;
     border-radius: 10px;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-    background: var(--color-bg);
-    color: var(--color-text-black);
+    font-size: 0.9rem;
+    background: #ffffff;
+    color: #0f172a;
+    transition: all 0.2s;
 }
 
-.tag-input input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.agent-signup-tag-input input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     outline: none;
 }
 
-.add-tag-btn {
+.agent-signup-add-tag {
     padding: 0.6rem 1.2rem;
-    background: var(--color-primary);
-    color: var(--color-text-white);
+    background: #2563eb;
+    color: #ffffff;
     border: none;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
+    font-size: 0.85rem;
 }
 
-.add-tag-btn:hover {
-    background: var(--color-primary-dark);
+.agent-signup-add-tag:hover:not(:disabled) {
+    background: #1d4ed8;
     transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
 }
 
-.tags-container {
+.agent-signup-add-tag:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.agent-signup-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
 }
 
-.tag {
-    background: #eef2ff;
-    color: var(--color-primary);
+.agent-signup-tag {
+    background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    color: #2563eb;
     padding: 0.3rem 0.7rem;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-weight: 500;
+    font-weight: 600;
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    animation: agentSignupTagIn 0.25s ease;
 }
 
-.tag button {
+@keyframes agentSignupTagIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.agent-signup-tag button {
     background: none;
     border: none;
-    color: var(--color-error);
+    color: #dc2626;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     padding: 0 0.2rem;
     line-height: 1;
     transition: transform 0.2s;
 }
 
-.tag button:hover {
-    transform: scale(1.2);
-}
+.agent-signup-tag button:hover { transform: scale(1.3); }
 
-/* ===== TERMS ===== */
-.terms-group {
-    padding: 0.5rem 0;
-}
+/* ============================================
+   TERMS
+   ============================================ */
+.agent-signup-terms-group { padding: 0.5rem 0; }
 
-.checkbox-label {
+.agent-signup-checkbox-label {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    font-size: 0.9rem;
-    color: var(--color-text-black);
+    font-size: 0.88rem;
+    color: #0f172a;
     cursor: pointer;
+    line-height: 1.5;
 }
 
-.checkbox-label input[type="checkbox"] {
+.agent-signup-checkbox-label input[type="checkbox"] {
     width: 18px;
     height: 18px;
     margin-top: 2px;
-    accent-color: var(--color-primary);
+    accent-color: #2563eb;
     cursor: pointer;
     flex-shrink: 0;
 }
 
-.checkbox-label input[type="checkbox"].error {
-    outline: 2px solid var(--color-error);
-    outline-offset: 2px;
-}
-
-.checkbox-label a {
-    color: var(--color-primary);
+.agent-signup-checkbox-label a {
+    color: #2563eb;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
 }
+.agent-signup-checkbox-label a:hover { text-decoration: underline; }
 
-.checkbox-label a:hover {
-    text-decoration: underline;
-}
-
-/* ===== SUBMIT BUTTON ===== */
-.signup-button {
+/* ============================================
+   SUBMIT BUTTON
+   ============================================ */
+.agent-signup-submit-btn {
     width: 100%;
-    padding: 0.9rem;
-    background: var(--color-primary);
-    color: var(--color-text-white);
+    padding: 1rem;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8, #7c3aed);
+    background-size: 200% 200%;
+    color: #ffffff;
     border: none;
     border-radius: 12px;
-    font-size: 1.05rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.35s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+    animation: agentSignupBtnShift 4s ease infinite;
 }
 
-.signup-button:hover:not(:disabled) {
-    background: var(--color-primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+@keyframes agentSignupBtnShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
 }
 
-.signup-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
+.agent-signup-submit-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(37, 99, 235, 0.5);
 }
 
-.signup-button .spinner {
+.agent-signup-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+.agent-signup-spinner {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: var(--color-text-white);
-    animation: spin 0.8s ease-in-out infinite;
+    border-top-color: #ffffff;
+    animation: agentSignupSpin 0.8s linear infinite;
 }
 
-/* ===== LOGIN LINK ===== */
-.login-link {
+@keyframes agentSignupSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   LOGIN LINK
+   ============================================ */
+.agent-signup-login-link {
     text-align: center;
-    margin-top: 1rem;
-    color: var(--color-text-gray);
-    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    color: #64748b;
+    font-size: 0.9rem;
 }
 
-.login-link a {
-    color: var(--color-primary);
+.agent-signup-login-link a {
+    color: #2563eb;
     text-decoration: none;
     font-weight: 600;
 }
-
-.login-link a:hover {
-    text-decoration: underline;
-}
+.agent-signup-login-link a:hover { text-decoration: underline; }
 
 /* ============================================
    OTP SECTION
    ============================================ */
-.otp-section {
+.agent-signup-otp-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1rem 0;
-    animation: slideUp 0.4s ease;
+    animation: agentSignupSlideUp 0.4s ease;
 }
 
-.otp-header {
-    text-align: center;
-    margin-bottom: 2rem;
+@keyframes agentSignupSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.otp-icon {
+.agent-signup-otp-header { text-align: center; margin-bottom: 1.75rem; }
+
+.agent-signup-otp-icon {
     font-size: 3rem;
-    color: var(--color-primary);
+    color: #2563eb;
     margin-bottom: 0.5rem;
+    animation: agentSignupFloatIcon 3s ease-in-out infinite;
 }
 
-.otp-message {
-    font-size: 1rem;
-    color: var(--color-text-black);
-    margin-bottom: 0.25rem;
+.agent-signup-otp-message {
+    font-size: 0.95rem;
+    color: #0f172a;
+    margin: 0 0 0.25rem;
 }
 
-.otp-message strong {
-    color: var(--color-primary);
-}
+.agent-signup-otp-message strong { color: #2563eb; }
 
-.otp-sub-message {
-    font-size: 0.9rem;
-    color: var(--color-text-gray);
-}
+.agent-signup-otp-sub-message { font-size: 0.85rem; color: #64748b; }
 
-.otp-inputs {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
+.agent-signup-otp-inputs { display: flex; gap: 0.7rem; margin-bottom: 1rem; }
 
-.otp-digit {
+.agent-signup-otp-digit {
     width: 48px;
     height: 56px;
     text-align: center;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.4rem;
+    font-weight: 700;
     border: 2px solid #e2e8f0;
     border-radius: 12px;
-    background: var(--color-bg);
-    color: var(--color-text-black);
+    background: #ffffff;
+    color: #0f172a;
     transition: all 0.2s ease;
 }
 
-.otp-digit:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.agent-signup-otp-digit:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
     outline: none;
+    transform: translateY(-2px);
 }
 
-.otp-digit.error {
-    border-color: var(--color-error);
-}
+.agent-signup-otp-digit.error { border-color: #dc2626; }
+.agent-signup-otp-digit:disabled { opacity: 0.6; }
 
-.otp-digit:disabled {
-    opacity: 0.6;
-}
+.agent-signup-otp-error { margin-bottom: 0.75rem; }
 
-.otp-error {
-    margin-bottom: 0.75rem;
-}
-
-.otp-timer {
+.agent-signup-otp-timer {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--color-text-gray);
-    font-size: 0.95rem;
+    color: #64748b;
+    font-size: 0.9rem;
     margin-bottom: 0.75rem;
 }
 
-.timer-icon {
-    color: var(--color-primary);
-    font-size: 1.1rem;
-}
+.agent-signup-timer-icon { color: #2563eb; font-size: 1.05rem; }
 
-.timer-label {
-    color: var(--color-text-gray);
-}
-
-.resend-btn {
+.agent-signup-resend-btn {
     background: none;
     border: none;
-    color: var(--color-primary);
-    font-weight: 600;
+    color: #2563eb;
+    font-weight: 700;
     cursor: pointer;
     padding: 0.3rem 1rem;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     transition: all 0.2s;
 }
 
-.resend-btn:hover:not(:disabled) {
-    color: var(--color-primary-dark);
+.agent-signup-resend-btn:hover:not(:disabled) {
+    color: #1d4ed8;
     text-decoration: underline;
 }
 
-.resend-btn:disabled {
-    color: var(--color-text-gray);
-    cursor: not-allowed;
-}
+.agent-signup-resend-btn:disabled { color: #94a3b8; cursor: not-allowed; }
 
-.otp-actions {
+.agent-signup-otp-actions {
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
@@ -620,221 +792,76 @@
     max-width: 400px;
 }
 
-.back-btn {
+.agent-signup-back-btn {
     flex: 1;
     padding: 0.75rem;
     background: #f1f5f9;
-    color: var(--color-text-black);
+    color: #0f172a;
     border: 1.5px solid #e2e8f0;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 }
+.agent-signup-back-btn:hover:not(:disabled) { background: #e2e8f0; }
+.agent-signup-back-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.back-btn:hover:not(:disabled) {
-    background: #e2e8f0;
-}
-
-.back-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.verify-btn {
+.agent-signup-verify-btn {
     flex: 2;
     padding: 0.75rem;
-    background: var(--color-primary);
-    color: var(--color-text-white);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
     border: none;
     border-radius: 10px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
 }
 
-.verify-btn:hover:not(:disabled) {
-    background: var(--color-primary-dark);
-    transform: translateY(-1px);
+.agent-signup-verify-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.45);
 }
-
-.verify-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.verify-btn .spinner {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: var(--color-text-white);
-    animation: spin 0.8s ease-in-out infinite;
-}
+.agent-signup-verify-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
 /* ============================================
-   ANIMATIONS
+   TOAST
    ============================================ */
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
-@media (max-width: 768px) {
-    .agent-signup-card {
-        padding: 1.5rem;
-    }
-
-    .signup-header h1 {
-        font-size: 1.5rem;
-    }
-
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-
-    .form-section {
-        padding: 1rem;
-    }
-
-    .otp-inputs {
-        gap: 0.5rem;
-    }
-
-    .otp-digit {
-        width: 42px;
-        height: 50px;
-        font-size: 1.3rem;
-    }
-
-    .otp-actions {
-        flex-direction: column;
-        max-width: 100%;
-    }
-
-    .back-btn,
-    .verify-btn {
-        flex: 1;
-    }
-
-    .file-preview {
-        min-height: 100px;
-    }
-}
-
-@media (max-width: 480px) {
-    .agent-signup-card {
-        padding: 1rem;
-        border-radius: 12px;
-    }
-
-    .header-icon {
-        width: 50px;
-        height: 50px;
-    }
-
-    .signup-header h1 {
-        font-size: 1.25rem;
-    }
-
-    .otp-digit {
-        width: 36px;
-        height: 44px;
-        font-size: 1.1rem;
-    }
-
-    .tag-input {
-        flex-direction: column;
-    }
-
-    .add-tag-btn {
-        width: 100%;
-    }
-
-    .file-drop-zone {
-        padding: 1.5rem 0.5rem;
-    }
-}
-
-/* ============================================
-   TOAST NOTIFICATION
-   ============================================ */
-.toast-notification {
+.agent-signup-toast {
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 9999;
     min-width: 320px;
     max-width: 450px;
-    animation: slideInRight 0.5s ease;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    animation: agentSignupSlideInRight 0.5s ease;
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
 }
 
-.toast-content {
+.agent-signup-toast-content {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 16px 20px;
-    background: white;
-    border-left: 5px solid #667eea;
+    background: #ffffff;
+    border-left: 5px solid #2563eb;
 }
 
-.toast-notification.success .toast-content {
-    border-left-color: #48bb78;
-}
+.agent-signup-toast-success .agent-signup-toast-content { border-left-color: #16a34a; }
+.agent-signup-toast-error   .agent-signup-toast-content { border-left-color: #dc2626; }
+.agent-signup-toast-warning .agent-signup-toast-content { border-left-color: #f59e0b; }
+.agent-signup-toast-info    .agent-signup-toast-content { border-left-color: #3b82f6; }
 
-.toast-notification.error .toast-content {
-    border-left-color: #fc8181;
-}
+.agent-signup-toast-icon { font-size: 22px; flex-shrink: 0; }
 
-.toast-notification.warning .toast-content {
-    border-left-color: #f6ad55;
-}
-
-.toast-notification.info .toast-content {
-    border-left-color: #4299e1;
-}
-
-.toast-icon {
-    font-size: 24px;
-    flex-shrink: 0;
-}
-
-.toast-message {
+.agent-signup-toast-message {
     flex: 1;
     font-size: 14px;
     color: #1a202c;
@@ -842,41 +869,90 @@
     font-weight: 500;
 }
 
-.toast-close {
+.agent-signup-toast-close {
     background: none;
     border: none;
-    color: #a0aec0;
+    color: #94a3b8;
     cursor: pointer;
     padding: 4px;
-    font-size: 18px;
-    transition: color 0.3s;
+    font-size: 16px;
     display: flex;
     align-items: center;
+    transition: color 0.2s;
+}
+.agent-signup-toast-close:hover { color: #475569; }
+
+@keyframes agentSignupSlideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
 }
 
-.toast-close:hover {
-    color: #718096;
-}
-
-/* Toast Animation */
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .agent-signup-card {
+        grid-template-columns: 1fr;
+        max-width: 620px;
+        max-height: 95vh;
     }
-    to {
-        transform: translateX(0);
-        opacity: 1;
+    .agent-signup-brand-panel {
+        padding: 2rem;
+        text-align: center;
+        align-items: center;
+        border-right: none;
+        border-bottom: 1px solid rgba(37, 99, 235, 0.06);
     }
+    .agent-signup-brand-panel::before,
+    .agent-signup-brand-panel::after { display: none; }
+    .agent-signup-brand-text { max-width: 100%; }
+    .agent-signup-brand-dots { margin-top: 1rem; }
+    .agent-signup-form-panel { padding: 2rem; }
 }
 
-/* Toast Responsive */
+@media (max-width: 768px) {
+    .agent-signup-page { padding: 1rem 0.5rem; }
+    .agent-signup-card { border-radius: 18px; }
+    .agent-signup-brand-panel { padding: 1.5rem; }
+    .agent-signup-brand-title { font-size: 1.6rem; }
+    .agent-signup-brand-icon { width: 54px; height: 54px; font-size: 1.4rem; }
+    .agent-signup-form-panel { padding: 1.5rem; }
+    .agent-signup-form-header h2 { font-size: 1.35rem; }
+    .agent-signup-form-row { grid-template-columns: 1fr; }
+    .agent-signup-form-section { padding: 1rem; }
+    .agent-signup-otp-digit { width: 42px; height: 50px; font-size: 1.2rem; }
+    .agent-signup-otp-actions { flex-direction: column; max-width: 100%; }
+}
+
 @media (max-width: 480px) {
-    .toast-notification {
-        top: 10px;
-        right: 10px;
-        left: 10px;
-        min-width: auto;
-        max-width: none;
+    .agent-signup-page { padding: 0.75rem; }
+    .agent-signup-card { border-radius: 14px; max-height: none; }
+    .agent-signup-brand-panel { padding: 1.25rem; }
+    .agent-signup-brand-title { font-size: 1.35rem; }
+    .agent-signup-form-panel { padding: 1.1rem; }
+    .agent-signup-otp-digit { width: 36px; height: 44px; font-size: 1.05rem; }
+    .agent-signup-tag-input { flex-direction: column; }
+    .agent-signup-add-tag { width: 100%; }
+    .agent-signup-toast {
+        top: 10px; right: 10px; left: 10px;
+        min-width: auto; max-width: none;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    .agent-signup-bg-gradient,
+    .agent-signup-bg-circle,
+    .agent-signup-brand-icon,
+    .agent-signup-brand-dots span,
+    .agent-signup-otp-icon,
+    .agent-signup-upload-icon,
+    .agent-signup-submit-btn,
+    .agent-signup-tag,
+    .agent-signup-brand-panel::before,
+    .agent-signup-brand-panel::after {
+        animation: none !important;
     }
 }

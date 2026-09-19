@@ -1,4 +1,8 @@
 /* ============================================
+   AGENT SIGN IN - Unique agent-signin- prefix
+   ============================================ */
+
+/* ============================================
    CONTAINER
    ============================================ */
 .agent-signin-container {
@@ -23,12 +27,12 @@
 /* ============================================
    HEADER
    ============================================ */
-.signin-header {
+.agent-signin-header {
     text-align: center;
     margin-bottom: 30px;
 }
 
-.header-icon {
+.agent-signin-header-icon {
     width: 64px;
     height: 64px;
     background: #2563eb;
@@ -40,14 +44,14 @@
     box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
 }
 
-.signin-header h1 {
+.agent-signin-header h1 {
     font-size: 26px;
     font-weight: 700;
     color: #1a202c;
     margin: 0 0 8px 0;
 }
 
-.signin-header p {
+.agent-signin-header p {
     color: #718096;
     font-size: 14px;
     margin: 0;
@@ -56,11 +60,11 @@
 /* ============================================
    FORM
    ============================================ */
-.form-group {
+.agent-signin-form-group {
     margin-bottom: 20px;
 }
 
-.form-group label {
+.agent-signin-form-group label {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -70,12 +74,12 @@
     margin-bottom: 8px;
 }
 
-.input-icon {
+.agent-signin-input-icon {
     color: #2563eb;
     font-size: 13px;
 }
 
-.form-group input {
+.agent-signin-form-group input {
     width: 100%;
     padding: 12px 16px;
     border: 2px solid #e2e8f0;
@@ -87,16 +91,16 @@
     color: #1a202c;
 }
 
-.form-group input:focus {
+.agent-signin-form-group input:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.form-group input.error {
+.agent-signin-form-group input.error {
     border-color: #fc8181;
 }
 
-.form-group input:disabled {
+.agent-signin-form-group input:disabled {
     background: #f7fafc;
     cursor: not-allowed;
 }
@@ -104,15 +108,15 @@
 /* ============================================
    PASSWORD WRAPPER
    ============================================ */
-.password-wrapper {
+.agent-signin-password-wrapper {
     position: relative;
 }
 
-.password-wrapper input {
+.agent-signin-password-wrapper input {
     padding-right: 44px;
 }
 
-.password-toggle {
+.agent-signin-password-toggle {
     position: absolute;
     right: 12px;
     top: 50%;
@@ -129,11 +133,11 @@
     font-size: 16px;
 }
 
-.password-toggle:hover:not(:disabled) {
+.agent-signin-password-toggle:hover:not(:disabled) {
     color: #2563eb;
 }
 
-.password-toggle:disabled {
+.agent-signin-password-toggle:disabled {
     cursor: not-allowed;
     opacity: 0.5;
 }
@@ -141,14 +145,14 @@
 /* ============================================
    FORM OPTIONS
    ============================================ */
-.form-options {
+.agent-signin-form-options {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
     margin-top: -8px;
 }
 
-.forgot-link {
+.agent-signin-forgot-link {
     color: #2563eb;
     text-decoration: none;
     font-size: 13px;
@@ -156,7 +160,7 @@
     transition: color 0.2s;
 }
 
-.forgot-link:hover {
+.agent-signin-forgot-link:hover {
     color: #1d4ed8;
     text-decoration: underline;
 }
@@ -164,7 +168,7 @@
 /* ============================================
    SUBMIT BUTTON
    ============================================ */
-.signin-button {
+.agent-signin-button {
     width: 100%;
     padding: 14px;
     background: #2563eb;
@@ -182,13 +186,13 @@
     margin-top: 8px;
 }
 
-.signin-button:hover:not(:disabled) {
+.agent-signin-button:hover:not(:disabled) {
     background: #1d4ed8;
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
 }
 
-.signin-button:disabled {
+.agent-signin-button:disabled {
     opacity: 0.7;
     cursor: not-allowed;
 }
@@ -196,17 +200,17 @@
 /* ============================================
    SPINNER
    ============================================ */
-.spinner {
+.agent-signin-spinner {
     width: 18px;
     height: 18px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-top: 2px solid #ffffff;
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: agentSigninSpin 0.8s linear infinite;
     display: inline-block;
 }
 
-@keyframes spin {
+@keyframes agentSigninSpin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
@@ -214,7 +218,7 @@
 /* ============================================
    MESSAGES
    ============================================ */
-.success-message {
+.agent-signin-success-message {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -228,13 +232,13 @@
     margin-bottom: 20px;
 }
 
-.success-message svg {
+.agent-signin-success-message svg {
     color: #48bb78;
     font-size: 18px;
     flex-shrink: 0;
 }
 
-.error-message {
+.agent-signin-error-message {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -248,13 +252,13 @@
     margin-bottom: 20px;
 }
 
-.error-message svg {
+.agent-signin-error-message svg {
     color: #e53e3e;
     font-size: 18px;
     flex-shrink: 0;
 }
 
-.error-text {
+.agent-signin-error-text {
     display: block;
     color: #e53e3e;
     font-size: 12px;
@@ -265,21 +269,21 @@
 /* ============================================
    SIGN UP LINK
    ============================================ */
-.signup-link {
+.agent-signin-signup-link {
     text-align: center;
     margin-top: 24px;
     font-size: 14px;
     color: #718096;
 }
 
-.signup-link a {
+.agent-signin-signup-link a {
     color: #2563eb;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
 }
 
-.signup-link a:hover {
+.agent-signin-signup-link a:hover {
     color: #1d4ed8;
     text-decoration: underline;
 }
@@ -292,11 +296,11 @@
         padding: 28px 20px;
     }
 
-    .signin-header h1 {
+    .agent-signin-header h1 {
         font-size: 22px;
     }
 
-    .header-icon {
+    .agent-signin-header-icon {
         width: 56px;
         height: 56px;
     }

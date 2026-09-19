@@ -25,7 +25,6 @@ import AdminApplications from './Pages/Admin/private/Applications/AdminApplicati
 import AdminViewApplication from './Pages/Admin/private/Applications/AdminViewApplication';
 import AdminEditApplication from './Pages/Admin/private/Applications/AdminEditApplication';
 import Payments from './Pages/Admin/private/Payments/Payments';
-
 // ===== AGENT PAGES =====
 import AgentDashboard from './Pages/Agent/private/AgentDashboard';
 import StudentApplication from './Pages/Agent/private/Application/StudentApplication';
@@ -45,6 +44,7 @@ import NotFound from './Pages/NotFound/NotFound';
 import './App.css';
 import ReceivePayment from './Pages/Admin/private/Payments/ReceivePayment';
 import AgentPayments from './Pages/Agent/Payments/AgentPayments';
+import Home from './Home/Home';
 
 function App() {
     return (
@@ -52,8 +52,7 @@ function App() {
             <div className="App">
                 <Routes>
                     {/* ===== DEFAULT ===== */}
-                    <Route path="/" element={<Navigate to="/signup" replace />} />
-
+<Route path="/" element={<Home />} />
                     {/* ===== ADMIN AUTH ROUTES ===== */}
                     <Route path="/signup" element={<AdminSignUp />} />
                     <Route path="/signin" element={<AdminSignIn />} />

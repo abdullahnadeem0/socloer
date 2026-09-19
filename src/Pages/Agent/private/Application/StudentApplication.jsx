@@ -454,7 +454,7 @@ const StudentApplication = () => {
             if (response.success) {
                 setSuccessMessage(`✅ Application submitted! Number: ${response.data.applicationNumber}`);
                 setTimeout(() => {
-                    navigate('/agent/applications');
+                    navigate('/agent/my-applications');
                 }, 2000);
             }
         } catch (error) {
