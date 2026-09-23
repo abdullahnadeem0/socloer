@@ -9,8 +9,33 @@ import {
     FaSpinner, FaArrowRight, FaArrowLeft, FaTrash, FaFileAlt,
     FaUserGraduate, FaMoneyBillWave, FaCalendarAlt, FaMapMarkerAlt,
     FaPhone, FaEnvelope, FaIdCard, FaSave, FaUpload,
-    FaFolderOpen, FaFileContract, FaReceipt
+    FaFolderOpen, FaFileContract, FaReceipt, FaLink
 } from 'react-icons/fa';
+
+// ============================================
+// ALL FILE FIELDS (used in multiple places)
+// ============================================
+const ALL_FILE_FIELDS = [
+    // Basic
+    'profilePhoto', 'idProof', 'marksheet',
+    'incomeCertificate', 'previousCertificate', 'bankPassbook',
+    // Additional
+    'dependentPassport1', 'sponsorDetails', 'bankStatementLetter',
+    'visaCopies', 'pendingDocument', 'visaDocument',
+    'studyContinuousLetter', 'dependentPassport2', 'transferStudents',
+    // Conditional
+    'signedCAL', 'paymentInvoice',
+    // Payment
+    'applicationFeeReceipt', 'englishExamReceipt',
+    'internalAdmissionFee', 'bankCheckDraft',
+    'insuranceFee', 'tuitionFee',
+    // Final
+    'finalSignedCAL', 'finalPaymentInvoice',
+    'initialAdmissionPortfolio', 'deferralAdmissionPortfolio'
+];
+
+const createEmptyUrlState = () =>
+    ALL_FILE_FIELDS.reduce((acc, f) => ({ ...acc, [f]: '' }), {});
 
 const StudentApplication = () => {
     const navigate = useNavigate();
@@ -28,17 +53,21 @@ const StudentApplication = () => {
     const [programs, setPrograms] = useState([]);
     const [loadingPrograms, setLoadingPrograms] = useState(false);
 
+    // ===== FILE MODES (upload | url) =====
+    // Default: 'upload'
+    const [fileModes, setFileModes] = useState({});
+
+    // ===== FILE URLS (parallel to formData file fields) =====
+    const [fileUrls, setFileUrls] = useState(createEmptyUrlState());
+
     // ===== FILE REFS =====
     const fileRefs = {
-        // Basic
         idProof: useRef(null),
         marksheet: useRef(null),
         incomeCertificate: useRef(null),
         profilePhoto: useRef(null),
         previousCertificate: useRef(null),
         bankPassbook: useRef(null),
-
-        // Additional
         dependentPassport1: useRef(null),
         sponsorDetails: useRef(null),
         bankStatementLetter: useRef(null),
@@ -48,20 +77,14 @@ const StudentApplication = () => {
         studyContinuousLetter: useRef(null),
         dependentPassport2: useRef(null),
         transferStudents: useRef(null),
-
-        // Conditional
         signedCAL: useRef(null),
         paymentInvoice: useRef(null),
-
-        // Payment
         applicationFeeReceipt: useRef(null),
         englishExamReceipt: useRef(null),
         internalAdmissionFee: useRef(null),
         bankCheckDraft: useRef(null),
         insuranceFee: useRef(null),
         tuitionFee: useRef(null),
-
-        // Final
         finalSignedCAL: useRef(null),
         finalPaymentInvoice: useRef(null),
         initialAdmissionPortfolio: useRef(null),
@@ -70,11 +93,9 @@ const StudentApplication = () => {
 
     // ===== FORM DATA =====
     const [formData, setFormData] = useState({
-        // Selection
         university: '',
         program: '',
 
-        // Student Info
         firstName: '',
         lastName: '',
         email: '',
@@ -93,25 +114,22 @@ const StudentApplication = () => {
         guardianPhone: '',
         annualIncome: '',
 
-        // Academic
         previousEducation: '',
         previousInstitute: '',
         passingYear: '',
         percentage: '',
         gpa: '',
 
-        // Statements
         whyDeserve: '',
         achievements: '',
 
-        // Bank
         accountHolderName: '',
         accountNumber: '',
         ifscCode: '',
         bankName: '',
         branchName: '',
 
-        // Files - Basic
+        // File fields (null when not uploaded)
         profilePhoto: null,
         profilePhotoPreview: null,
         idProof: null,
@@ -120,7 +138,6 @@ const StudentApplication = () => {
         previousCertificate: null,
         bankPassbook: null,
 
-        // Additional Documents
         dependentPassport1: null,
         sponsorDetails: null,
         bankStatementLetter: null,
@@ -131,11 +148,9 @@ const StudentApplication = () => {
         dependentPassport2: null,
         transferStudents: null,
 
-        // Conditional
         signedCAL: null,
         paymentInvoice: null,
 
-        // Payment
         applicationFeeReceipt: null,
         englishExamReceipt: null,
         internalAdmissionFee: null,
@@ -143,12 +158,22 @@ const StudentApplication = () => {
         insuranceFee: null,
         tuitionFee: null,
 
-        // Final
         finalSignedCAL: null,
         finalPaymentInvoice: null,
         initialAdmissionPortfolio: null,
         deferralAdmissionPortfolio: null
     });
+
+    // ============================================
+    // HELPERS
+    // ============================================
+    const getFieldMode = (name) => fileModes[name] || 'upload';
+
+    const isFieldProvided = (name) => {
+        const hasFile = !!formData[name];
+        const hasUrl = !!(fileUrls[name] && fileUrls[name].trim());
+        return hasFile || hasUrl;
+    };
 
     // ============================================
     // FETCH UNIVERSITIES
@@ -203,7 +228,7 @@ const StudentApplication = () => {
     };
 
     // ============================================
-    // HANDLE CHANGE
+    // HANDLE CHANGE (text/select/file)
     // ============================================
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -253,16 +278,41 @@ const StudentApplication = () => {
     };
 
     // ============================================
+    // URL CHANGE
+    // ============================================
+    const handleUrlChange = (name, value) => {
+        setFileUrls(prev => ({ ...prev, [name]: value }));
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: '' }));
+        }
+    };
+
+    // ============================================
+    // MODE SWITCH (upload | url)
+    // ============================================
+    const handleModeSwitch = (name, mode) => {
+        setFileModes(prev => ({ ...prev, [name]: mode }));
+        // Clear opposite value to avoid confusion
+        if (mode === 'upload') {
+            setFileUrls(prev => ({ ...prev, [name]: '' }));
+        } else {
+            // Switching to URL — clear uploaded file
+            removeFile(name, true);
+        }
+        setErrors(prev => ({ ...prev, [name]: '' }));
+    };
+
+    // ============================================
     // REMOVE FILE
     // ============================================
-    const removeFile = (fieldName) => {
+    const removeFile = (fieldName, keepPreviewState = false) => {
         if (fieldName === 'profilePhoto' && formData.profilePhotoPreview) {
             URL.revokeObjectURL(formData.profilePhotoPreview);
         }
         setFormData(prev => ({
             ...prev,
             [fieldName]: null,
-            ...(fieldName === 'profilePhoto' && { profilePhotoPreview: null })
+            ...(fieldName === 'profilePhoto' && !keepPreviewState && { profilePhotoPreview: null })
         }));
         if (fileRefs[fieldName]?.current) {
             fileRefs[fieldName].current.value = '';
@@ -270,43 +320,194 @@ const StudentApplication = () => {
     };
 
     // ============================================
-    // FILE UPLOAD COMPONENT (Inline)
+    // RENDER FILE INPUT (upload OR url)
     // ============================================
     const renderFileUpload = (label, name) => {
+        const mode = getFieldMode(name);
         const hasFile = formData[name];
+        const hasUrl = fileUrls[name] && fileUrls[name].trim();
         const error = errors[name];
         const isTouched = touched[name];
 
         return (
             <div className="form-group">
                 <label>{label}</label>
-                {!hasFile ? (
-                    <div className="file-drop-zone">
+
+                {/* MODE TOGGLE */}
+                <div className="file-mode-toggle">
+                    <button
+                        type="button"
+                        className={mode === 'upload' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'upload')}
+                    >
+                        <FaUpload /> Upload
+                    </button>
+                    <button
+                        type="button"
+                        className={mode === 'url' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'url')}
+                    >
+                        <FaLink /> URL
+                    </button>
+                </div>
+
+                {/* UPLOAD MODE */}
+                {mode === 'upload' && (
+                    hasFile ? (
+                        <div className="file-preview-simple">
+                            <FaFileAlt />
+                            <span>{hasFile.name}</span>
+                            <button
+                                type="button"
+                                className="remove-file-btn"
+                                onClick={() => removeFile(name)}
+                            >
+                                <FaTrash />
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="file-drop-zone">
+                            <input
+                                type="file"
+                                name={name}
+                                ref={fileRefs[name]}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                accept=".jpg,.jpeg,.png,.pdf"
+                            />
+                            <FaUpload className="upload-icon" />
+                            <p>Upload</p>
+                            <small>JPG, PNG, PDF (Max 5MB)</small>
+                        </div>
+                    )
+                )}
+
+                {/* URL MODE */}
+                {mode === 'url' && (
+                    <div className="url-input-wrap">
+                        <FaLink className="url-input-icon" />
                         <input
-                            type="file"
-                            name={name}
-                            ref={fileRefs[name]}
-                            onChange={handleChange}
+                            type="url"
+                            className="url-input"
+                            placeholder="https://drive.google.com/file/..."
+                            value={fileUrls[name] || ''}
+                            onChange={(e) => handleUrlChange(name, e.target.value)}
                             onBlur={handleBlur}
-                            accept=".jpg,.jpeg,.png,.pdf"
                         />
-                        <FaUpload className="upload-icon" />
-                        <p>Upload</p>
-                        <small>JPG, PNG, PDF (Max 5MB)</small>
-                    </div>
-                ) : (
-                    <div className="file-preview-simple">
-                        <FaFileAlt />
-                        <span>{hasFile.name}</span>
-                        <button
-                            type="button"
-                            className="remove-file-btn"
-                            onClick={() => removeFile(name)}
-                        >
-                            <FaTrash />
-                        </button>
+                        {hasUrl && (
+                            <button
+                                type="button"
+                                className="remove-file-btn"
+                                onClick={() => handleUrlChange(name, '')}
+                                title="Clear URL"
+                            >
+                                <FaTrash />
+                            </button>
+                        )}
                     </div>
                 )}
+
+                {error && <span className="error-text">{error}</span>}
+            </div>
+        );
+    };
+
+    // ============================================
+    // PROFILE PHOTO (special — supports both modes)
+    // ============================================
+    const renderProfilePhotoUpload = () => {
+        const name = 'profilePhoto';
+        const mode = getFieldMode(name);
+        const error = errors[name];
+        const hasFile = formData.profilePhoto;
+        const hasUrl = fileUrls[name] && fileUrls[name].trim();
+        const preview = formData.profilePhotoPreview || (mode === 'url' && hasUrl ? hasUrl : null);
+
+        return (
+            <div className="form-group">
+                <label>Profile Photo *</label>
+
+                {/* MODE TOGGLE */}
+                <div className="file-mode-toggle">
+                    <button
+                        type="button"
+                        className={mode === 'upload' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'upload')}
+                    >
+                        <FaUpload /> Upload
+                    </button>
+                    <button
+                        type="button"
+                        className={mode === 'url' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'url')}
+                    >
+                        <FaLink /> URL
+                    </button>
+                </div>
+
+                {/* UPLOAD MODE */}
+                {mode === 'upload' && (
+                    !formData.profilePhotoPreview ? (
+                        <div className="file-drop-zone">
+                            <input
+                                type="file"
+                                name={name}
+                                ref={fileRefs[name]}
+                                onChange={handleChange}
+                                accept="image/*"
+                            />
+                            <FaUpload className="upload-icon" />
+                            <p>Upload Photo</p>
+                            <small>JPG, PNG (Max 5MB)</small>
+                        </div>
+                    ) : (
+                        <div className="file-preview">
+                            <img src={formData.profilePhotoPreview} alt="Preview" />
+                            <button
+                                type="button"
+                                className="remove-file-btn"
+                                onClick={() => removeFile(name)}
+                            >
+                                <FaTrash />
+                            </button>
+                        </div>
+                    )
+                )}
+
+                {/* URL MODE */}
+                {mode === 'url' && (
+                    <>
+                        <div className="url-input-wrap">
+                            <FaLink className="url-input-icon" />
+                            <input
+                                type="url"
+                                className="url-input"
+                                placeholder="https://example.com/photo.jpg"
+                                value={fileUrls[name] || ''}
+                                onChange={(e) => handleUrlChange(name, e.target.value)}
+                            />
+                            {hasUrl && (
+                                <button
+                                    type="button"
+                                    className="remove-file-btn"
+                                    onClick={() => handleUrlChange(name, '')}
+                                >
+                                    <FaTrash />
+                                </button>
+                            )}
+                        </div>
+                        {preview && (
+                            <div className="file-preview url-preview">
+                                <img
+                                    src={preview}
+                                    alt="URL Preview"
+                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                />
+                            </div>
+                        )}
+                    </>
+                )}
+
                 {error && <span className="error-text">{error}</span>}
             </div>
         );
@@ -346,9 +547,10 @@ const StudentApplication = () => {
         if (!formData.whyDeserve.trim()) newErrors.whyDeserve = 'This field is required';
         else if (formData.whyDeserve.length < 50) newErrors.whyDeserve = 'Minimum 50 characters required';
 
-        if (!formData.idProof) newErrors.idProof = 'ID proof is required';
-        if (!formData.marksheet) newErrors.marksheet = 'Marksheet is required';
-        if (!formData.profilePhoto) newErrors.profilePhoto = 'Profile photo is required';
+        // ✅ File OR URL validation
+        if (!isFieldProvided('idProof')) newErrors.idProof = 'ID proof is required (upload or URL)';
+        if (!isFieldProvided('marksheet')) newErrors.marksheet = 'Marksheet is required (upload or URL)';
+        if (!isFieldProvided('profilePhoto')) newErrors.profilePhoto = 'Profile photo is required (upload or URL)';
 
         return newErrors;
     };
@@ -425,24 +627,18 @@ const StudentApplication = () => {
                 branchName: formData.branchName
             }));
 
-            // ALL FILES
-            const fileFields = [
-                'profilePhoto', 'idProof', 'marksheet',
-                'incomeCertificate', 'previousCertificate', 'bankPassbook',
-                'dependentPassport1', 'sponsorDetails', 'bankStatementLetter',
-                'visaCopies', 'pendingDocument', 'visaDocument',
-                'studyContinuousLetter', 'dependentPassport2', 'transferStudents',
-                'signedCAL', 'paymentInvoice',
-                'applicationFeeReceipt', 'englishExamReceipt',
-                'internalAdmissionFee', 'bankCheckDraft',
-                'insuranceFee', 'tuitionFee',
-                'finalSignedCAL', 'finalPaymentInvoice',
-                'initialAdmissionPortfolio', 'deferralAdmissionPortfolio'
-            ];
-
-            fileFields.forEach(field => {
+            // ===== FILES (uploaded) =====
+            ALL_FILE_FIELDS.forEach(field => {
                 if (formData[field]) {
                     dataToSend.append(field, formData[field]);
+                }
+            });
+
+            // ===== URLs (parallel) =====
+            ALL_FILE_FIELDS.forEach(field => {
+                const url = fileUrls[field];
+                if (url && url.trim()) {
+                    dataToSend.append(`${field}Url`, url.trim());
                 }
             });
 
@@ -499,7 +695,7 @@ const StudentApplication = () => {
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="application-form">
 
-                    {/* SECTION 1: UNIVERSITY & PROGRAM */}
+                    {/* SECTION 1 */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaUniversity className="section-icon" />
@@ -563,7 +759,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* SECTION 2: STUDENT PERSONAL INFO */}
+                    {/* SECTION 2: STUDENT INFO */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaUser className="section-icon" />
@@ -788,7 +984,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* SECTION 4: FAMILY INFO */}
+                    {/* SECTION 4: FAMILY */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaUser className="section-icon" />
@@ -842,7 +1038,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* SECTION 5: ACADEMIC INFO */}
+                    {/* SECTION 5: ACADEMIC */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaGraduationCap className="section-icon" />
@@ -967,7 +1163,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* SECTION 7: BANK DETAILS */}
+                    {/* SECTION 7: BANK */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaMoneyBillWave className="section-icon" />
@@ -1029,9 +1225,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* ============================================ */}
-                    {/* SECTION 8: BASIC DOCUMENTS */}
-                    {/* ============================================ */}
+                    {/* SECTION 8: BASIC DOCS */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaFileUpload className="section-icon" />
@@ -1039,37 +1233,7 @@ const StudentApplication = () => {
                         </h3>
 
                         <div className="form-row">
-                            {/* Profile Photo */}
-                            <div className="form-group">
-                                <label>Profile Photo *</label>
-                                {!formData.profilePhotoPreview ? (
-                                    <div className="file-drop-zone">
-                                        <input
-                                            type="file"
-                                            name="profilePhoto"
-                                            ref={fileRefs.profilePhoto}
-                                            onChange={handleChange}
-                                            accept="image/*"
-                                        />
-                                        <FaUpload className="upload-icon" />
-                                        <p>Upload Photo</p>
-                                        <small>JPG, PNG (Max 5MB)</small>
-                                    </div>
-                                ) : (
-                                    <div className="file-preview">
-                                        <img src={formData.profilePhotoPreview} alt="Preview" />
-                                        <button
-                                            type="button"
-                                            className="remove-file-btn"
-                                            onClick={() => removeFile('profilePhoto')}
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                    </div>
-                                )}
-                                {errors.profilePhoto && <span className="error-text">{errors.profilePhoto}</span>}
-                            </div>
-
+                            {renderProfilePhotoUpload()}
                             {renderFileUpload('ID Proof (Aadhar/PAN) *', 'idProof')}
                         </div>
 
@@ -1084,9 +1248,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* ============================================ */}
-                    {/* SECTION 9: ADDITIONAL DOCUMENTS */}
-                    {/* ============================================ */}
+                    {/* SECTION 9: ADDITIONAL DOCS */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaFolderOpen className="section-icon" />
@@ -1119,9 +1281,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* ============================================ */}
-                    {/* SECTION 10: CONDITIONAL LETTER & INVOICE */}
-                    {/* ============================================ */}
+                    {/* SECTION 10: CONDITIONAL LETTER */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaFileContract className="section-icon" />
@@ -1134,9 +1294,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* ============================================ */}
-                    {/* SECTION 11: SUBMIT PAYMENT RECEIPT */}
-                    {/* ============================================ */}
+                    {/* SECTION 11: PAYMENT RECEIPTS */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaReceipt className="section-icon" />
@@ -1159,9 +1317,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* ============================================ */}
-                    {/* SECTION 12: FINAL ADMISSION PORTFOLIO */}
-                    {/* ============================================ */}
+                    {/* SECTION 12: FINAL PORTFOLIO */}
                     <div className="form-section">
                         <h3 className="section-title">
                             <FaGraduationCap className="section-icon" />
@@ -1179,7 +1335,7 @@ const StudentApplication = () => {
                         </div>
                     </div>
 
-                    {/* SUBMIT BUTTONS */}
+                    {/* ACTIONS */}
                     <div className="form-actions">
                         <button
                             type="button"

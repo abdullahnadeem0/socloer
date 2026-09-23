@@ -936,4 +936,379 @@
     .AdminViewApplication .action-buttons { grid-template-columns: 1fr; }
     .AdminViewApplication .footer-actions { flex-direction: column-reverse; }
     .AdminViewApplication .back-btn { width: 100%; justify-content: center; }
+}/* ============================================
+   ✅ DOC ITEM with actions
+   ============================================ */
+.AdminViewApplication .doc-item.uploaded {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #f0fff4;
+    border: 2px solid #c6f6d5;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.AdminViewApplication .doc-item.uploaded:hover {
+    border-color: #48bb78;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(72, 187, 120, 0.15);
+}
+
+.AdminViewApplication .doc-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #d1fae5;
+    color: #059669;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.AdminViewApplication .doc-icon {
+    font-size: 1rem;
+}
+
+.AdminViewApplication .doc-link-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 14px;
+    height: 14px;
+    padding: 3px;
+    background: #f59e0b;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 0.55rem;
+    border: 2px solid #ffffff;
+    box-sizing: content-box;
+}
+
+.AdminViewApplication .doc-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.AdminViewApplication .doc-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1a202c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.AdminViewApplication .doc-status {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.AdminViewApplication .uploaded-text {
+    color: #48bb78;
+}
+
+.AdminViewApplication .empty-text {
+    color: #a0aec0;
+}
+
+/* ===== DOC ACTIONS ===== */
+.AdminViewApplication .doc-actions {
+    display: flex;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.AdminViewApplication .doc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    padding: 0;
+}
+
+.AdminViewApplication .doc-btn.preview {
+    background: #e0e7ff;
+    color: #2563eb;
+}
+
+.AdminViewApplication .doc-btn.preview:hover {
+    background: #c7d2fe;
+    transform: scale(1.08);
+}
+
+.AdminViewApplication .doc-btn.download {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.AdminViewApplication .doc-btn.download:hover:not(:disabled) {
+    background: #a7f3d0;
+    transform: scale(1.08);
+}
+
+.AdminViewApplication .doc-btn.download:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.AdminViewApplication .spinner-small {
+    animation: adminViewSpin 1s linear infinite;
+    font-size: 0.8rem;
+}
+
+@keyframes adminViewSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== CARD HEADER WITH BUTTON ===== */
+.AdminViewApplication .card-header.between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.AdminViewApplication .card-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.AdminViewApplication .docs-count-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.65rem;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ===== DOWNLOAD ALL BUTTON ===== */
+.AdminViewApplication .download-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.AdminViewApplication .download-all-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+}
+
+.AdminViewApplication .download-all-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+/* ===== IMAGE PREVIEW MODAL ===== */
+.AdminViewApplication .image-preview-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: adminFadeIn 0.2s ease;
+}
+
+.AdminViewApplication .preview-content {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 90vw;
+    max-height: 90vh;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: adminScaleIn 0.25s ease;
+}
+
+.AdminViewApplication .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 1rem;
+}
+
+.AdminViewApplication .preview-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a202c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.AdminViewApplication .preview-actions {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.AdminViewApplication .preview-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    padding: 0;
+}
+
+.AdminViewApplication .preview-btn.download {
+    background: #d1fae5;
+    color: #059669;
+}
+.AdminViewApplication .preview-btn.download:hover {
+    background: #a7f3d0;
+}
+
+.AdminViewApplication .preview-btn.open {
+    background: #dbeafe;
+    color: #2563eb;
+}
+.AdminViewApplication .preview-btn.open:hover {
+    background: #bfdbfe;
+}
+
+.AdminViewApplication .preview-btn.close {
+    background: #fee2e2;
+    color: #dc2626;
+}
+.AdminViewApplication .preview-btn.close:hover {
+    background: #fecaca;
+}
+
+.AdminViewApplication .preview-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: #f1f5f9;
+    overflow: auto;
+    min-height: 200px;
+    max-height: calc(90vh - 80px);
+}
+
+.AdminViewApplication .preview-body img {
+    max-width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+@keyframes adminFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes adminScaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ===== PRINT HEADER ===== */
+.AdminViewApplication .print-only-header {
+    display: none;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .AdminViewApplication {
+        background: #ffffff !important;
+        padding: 0 !important;
+    }
+
+    .AdminViewApplication .print-only-header {
+        display: block !important;
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #1a202c;
+        text-align: center;
+    }
+
+    .AdminViewApplication .print-only-header h1 {
+        margin: 0 0 0.75rem;
+        font-size: 1.5rem;
+    }
+
+    .AdminViewApplication .print-only-header p {
+        margin: 0.25rem 0;
+        font-size: 0.85rem;
+    }
+
+    .AdminViewApplication .info-card {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e0 !important;
+        page-break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+
+    .AdminViewApplication .doc-item.uploaded {
+        background: #f0fff4 !important;
+        border: 1px solid #cbd5e0 !important;
+    }
+
+    .AdminViewApplication .doc-actions {
+        display: none !important;
+    }
+
+    .AdminViewApplication .image-preview-modal {
+        display: none !important;
+    }
 }

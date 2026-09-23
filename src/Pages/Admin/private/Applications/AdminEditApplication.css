@@ -15,7 +15,9 @@
     gap: 1.5rem;
 }
 
-/* HEADER */
+/* ============================================
+   HEADER
+   ============================================ */
 .AdminEditApplication .edit-header {
     display: flex;
     align-items: center;
@@ -39,6 +41,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.25s ease;
+    flex-shrink: 0;
 }
 
 .AdminEditApplication .back-icon-btn:hover {
@@ -71,7 +74,9 @@
     width: fit-content;
 }
 
-/* MESSAGES */
+/* ============================================
+   MESSAGES
+   ============================================ */
 .AdminEditApplication .success-message,
 .AdminEditApplication .error-message {
     padding: 1rem 1.25rem;
@@ -94,7 +99,9 @@
     border-left: 4px solid #fc8181;
 }
 
-/* FORM */
+/* ============================================
+   FORM
+   ============================================ */
 .AdminEditApplication .edit-form {
     display: flex;
     flex-direction: column;
@@ -187,7 +194,9 @@
     font-weight: 500;
 }
 
-/* FILE UPLOAD */
+/* ============================================
+   FILE UPLOAD (existing)
+   ============================================ */
 .AdminEditApplication .file-drop-zone {
     position: relative;
     border: 2px dashed #dce3ec;
@@ -323,7 +332,142 @@
     transform: scale(1.1);
 }
 
-/* ACTIONS */
+/* ============================================
+   ✅ FILE MODE TOGGLE (Keep | Upload | URL)
+   ============================================ */
+.AdminEditApplication .file-mode-toggle {
+    display: inline-flex;
+    gap: 4px;
+    margin-bottom: 0.75rem;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    width: fit-content;
+}
+
+.AdminEditApplication .file-mode-toggle button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.AdminEditApplication .file-mode-toggle button:hover {
+    color: #334155;
+}
+
+.AdminEditApplication .file-mode-toggle button.active {
+    background: #ffffff;
+    color: #2563eb;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ============================================
+   ✅ URL INPUT
+   ============================================ */
+.AdminEditApplication .url-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.AdminEditApplication .url-input-wrap .url-input-icon {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 13px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.AdminEditApplication .url-input-wrap .url-input {
+    width: 100%;
+    padding: 11px 42px 11px 38px;
+    border: 2px solid #e8edf3;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    background: #ffffff;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.AdminEditApplication .url-input-wrap .url-input::placeholder {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.AdminEditApplication .url-input-wrap .url-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.AdminEditApplication .url-input-wrap .remove-file-btn {
+    position: absolute;
+    right: 8px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 7px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 11px;
+    padding: 0;
+}
+
+.AdminEditApplication .url-input-wrap .remove-file-btn:hover {
+    background: #fecaca;
+    transform: scale(1.08);
+}
+
+/* ============================================
+   ✅ EXISTING FILE PREVIEW (Keep mode)
+   ============================================ */
+.AdminEditApplication .file-preview-simple.existing {
+    background: #f0fdf4;
+    border: 1.5px dashed #86efac;
+    padding: 10px 12px;
+    border-radius: 10px;
+}
+
+.AdminEditApplication .file-preview-simple.existing svg {
+    color: #059669;
+}
+
+/* ============================================
+   ✅ FILE PREVIEW WITH URL (Profile Photo)
+   ============================================ */
+.AdminEditApplication .file-preview.url-preview {
+    margin-top: 0.75rem;
+    min-height: 120px;
+}
+
+.AdminEditApplication .file-preview.url-preview img {
+    max-height: 180px;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
 .AdminEditApplication .form-actions {
     display: flex;
     gap: 1rem;
@@ -378,7 +522,9 @@
     animation: AdminEditApp_spin 1s linear infinite;
 }
 
-/* LOADING / ERROR */
+/* ============================================
+   LOADING / ERROR
+   ============================================ */
 .AdminEditApplication .loading-state,
 .AdminEditApplication .error-state {
     display: flex;
@@ -426,12 +572,16 @@
     background: #f1f5f9;
 }
 
-/* ANIMATIONS */
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 @keyframes AdminEditApp_spin {
     to { transform: rotate(360deg); }
 }
 
-/* RESPONSIVE */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 768px) {
     .AdminEditApplication {
         padding: 1rem 0.5rem;
@@ -453,5 +603,18 @@
     .AdminEditApplication .submit-btn {
         flex: 1;
         width: 100%;
+    }
+
+    /* Mode toggle responsive */
+    .AdminEditApplication .file-mode-toggle {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .AdminEditApplication .file-mode-toggle button {
+        flex: 1;
+        justify-content: center;
+        padding: 6px 8px;
+        font-size: 11.5px;
     }
 }

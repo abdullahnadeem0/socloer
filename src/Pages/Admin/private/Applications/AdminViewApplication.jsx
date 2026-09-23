@@ -3,13 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './AdminViewApplication.css';
 import adminApi from '../../../../api/adminApi';
+import api, { API_URL, SERVER_URL, getFileUrl as configGetFileUrl } from '../../../../api/config';
 import {
     FaArrowLeft, FaUserGraduate, FaUniversity, FaGraduationCap,
     FaFileAlt, FaMoneyBillWave, FaCheckCircle, FaClock,
     FaTimesCircle, FaSpinner, FaExclamationTriangle,
     FaCalendarAlt, FaMapMarkerAlt, FaPhone, FaEnvelope,
     FaFolderOpen, FaDownload, FaPrint, FaHourglassHalf,
-    FaUser, FaBook, FaRedo, FaTimes, FaHistory, FaUserTie
+    FaUser, FaBook, FaRedo, FaTimes, FaHistory, FaUserTie,
+    FaLink, FaExternalLinkAlt, FaImage, FaFilePdf,
+    FaCloudDownloadAlt
 } from 'react-icons/fa';
 
 const AdminViewApplication = () => {
@@ -30,7 +33,13 @@ const AdminViewApplication = () => {
         loading: false
     });
 
-    const API_URL = 'http://localhost:5000';
+    // ===== Download States =====
+    const [downloadingAll, setDownloadingAll] = useState(false);
+    const [downloadProgress, setDownloadProgress] = useState({ current: 0, total: 0 });
+    const [downloadingField, setDownloadingField] = useState(null);
+
+    // ===== Image Preview Modal =====
+    const [previewImage, setPreviewImage] = useState(null);
 
     // ============================================
     // FETCH
@@ -66,6 +75,18 @@ const AdminViewApplication = () => {
         return `${API_URL}${finalPath}`;
     };
 
+    const isExternalUrl = (path) => {
+        if (!path) return false;
+        return path.startsWith('http://') || path.startsWith('https://');
+    };
+
+    const isImageFile = (path) => {
+        if (!path) return false;
+        const lower = path.toLowerCase();
+        return /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(lower) ||
+            /\.(jpg|jpeg|png|webp)\?/i.test(lower);
+    };
+
     const formatDate = (date) => {
         if (!date) return 'N/A';
         return new Date(date).toLocaleDateString('en-IN', {
@@ -96,6 +117,144 @@ const AdminViewApplication = () => {
 
     const canTakeAction = (status) => {
         return ['submitted', 'under-review', 'pending-documents'].includes(status);
+    };
+
+    // ============================================
+    // ✅ DOWNLOAD SINGLE FILE
+    // ============================================
+    const generateFileName = (label, path) => {
+        const studentName = `${application?.student?.firstName || 'Student'}_${application?.student?.lastName || ''}`.trim();
+        const appNumber = application?.applicationNumber || 'App';
+        const safeLabel = label.replace(/[^a-zA-Z0-9]/g, '_');
+
+        let ext = '';
+        if (path && !isExternalUrl(path)) {
+            const parts = path.split('.');
+            if (parts.length > 1) ext = '.' + parts.pop().split('?')[0];
+        }
+        if (!ext) ext = '.pdf';
+        return `${appNumber}_${studentName}_${safeLabel}${ext}`;
+    };
+
+    const triggerDownload = (blob, fileName) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    };
+
+    const downloadFile = async (label, path, isDownloadAll = false) => {
+        if (!path) return;
+        const fileName = generateFileName(label, path);
+
+        try {
+            if (!isDownloadAll) setDownloadingField(label);
+
+            // ===== EXTERNAL URL =====
+            if (isExternalUrl(path)) {
+                let downloadUrl = path;
+
+                // Google Drive direct download
+                const driveMatch = path.match(/\/file\/d\/([^/]+)/);
+                if (driveMatch) {
+                    downloadUrl = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+                }
+
+                try {
+                    const response = await fetch(downloadUrl, { mode: 'cors' });
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        triggerDownload(blob, fileName);
+                    } else {
+                        window.open(path, '_blank');
+                    }
+                } catch (fetchError) {
+                    console.warn('CORS blocked, opening in new tab:', fetchError);
+                    window.open(path, '_blank');
+                }
+                return;
+            }
+
+            // ===== LOCAL FILE =====
+            const fileUrl = getFileUrl(path);
+            const response = await fetch(fileUrl);
+
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const blob = await response.blob();
+            if (blob.type === 'application/json') throw new Error('File not found on server');
+
+            triggerDownload(blob, fileName);
+        } catch (error) {
+            console.error(`❌ Download failed for ${label}:`, error);
+            const url = isExternalUrl(path) ? path : getFileUrl(path);
+            window.open(url, '_blank');
+        } finally {
+            if (!isDownloadAll) setTimeout(() => setDownloadingField(null), 500);
+        }
+    };
+
+    // ============================================
+    // ✅ DOWNLOAD ALL DOCUMENTS
+    // ============================================
+    const downloadAllDocuments = async () => {
+        if (!application?.documents) return;
+        const docs = application.documents;
+
+        const docList = [
+            { label: 'Profile Photo', path: docs.profilePhoto },
+            { label: 'ID Proof', path: docs.idProof },
+            { label: 'Marksheet', path: docs.marksheet },
+            { label: 'Income Certificate', path: docs.incomeCertificate },
+            { label: 'Previous Certificate', path: docs.previousCertificate },
+            { label: 'Bank Passbook', path: docs.bankPassbook },
+            { label: 'Dependent Passport', path: docs.dependentPassport1 },
+            { label: 'Sponsor Details', path: docs.sponsorDetails },
+            { label: 'Bank Statement Letter', path: docs.bankStatementLetter },
+            { label: 'Visa Copies', path: docs.visaCopies },
+            { label: 'Pending Document', path: docs.pendingDocument },
+            { label: 'Visa Document', path: docs.visaDocument },
+            { label: 'Study Continuous Letter', path: docs.studyContinuousLetter },
+            { label: 'Dependent Passport 2', path: docs.dependentPassport2 },
+            { label: 'Transfer Students', path: docs.transferStudents },
+            { label: 'Signed CAL', path: docs.signedCAL },
+            { label: 'Payment Invoice', path: docs.paymentInvoice },
+            { label: 'Application Fee Receipt', path: docs.applicationFeeReceipt },
+            { label: 'English Exam Receipt', path: docs.englishExamReceipt },
+            { label: 'Internal Admission Fee', path: docs.internalAdmissionFee },
+            { label: 'Bank Check Draft', path: docs.bankCheckDraft },
+            { label: 'Insurance Fee', path: docs.insuranceFee },
+            { label: 'Tuition Fee', path: docs.tuitionFee },
+            { label: 'Final Signed CAL', path: docs.finalSignedCAL },
+            { label: 'Final Payment Invoice', path: docs.finalPaymentInvoice },
+            { label: 'Initial Admission Portfolio', path: docs.initialAdmissionPortfolio },
+            { label: 'Deferral Admission Portfolio', path: docs.deferralAdmissionPortfolio }
+        ].filter(d => d.path);
+
+        if (docList.length === 0) {
+            alert('No documents available to download');
+            return;
+        }
+
+        setDownloadingAll(true);
+        setDownloadProgress({ current: 0, total: docList.length });
+
+        for (let i = 0; i < docList.length; i++) {
+            setDownloadProgress({ current: i + 1, total: docList.length });
+            try {
+                await downloadFile(docList[i].label, docList[i].path, true);
+            } catch (err) {
+                console.error(`Failed: ${docList[i].label}`, err);
+            }
+            await new Promise(resolve => setTimeout(resolve, 400));
+        }
+
+        setDownloadingAll(false);
+        setDownloadProgress({ current: 0, total: 0 });
     };
 
     // ============================================
@@ -155,7 +314,7 @@ const AdminViewApplication = () => {
     };
 
     // ============================================
-    // DOCUMENT RENDERER
+    // ✅ DOCUMENT RENDERER (with URL + Download + Preview)
     // ============================================
     const renderDoc = (label, path) => {
         if (!path) {
@@ -170,22 +329,62 @@ const AdminViewApplication = () => {
             );
         }
 
+        const external = isExternalUrl(path);
+        const isImage = isImageFile(path);
+        const fileUrl = getFileUrl(path);
+        const isDownloading = downloadingField === label;
+
         return (
-            <a
-                href={getFileUrl(path)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="doc-item uploaded"
-            >
-                <FaFileAlt className="doc-icon" />
+            <div className="doc-item uploaded">
+                <div className="doc-icon-wrap">
+                    {isImage ? <FaImage className="doc-icon" /> : <FaFilePdf className="doc-icon" />}
+                    {external && <FaLink className="doc-link-badge" title="External URL" />}
+                </div>
                 <div className="doc-info">
                     <span className="doc-label">{label}</span>
                     <span className="doc-status uploaded-text">
-                        <FaCheckCircle /> Uploaded
+                        <FaCheckCircle /> {external ? 'URL Provided' : 'Uploaded'}
                     </span>
                 </div>
-                <FaDownload className="download-icon" />
-            </a>
+                <div className="doc-actions">
+                    {/* PREVIEW / OPEN */}
+                    {isImage ? (
+                        <button
+                            type="button"
+                            className="doc-btn preview"
+                            onClick={() => setPreviewImage({ url: fileUrl, label })}
+                            title="Preview"
+                        >
+                            <FaImage />
+                        </button>
+                    ) : (
+                        <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="doc-btn preview"
+                            title="Open in new tab"
+                        >
+                            <FaExternalLinkAlt />
+                        </a>
+                    )}
+
+                    {/* DOWNLOAD */}
+                    <button
+                        type="button"
+                        className="doc-btn download"
+                        onClick={() => downloadFile(label, path)}
+                        disabled={isDownloading}
+                        title="Download"
+                    >
+                        {isDownloading ? (
+                            <FaSpinner className="spinner-small" />
+                        ) : (
+                            <FaDownload />
+                        )}
+                    </button>
+                </div>
+            </div>
         );
     };
 
@@ -224,15 +423,21 @@ const AdminViewApplication = () => {
     const statusInfo = getStatusInfo(application.status);
     const canAct = canTakeAction(application.status);
 
+    // ===== Available documents count =====
+    const docs = application.documents || {};
+    const availableDocsCount = Object.values(docs).filter(
+        v => v && typeof v === 'string' && v.length > 0
+    ).length;
+
     // ============================================
     // RENDER
     // ============================================
     return (
         <div className="AdminViewApplication">
-            <div className="view-container">
+            <div className="view-container" id="printable-area">
 
                 {/* ===== HEADER ===== */}
-                <div className="view-header">
+                <div className="view-header no-print">
                     <button
                         className="back-icon-btn"
                         onClick={() => navigate('/admin/applications')}
@@ -255,9 +460,17 @@ const AdminViewApplication = () => {
                     </div>
                 </div>
 
+                {/* ===== PRINT-ONLY HEADER ===== */}
+                <div className="print-only-header">
+                    <h1>Student Scholarship Application</h1>
+                    <p><strong>Application No:</strong> {application.applicationNumber}</p>
+                    <p><strong>Status:</strong> {statusInfo.label}</p>
+                    <p><strong>Printed On:</strong> {new Date().toLocaleString('en-IN')}</p>
+                </div>
+
                 {/* ===== SUCCESS MESSAGE ===== */}
                 {successMessage && (
-                    <div className="success-message">
+                    <div className="success-message no-print">
                         <FaCheckCircle /> {successMessage}
                     </div>
                 )}
@@ -320,6 +533,11 @@ const AdminViewApplication = () => {
                                 src={getFileUrl(application.student.profileImage)}
                                 alt="Profile"
                                 className="student-photo"
+                                onClick={() => setPreviewImage({
+                                    url: getFileUrl(application.student.profileImage),
+                                    label: 'Profile Photo'
+                                })}
+                                style={{ cursor: 'pointer' }}
                             />
                         ) : (
                             <div className="student-photo placeholder">
@@ -495,9 +713,35 @@ const AdminViewApplication = () => {
 
                 {/* ===== DOCUMENTS ===== */}
                 <div className="info-card">
-                    <div className="card-header">
-                        <FaFolderOpen className="card-icon" />
-                        <h2>Documents</h2>
+                    <div className="card-header between">
+                        <div className="header-left">
+                            <FaFolderOpen className="card-icon" />
+                            <h2>Documents</h2>
+                            {availableDocsCount > 0 && (
+                                <span className="docs-count-badge">{availableDocsCount} available</span>
+                            )}
+                        </div>
+
+                        {availableDocsCount > 0 && (
+                            <button
+                                type="button"
+                                className="download-all-btn no-print"
+                                onClick={downloadAllDocuments}
+                                disabled={downloadingAll}
+                            >
+                                {downloadingAll ? (
+                                    <>
+                                        <FaSpinner className="spinner-small" />
+                                        {downloadProgress.current}/{downloadProgress.total}...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaCloudDownloadAlt />
+                                        Download All
+                                    </>
+                                )}
+                            </button>
+                        )}
                     </div>
 
                     <div className="docs-section">
@@ -578,7 +822,7 @@ const AdminViewApplication = () => {
 
                 {/* ===== ACTION BUTTONS ===== */}
                 {canAct && (
-                    <div className="action-panel">
+                    <div className="action-panel no-print">
                         <h3>Take Action</h3>
                         <div className="action-buttons">
                             <button
@@ -612,7 +856,7 @@ const AdminViewApplication = () => {
                 )}
 
                 {/* ===== FOOTER ===== */}
-                <div className="footer-actions">
+                <div className="footer-actions no-print">
                     <button
                         className="back-btn"
                         onClick={() => navigate('/admin/applications')}
@@ -620,94 +864,141 @@ const AdminViewApplication = () => {
                         <FaArrowLeft /> Back to Applications
                     </button>
                 </div>
+            </div>
 
-                {/* ===== ACTION MODAL ===== */}
-                {actionModal.show && (
-                    <div className="modal-overlay" onClick={closeActionModal}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <div className={`modal-header ${actionModal.type}`}>
-                                <h2>
-                                    {actionModal.type === 'approve' && <>✅ Approve Application</>}
-                                    {actionModal.type === 'reject' && <>❌ Reject Application</>}
-                                    {actionModal.type === 'review' && <>🔄 Send Back for Review</>}
-                                </h2>
-                                <button className="close-btn" onClick={closeActionModal}>
+            {/* ===== IMAGE PREVIEW MODAL ===== */}
+            {previewImage && (
+                <div
+                    className="image-preview-modal no-print"
+                    onClick={() => setPreviewImage(null)}
+                >
+                    <div className="preview-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="preview-header">
+                            <h3>{previewImage.label}</h3>
+                            <div className="preview-actions">
+                                <button
+                                    type="button"
+                                    className="preview-btn download"
+                                    onClick={() => downloadFile(previewImage.label, previewImage.url)}
+                                    title="Download"
+                                >
+                                    <FaDownload />
+                                </button>
+                                <a
+                                    href={previewImage.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="preview-btn open"
+                                    title="Open in new tab"
+                                >
+                                    <FaExternalLinkAlt />
+                                </a>
+                                <button
+                                    type="button"
+                                    className="preview-btn close"
+                                    onClick={() => setPreviewImage(null)}
+                                >
                                     <FaTimes />
                                 </button>
                             </div>
-
-                            <div className="modal-body">
-                                <div className="modal-app-info">
-                                    <div><span>Application:</span> <strong>{application.applicationNumber}</strong></div>
-                                    <div><span>Student:</span> <strong>{application.student?.firstName} {application.student?.lastName}</strong></div>
-                                    <div><span>Agent:</span> <strong>{application.agentName}</strong></div>
-                                </div>
-
-                                <div className="modal-message">
-                                    {actionModal.type === 'approve' && (
-                                        <p className="info-text">
-                                            This will <strong>approve</strong> the application and notify the agent via email.
-                                        </p>
-                                    )}
-                                    {actionModal.type === 'reject' && (
-                                        <p className="warning-text">
-                                            This will <strong>reject</strong> the application. Agent will receive the reason via email.
-                                        </p>
-                                    )}
-                                    {actionModal.type === 'review' && (
-                                        <p className="review-text">
-                                            Application will be sent back to agent for <strong>corrections</strong>.
-                                        </p>
-                                    )}
-                                </div>
-
-                                <div className="form-group">
-                                    <label>
-                                        {actionModal.type === 'approve' && 'Remarks (Optional)'}
-                                        {actionModal.type === 'reject' && 'Rejection Reason *'}
-                                        {actionModal.type === 'review' && 'Review Remarks *'}
-                                    </label>
-                                    <textarea
-                                        placeholder={
-                                            actionModal.type === 'approve' ? 'Additional notes...' :
-                                            actionModal.type === 'reject' ? 'Why is this being rejected?' :
-                                            'What changes are needed?'
-                                        }
-                                        rows="4"
-                                        value={actionModal.remarks}
-                                        onChange={(e) => setActionModal(prev => ({ ...prev, remarks: e.target.value }))}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="modal-footer">
-                                <button
-                                    className="modal-btn cancel"
-                                    onClick={closeActionModal}
-                                    disabled={actionModal.loading}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    className={`modal-btn primary ${actionModal.type}`}
-                                    onClick={handleAction}
-                                    disabled={actionModal.loading}
-                                >
-                                    {actionModal.loading ? (
-                                        <><FaSpinner className="spinner" /> Processing...</>
-                                    ) : (
-                                        <>
-                                            {actionModal.type === 'approve' && <><FaCheckCircle /> Approve & Notify</>}
-                                            {actionModal.type === 'reject' && <><FaTimesCircle /> Reject & Notify</>}
-                                            {actionModal.type === 'review' && <><FaRedo /> Send Back</>}
-                                        </>
-                                    )}
-                                </button>
-                            </div>
+                        </div>
+                        <div className="preview-body">
+                            <img
+                                src={previewImage.url}
+                                alt={previewImage.label}
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                            />
                         </div>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
+
+            {/* ===== ACTION MODAL ===== */}
+            {actionModal.show && (
+                <div className="modal-overlay no-print" onClick={closeActionModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className={`modal-header ${actionModal.type}`}>
+                            <h2>
+                                {actionModal.type === 'approve' && <>✅ Approve Application</>}
+                                {actionModal.type === 'reject' && <>❌ Reject Application</>}
+                                {actionModal.type === 'review' && <>🔄 Send Back for Review</>}
+                            </h2>
+                            <button className="close-btn" onClick={closeActionModal}>
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <div className="modal-body">
+                            <div className="modal-app-info">
+                                <div><span>Application:</span> <strong>{application.applicationNumber}</strong></div>
+                                <div><span>Student:</span> <strong>{application.student?.firstName} {application.student?.lastName}</strong></div>
+                                <div><span>Agent:</span> <strong>{application.agentName}</strong></div>
+                            </div>
+
+                            <div className="modal-message">
+                                {actionModal.type === 'approve' && (
+                                    <p className="info-text">
+                                        This will <strong>approve</strong> the application and notify the agent via email.
+                                    </p>
+                                )}
+                                {actionModal.type === 'reject' && (
+                                    <p className="warning-text">
+                                        This will <strong>reject</strong> the application. Agent will receive the reason via email.
+                                    </p>
+                                )}
+                                {actionModal.type === 'review' && (
+                                    <p className="review-text">
+                                        Application will be sent back to agent for <strong>corrections</strong>.
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <label>
+                                    {actionModal.type === 'approve' && 'Remarks (Optional)'}
+                                    {actionModal.type === 'reject' && 'Rejection Reason *'}
+                                    {actionModal.type === 'review' && 'Review Remarks *'}
+                                </label>
+                                <textarea
+                                    placeholder={
+                                        actionModal.type === 'approve' ? 'Additional notes...' :
+                                            actionModal.type === 'reject' ? 'Why is this being rejected?' :
+                                                'What changes are needed?'
+                                    }
+                                    rows="4"
+                                    value={actionModal.remarks}
+                                    onChange={(e) => setActionModal(prev => ({ ...prev, remarks: e.target.value }))}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button
+                                className="modal-btn cancel"
+                                onClick={closeActionModal}
+                                disabled={actionModal.loading}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className={`modal-btn primary ${actionModal.type}`}
+                                onClick={handleAction}
+                                disabled={actionModal.loading}
+                            >
+                                {actionModal.loading ? (
+                                    <><FaSpinner className="spinner" /> Processing...</>
+                                ) : (
+                                    <>
+                                        {actionModal.type === 'approve' && <><FaCheckCircle /> Approve & Notify</>}
+                                        {actionModal.type === 'reject' && <><FaTimesCircle /> Reject & Notify</>}
+                                        {actionModal.type === 'review' && <><FaRedo /> Send Back</>}
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

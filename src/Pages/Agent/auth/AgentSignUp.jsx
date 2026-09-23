@@ -9,23 +9,22 @@ import {
     FaClock, FaEnvelopeOpen, FaCheckCircle, FaIdCard,
     FaCalendarAlt, FaBriefcase, FaMapMarkerAlt,
     FaGraduationCap, FaPhone, FaUpload, FaTrash, FaFileAlt,
-    FaTimes, FaUserTie
+    FaTimes, FaUserTie, FaLink
 } from 'react-icons/fa';
 
 // ============================================
 // FLOATING CIRCLES BACKGROUND - WHITE THEME
 // ============================================
 const FloatingCircles = () => {
-    // Soft pastel circles for white theme
     const circles = [
-        { size: 340, top: '3%',  left: '5%',   duration: 22, delay: 0,   color: 'rgba(96, 165, 250, 0.30)' }, // soft blue
-        { size: 240, top: '58%', left: '72%',  duration: 28, delay: 2,   color: 'rgba(167, 139, 250, 0.28)' }, // soft purple
-        { size: 200, top: '72%', left: '12%',  duration: 24, delay: 4,   color: 'rgba(147, 197, 253, 0.26)' }, // light blue
-        { size: 280, top: '18%', left: '68%',  duration: 30, delay: 1,   color: 'rgba(196, 181, 253, 0.26)' }, // light lavender
-        { size: 160, top: '42%', left: '38%',  duration: 20, delay: 3,   color: 'rgba(110, 231, 183, 0.25)' }, // soft mint
-        { size: 220, top: '82%', left: '52%',  duration: 26, delay: 5,   color: 'rgba(251, 207, 232, 0.28)' }, // soft pink
-        { size: 180, top: '8%',  left: '42%',  duration: 32, delay: 2.5, color: 'rgba(253, 224, 71, 0.22)'  }, // soft yellow
-        { size: 260, top: '32%', left: '88%',  duration: 27, delay: 1.5, color: 'rgba(125, 211, 252, 0.26)' }, // sky blue
+        { size: 340, top: '3%',  left: '5%',   duration: 22, delay: 0,   color: 'rgba(96, 165, 250, 0.30)' },
+        { size: 240, top: '58%', left: '72%',  duration: 28, delay: 2,   color: 'rgba(167, 139, 250, 0.28)' },
+        { size: 200, top: '72%', left: '12%',  duration: 24, delay: 4,   color: 'rgba(147, 197, 253, 0.26)' },
+        { size: 280, top: '18%', left: '68%',  duration: 30, delay: 1,   color: 'rgba(196, 181, 253, 0.26)' },
+        { size: 160, top: '42%', left: '38%',  duration: 20, delay: 3,   color: 'rgba(110, 231, 183, 0.25)' },
+        { size: 220, top: '82%', left: '52%',  duration: 26, delay: 5,   color: 'rgba(251, 207, 232, 0.28)' },
+        { size: 180, top: '8%',  left: '42%',  duration: 32, delay: 2.5, color: 'rgba(253, 224, 71, 0.22)'  },
+        { size: 260, top: '32%', left: '88%',  duration: 27, delay: 1.5, color: 'rgba(125, 211, 252, 0.26)' },
     ];
 
     return (
@@ -50,7 +49,7 @@ const FloatingCircles = () => {
 };
 
 // ============================================
-// MAIN COMPONENT (same as before — sirf upar wala change hai)
+// MAIN COMPONENT
 // ============================================
 const AgentSignUp = () => {
     const navigate = useNavigate();
@@ -61,10 +60,15 @@ const AgentSignUp = () => {
         name: '', email: '', phone: '', password: '', confirmPassword: '',
         dateOfBirth: '', gender: '', nationality: '',
         idType: 'aadhar', idNumber: '', idFile: null, idFilePreview: null,
+        // ✅ NEW: URL for ID document
+        idFileUrl: '',
         jobTitle: '', company: '', experience: '', education: '', specialization: '',
         address: '', city: '', state: '', pincode: '', country: 'India', bio: '',
         languages: [], skills: [], agreeTerms: false
     });
+
+    // ✅ NEW: ID document input mode (upload | url)
+    const [idFileMode, setIdFileMode] = useState('upload');
 
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
@@ -125,19 +129,56 @@ const AgentSignUp = () => {
 
     const handleBlur = (e) => setTouched(prev => ({ ...prev, [e.target.name]: true }));
 
+    // ============================================
+    // ✅ FILE CHANGE
+    // ============================================
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
         if (!validTypes.includes(file.type)) return showToast('Please upload JPG, PNG or PDF file', 'error');
         if (file.size > 5 * 1024 * 1024) return showToast('File size should be less than 5MB', 'error');
-        setFormData(prev => ({ ...prev, idFile: file, idFilePreview: URL.createObjectURL(file) }));
+        setFormData(prev => ({
+            ...prev,
+            idFile: file,
+            idFilePreview: URL.createObjectURL(file),
+            idFileUrl: '' // URL clear कर दें जब file upload हो
+        }));
+        if (errors.idFile) setErrors(prev => ({ ...prev, idFile: '' }));
         showToast('File uploaded successfully!', 'success');
     };
 
     const removeFile = () => {
         setFormData(prev => ({ ...prev, idFile: null, idFilePreview: null }));
         if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    // ============================================
+    // ✅ URL CHANGE
+    // ============================================
+    const handleIdUrlChange = (value) => {
+        setFormData(prev => ({
+            ...prev,
+            idFileUrl: value,
+            idFile: null,
+            idFilePreview: null
+        }));
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        if (errors.idFile) setErrors(prev => ({ ...prev, idFile: '' }));
+    };
+
+    // ============================================
+    // ✅ MODE SWITCH (upload | url)
+    // ============================================
+    const handleIdModeSwitch = (mode) => {
+        setIdFileMode(mode);
+        if (mode === 'upload') {
+            setFormData(prev => ({ ...prev, idFileUrl: '' }));
+        } else {
+            // URL mode — file clear
+            removeFile();
+        }
+        if (errors.idFile) setErrors(prev => ({ ...prev, idFile: '' }));
     };
 
     const addLanguage = () => {
@@ -185,6 +226,9 @@ const AgentSignUp = () => {
         if (pasted.length === 6) setTimeout(() => handleVerifyOTP(pasted), 300);
     };
 
+    // ============================================
+    // ✅ VALIDATE FORM — ID file/URL optional
+    // ============================================
     const validateForm = () => {
         const newErrors = {};
         if (!formData.name.trim()) newErrors.name = 'Full name is required';
@@ -201,7 +245,9 @@ const AgentSignUp = () => {
         if (!formData.gender) newErrors.gender = 'Gender is required';
         if (!formData.idType) newErrors.idType = 'ID type is required';
         if (!formData.idNumber.trim()) newErrors.idNumber = 'ID number is required';
-        if (!formData.idFile) newErrors.idFile = 'Please upload your ID document';
+
+        // ✅ ID document अब OPTIONAL है — कोई validation नहीं
+
         if (!formData.jobTitle) newErrors.jobTitle = 'Job title is required';
         if (!formData.experience) newErrors.experience = 'Experience is required';
         if (!formData.education) newErrors.education = 'Education is required';
@@ -211,6 +257,7 @@ const AgentSignUp = () => {
         if (!formData.pincode.trim()) newErrors.pincode = 'Pincode is required';
         else if (!/^[0-9]{6}$/.test(formData.pincode)) newErrors.pincode = 'Please enter a valid 6-digit pincode';
         if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to the terms and conditions';
+
         const firstKey = Object.keys(newErrors)[0];
         if (firstKey) showToast(newErrors[firstKey], 'error');
         return newErrors;
@@ -246,7 +293,17 @@ const AgentSignUp = () => {
                 languages: JSON.stringify(formData.languages),
                 skills: JSON.stringify(formData.skills),
             }).forEach(([k, v]) => fd.append(k, v));
-            if (formData.idFile) fd.append('idFile', formData.idFile);
+
+            // ✅ ID file (if uploaded)
+            if (formData.idFile) {
+                fd.append('idFile', formData.idFile);
+            }
+
+            // ✅ ID URL (if provided)
+            if (formData.idFileUrl && formData.idFileUrl.trim()) {
+                fd.append('idFileUrl', formData.idFileUrl.trim());
+            }
+
             const response = await agentApi.signup(fd);
             if (response.success) {
                 showToast('✅ Verification code sent to your email!', 'success');
@@ -488,7 +545,9 @@ const AgentSignUp = () => {
                                     </div>
                                 </div>
 
-                                {/* ID */}
+                                {/* ============================================ */}
+                                {/* ✅ IDENTIFICATION — Updated with URL support */}
+                                {/* ============================================ */}
                                 <div className="agent-signup-form-section">
                                     <h3 className="agent-signup-section-title">
                                         <FaIdCard className="agent-signup-section-icon" /> Identification
@@ -512,34 +571,86 @@ const AgentSignUp = () => {
                                             {touched.idNumber && errors.idNumber && <span className="agent-signup-error-text">{errors.idNumber}</span>}
                                         </div>
                                     </div>
+
+                                    {/* ID DOCUMENT — Optional with Upload/URL toggle */}
                                     <div className="agent-signup-form-group">
-                                        <label htmlFor="idFile">Upload ID Document *</label>
-                                        <div className="agent-signup-file-upload">
-                                            {!formData.idFilePreview ? (
-                                                <div className="agent-signup-file-drop">
-                                                    <input type="file" id="idFile" name="idFile" ref={fileInputRef}
-                                                        onChange={handleFileChange} accept=".jpg,.jpeg,.png,.pdf"
-                                                        className={errors.idFile ? 'error' : ''} disabled={loading} />
-                                                    <FaUpload className="agent-signup-upload-icon" />
-                                                    <p>Click to upload or drag and drop</p>
-                                                    <small>JPG, PNG or PDF (Max 5MB)</small>
-                                                </div>
-                                            ) : (
-                                                <div className="agent-signup-file-preview">
-                                                    {formData.idFilePreview.match(/\.(jpeg|jpg|png|gif)$/) ? (
-                                                        <img src={formData.idFilePreview} alt="ID Preview" className="agent-signup-preview-image" />
-                                                    ) : (
-                                                        <div className="agent-signup-file-icon-preview">
-                                                            <FaFileAlt size={40} />
-                                                            <p>{formData.idFile?.name}</p>
-                                                        </div>
-                                                    )}
-                                                    <button type="button" className="agent-signup-remove-file"
-                                                        onClick={removeFile} disabled={loading}><FaTrash /></button>
-                                                </div>
-                                            )}
+                                        <label>ID Document (Optional)</label>
+
+                                        {/* Mode Toggle */}
+                                        <div className="agent-signup-file-mode-toggle">
+                                            <button
+                                                type="button"
+                                                className={idFileMode === 'upload' ? 'active' : ''}
+                                                onClick={() => handleIdModeSwitch('upload')}
+                                                disabled={loading}
+                                            >
+                                                <FaUpload /> Upload
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={idFileMode === 'url' ? 'active' : ''}
+                                                onClick={() => handleIdModeSwitch('url')}
+                                                disabled={loading}
+                                            >
+                                                <FaLink /> URL
+                                            </button>
                                         </div>
-                                        {errors.idFile && <span className="agent-signup-error-text">{errors.idFile}</span>}
+
+                                        {/* UPLOAD MODE */}
+                                        {idFileMode === 'upload' && (
+                                            <div className="agent-signup-file-upload">
+                                                {!formData.idFilePreview ? (
+                                                    <div className="agent-signup-file-drop">
+                                                        <input type="file" id="idFile" name="idFile" ref={fileInputRef}
+                                                            onChange={handleFileChange} accept=".jpg,.jpeg,.png,.pdf"
+                                                            disabled={loading} />
+                                                        <FaUpload className="agent-signup-upload-icon" />
+                                                        <p>Click to upload or drag and drop</p>
+                                                        <small>JPG, PNG or PDF (Max 5MB) — Optional</small>
+                                                    </div>
+                                                ) : (
+                                                    <div className="agent-signup-file-preview">
+                                                        {formData.idFilePreview.match(/\.(jpeg|jpg|png|gif)$/) ? (
+                                                            <img src={formData.idFilePreview} alt="ID Preview" className="agent-signup-preview-image" />
+                                                        ) : (
+                                                            <div className="agent-signup-file-icon-preview">
+                                                                <FaFileAlt size={40} />
+                                                                <p>{formData.idFile?.name}</p>
+                                                            </div>
+                                                        )}
+                                                        <button type="button" className="agent-signup-remove-file"
+                                                            onClick={removeFile} disabled={loading}><FaTrash /></button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* URL MODE */}
+                                        {idFileMode === 'url' && (
+                                            <div className="agent-signup-url-input-wrap">
+                                                <FaLink className="agent-signup-url-icon" />
+                                                <input
+                                                    type="url"
+                                                    className="agent-signup-url-input"
+                                                    placeholder="https://drive.google.com/..."
+                                                    value={formData.idFileUrl || ''}
+                                                    onChange={(e) => handleIdUrlChange(e.target.value)}
+                                                    disabled={loading}
+                                                />
+                                                {formData.idFileUrl && (
+                                                    <button
+                                                        type="button"
+                                                        className="agent-signup-url-clear"
+                                                        onClick={() => handleIdUrlChange('')}
+                                                        disabled={loading}
+                                                    >
+                                                        <FaTimes />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* ✅ कोई error message नहीं — optional है */}
                                     </div>
                                 </div>
 

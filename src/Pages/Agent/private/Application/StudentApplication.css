@@ -450,4 +450,125 @@
     .StudentApplication .submit-btn {
         flex: 1;
     }
+}/* ============================================
+   FILE MODE TOGGLE (Upload | URL)
+   ============================================ */
+.file-mode-toggle {
+    display: inline-flex;
+    gap: 4px;
+    margin-bottom: 10px;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.file-mode-toggle button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.file-mode-toggle button:hover {
+    color: #334155;
+}
+
+.file-mode-toggle button.active {
+    background: #ffffff;
+    color: #2563eb;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ============================================
+   URL INPUT
+   ============================================ */
+.url-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.url-input-wrap .url-input-icon {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.url-input-wrap .url-input {
+    width: 100%;
+    padding: 11px 42px 11px 36px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #ffffff;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.url-input-wrap .url-input::placeholder {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.url-input-wrap .url-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.url-input-wrap .remove-file-btn {
+    position: absolute;
+    right: 8px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.url-input-wrap .remove-file-btn:hover {
+    background: #fecaca;
+}
+
+/* ============================================
+   URL PREVIEW (for profile photo URL)
+   ============================================ */
+.file-preview.url-preview {
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-preview.url-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

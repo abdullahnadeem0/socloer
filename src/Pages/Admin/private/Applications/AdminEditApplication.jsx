@@ -3,14 +3,35 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './AdminEditApplication.css';
 import adminApi from '../../../../api/adminApi';
-import api, { API_URL, SERVER_URL, getFileUrl } from '../../../../api/config';
+import api, { API_URL, SERVER_URL, getFileUrl as configGetFileUrl } from '../../../../api/config';
 
 import {
     FaArrowLeft, FaSave, FaUser, FaGraduationCap, FaUniversity,
     FaFileAlt, FaMoneyBillWave, FaMapMarkerAlt, FaSpinner,
     FaExclamationTriangle, FaCheckCircle, FaUpload, FaTrash,
-    FaFolderOpen, FaFileContract, FaReceipt
+    FaFolderOpen, FaFileContract, FaReceipt, FaLink,
+    FaExternalLinkAlt, FaImage
 } from 'react-icons/fa';
+
+// ============================================
+// ALL FILE FIELDS
+// ============================================
+const ALL_FILE_FIELDS = [
+    'profilePhoto', 'idProof', 'marksheet',
+    'incomeCertificate', 'previousCertificate', 'bankPassbook',
+    'dependentPassport1', 'sponsorDetails', 'bankStatementLetter',
+    'visaCopies', 'pendingDocument', 'visaDocument',
+    'studyContinuousLetter', 'dependentPassport2', 'transferStudents',
+    'signedCAL', 'paymentInvoice',
+    'applicationFeeReceipt', 'englishExamReceipt',
+    'internalAdmissionFee', 'bankCheckDraft',
+    'insuranceFee', 'tuitionFee',
+    'finalSignedCAL', 'finalPaymentInvoice',
+    'initialAdmissionPortfolio', 'deferralAdmissionPortfolio'
+];
+
+const createEmptyUrlState = () =>
+    ALL_FILE_FIELDS.reduce((acc, f) => ({ ...acc, [f]: '' }), {});
 
 const AdminEditApplication = () => {
     const { id } = useParams();
@@ -30,6 +51,15 @@ const AdminEditApplication = () => {
 
     // ===== ORIGINAL DATA =====
     const [originalData, setOriginalData] = useState(null);
+
+    // ===== FILE MODES (upload | url | keep) =====
+    // 'keep' = पुरानी file रखो
+    // 'upload' = नई file upload
+    // 'url' = URL दो
+    const [fileModes, setFileModes] = useState({});
+
+    // ===== FILE URLS =====
+    const [fileUrls, setFileUrls] = useState(createEmptyUrlState());
 
     // ===== FILE REFS =====
     const fileRefs = {
@@ -62,75 +92,52 @@ const AdminEditApplication = () => {
         deferralAdmissionPortfolio: useRef(null)
     };
 
-
     // ===== FORM DATA =====
     const [formData, setFormData] = useState({
         university: '',
         program: '',
-
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        dateOfBirth: '',
-        gender: '',
-        nationality: 'Indian',
-        category: 'General',
-        address: '',
-        city: '',
-        state: '',
-        pincode: '',
-        country: 'India',
-        fatherName: '',
-        motherName: '',
-        guardianPhone: '',
-        annualIncome: '',
-
-        previousEducation: '',
-        previousInstitute: '',
-        passingYear: '',
-        percentage: '',
-        gpa: '',
-
-        whyDeserve: '',
-        achievements: '',
-
-        accountHolderName: '',
-        accountNumber: '',
-        ifscCode: '',
-        bankName: '',
-        branchName: '',
+        firstName: '', lastName: '', email: '', phone: '',
+        dateOfBirth: '', gender: '', nationality: 'Indian', category: 'General',
+        address: '', city: '', state: '', pincode: '', country: 'India',
+        fatherName: '', motherName: '', guardianPhone: '', annualIncome: '',
+        previousEducation: '', previousInstitute: '', passingYear: '',
+        percentage: '', gpa: '',
+        whyDeserve: '', achievements: '',
+        accountHolderName: '', accountNumber: '', ifscCode: '',
+        bankName: '', branchName: '',
 
         // Files
-        profilePhoto: null,
-        profilePhotoPreview: null,
-        idProof: null,
-        marksheet: null,
-        incomeCertificate: null,
-        previousCertificate: null,
-        bankPassbook: null,
-        dependentPassport1: null,
-        sponsorDetails: null,
-        bankStatementLetter: null,
-        visaCopies: null,
-        pendingDocument: null,
-        visaDocument: null,
-        studyContinuousLetter: null,
-        dependentPassport2: null,
+        profilePhoto: null, profilePhotoPreview: null,
+        idProof: null, marksheet: null, incomeCertificate: null,
+        previousCertificate: null, bankPassbook: null,
+        dependentPassport1: null, sponsorDetails: null,
+        bankStatementLetter: null, visaCopies: null,
+        pendingDocument: null, visaDocument: null,
+        studyContinuousLetter: null, dependentPassport2: null,
         transferStudents: null,
-        signedCAL: null,
-        paymentInvoice: null,
-        applicationFeeReceipt: null,
-        englishExamReceipt: null,
-        internalAdmissionFee: null,
-        bankCheckDraft: null,
-        insuranceFee: null,
-        tuitionFee: null,
-        finalSignedCAL: null,
-        finalPaymentInvoice: null,
-        initialAdmissionPortfolio: null,
-        deferralAdmissionPortfolio: null
+        signedCAL: null, paymentInvoice: null,
+        applicationFeeReceipt: null, englishExamReceipt: null,
+        internalAdmissionFee: null, bankCheckDraft: null,
+        insuranceFee: null, tuitionFee: null,
+        finalSignedCAL: null, finalPaymentInvoice: null,
+        initialAdmissionPortfolio: null, deferralAdmissionPortfolio: null
     });
+
+    // ============================================
+    // HELPER: Get existing doc + detect if URL
+    // ============================================
+    const getExistingDoc = (field) => originalData?.documents?.[field] || null;
+
+    const isExternalUrl = (path) => {
+        if (!path) return false;
+        return path.startsWith('http://') || path.startsWith('https://');
+    };
+
+    const getFieldMode = (field) => {
+        if (fileModes[field]) return fileModes[field];
+        // Default: 'keep' if old file exists, else 'upload'
+        return getExistingDoc(field) ? 'keep' : 'upload';
+    };
 
     // ============================================
     // FETCH DATA
@@ -143,10 +150,7 @@ const AdminEditApplication = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('adminToken');
-
-            // Token check
             if (!token || token === 'null' || token === 'undefined') {
-                console.error('❌ No valid token!');
                 setServerError('Session expired. Please login again.');
                 setTimeout(() => {
                     localStorage.clear();
@@ -155,20 +159,12 @@ const AdminEditApplication = () => {
                 return;
             }
 
-            console.log('🔑 Token exists, length:', token.length);
-
-            // ===== FETCH APPLICATION =====
             const appResponse = await adminApi.applications.getById(id);
-            console.log('📥 Application response:', appResponse);
-
-            if (!appResponse.success) {
-                throw new Error('Application not found');
-            }
+            if (!appResponse.success) throw new Error('Application not found');
 
             const app = appResponse.data;
             setOriginalData(app);
 
-            // Fill form
             setFormData(prev => ({
                 ...prev,
                 university: app.university?._id || app.university || '',
@@ -178,8 +174,7 @@ const AdminEditApplication = () => {
                 email: app.student?.email || '',
                 phone: app.student?.phone || '',
                 dateOfBirth: app.student?.dateOfBirth
-                    ? new Date(app.student.dateOfBirth).toISOString().split('T')[0]
-                    : '',
+                    ? new Date(app.student.dateOfBirth).toISOString().split('T')[0] : '',
                 gender: app.student?.gender || '',
                 nationality: app.student?.nationality || 'Indian',
                 category: app.student?.category || 'General',
@@ -206,48 +201,40 @@ const AdminEditApplication = () => {
                 branchName: app.bankDetails?.branchName || ''
             }));
 
-            // ===== FETCH UNIVERSITIES =====
-            try {
-                console.log('🎓 Fetching universities...');
-                const unisResponse = await adminApi.getAllUniversities(token);
-                console.log('📥 Universities response:', unisResponse);
-
-                if (unisResponse.success) {
-                    const unisList = unisResponse.data || unisResponse.universities || [];
-                    console.log('✅ Universities loaded:', unisList.length);
-                    setUniversities(unisList);
+            // Initialize file URLs state from existing docs that are URLs
+            const initialUrls = createEmptyUrlState();
+            ALL_FILE_FIELDS.forEach(f => {
+                const doc = app.documents?.[f];
+                if (doc && isExternalUrl(doc)) {
+                    initialUrls[f] = doc;
                 }
-            } catch (uniError) {
-                console.error('❌ Universities error:', uniError);
-            }
+            });
+            setFileUrls(initialUrls);
 
-            // ===== FETCH PROGRAMS =====
+            // Fetch universities
+            try {
+                const unisResponse = await adminApi.getAllUniversities(token);
+                if (unisResponse.success) {
+                    setUniversities(unisResponse.data || unisResponse.universities || []);
+                }
+            } catch (e) { console.error('Uni error:', e); }
+
+            // Fetch programs
             const uniId = app.university?._id || app.university;
             if (uniId) {
                 try {
-                    console.log('📚 Fetching programs for:', uniId);
                     const programsResponse = await adminApi.getProgramsByUniversity(uniId, token);
-                    console.log('📥 Programs response:', programsResponse);
-
                     if (programsResponse.success) {
-                        const progsList = programsResponse.data || programsResponse.programs || [];
-                        console.log('✅ Programs loaded:', progsList.length);
-                        setPrograms(progsList);
+                        setPrograms(programsResponse.data || programsResponse.programs || []);
                     }
-                } catch (progError) {
-                    console.error('❌ Programs error:', progError);
-                }
+                } catch (e) { console.error('Prog error:', e); }
             }
 
         } catch (error) {
             console.error('❌ Fetch error:', error);
             setServerError(error.response?.data?.message || 'Failed to load application');
-
             if (error.response?.status === 401) {
-                setTimeout(() => {
-                    localStorage.clear();
-                    navigate('/signin');
-                }, 2000);
+                setTimeout(() => { localStorage.clear(); navigate('/signin'); }, 2000);
             }
         } finally {
             setLoading(false);
@@ -259,42 +246,26 @@ const AdminEditApplication = () => {
     // ============================================
     const handleUniversityChange = async (e) => {
         const universityId = e.target.value;
-
-        console.log('🎓 University selected:', universityId);
-
-        setFormData(prev => ({
-            ...prev,
-            university: universityId,
-            program: ''
-        }));
-
+        setFormData(prev => ({ ...prev, university: universityId, program: '' }));
         setPrograms([]);
-
         if (!universityId) return;
 
         setLoadingPrograms(true);
         try {
             const token = localStorage.getItem('adminToken');
-            console.log('📚 Fetching programs...');
-            
             const response = await adminApi.getProgramsByUniversity(universityId, token);
-            console.log('📥 Programs response:', response);
-
             if (response.success) {
-                const progsList = response.data || response.programs || [];
-                console.log('✅ Programs loaded:', progsList.length);
-                setPrograms(progsList);
+                setPrograms(response.data || response.programs || []);
             }
         } catch (error) {
             console.error('❌ Programs error:', error);
-            console.error('❌ Error details:', error.response?.data);
         } finally {
             setLoadingPrograms(false);
         }
     };
 
     // ============================================
-    // HANDLE CHANGE
+    // HANDLE CHANGE (text/select/file)
     // ============================================
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -307,7 +278,6 @@ const AdminEditApplication = () => {
                 setErrors(prev => ({ ...prev, [name]: 'Max 5MB allowed' }));
                 return;
             }
-
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
             if (!validTypes.includes(file.type)) {
                 setErrors(prev => ({ ...prev, [name]: 'Only JPG, PNG, PDF allowed' }));
@@ -315,14 +285,12 @@ const AdminEditApplication = () => {
             }
 
             const update = { [name]: file };
-
             if (name === 'profilePhoto') {
                 if (formData.profilePhotoPreview) {
                     URL.revokeObjectURL(formData.profilePhotoPreview);
                 }
                 update.profilePhotoPreview = URL.createObjectURL(file);
             }
-
             setFormData(prev => ({ ...prev, ...update }));
             setErrors(prev => ({ ...prev, [name]: '' }));
             return;
@@ -332,27 +300,50 @@ const AdminEditApplication = () => {
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
-
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: '' }));
-        }
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
     // ============================================
     // REMOVE FILE
     // ============================================
-    const removeFile = (fieldName) => {
-        if (fieldName === 'profilePhoto' && formData.profilePhotoPreview) {
+    const removeFile = (fieldName, keepPreview = false) => {
+        if (fieldName === 'profilePhoto' && formData.profilePhotoPreview && !keepPreview) {
             URL.revokeObjectURL(formData.profilePhotoPreview);
         }
         setFormData(prev => ({
             ...prev,
             [fieldName]: null,
-            ...(fieldName === 'profilePhoto' && { profilePhotoPreview: null })
+            ...(fieldName === 'profilePhoto' && !keepPreview && { profilePhotoPreview: null })
         }));
         if (fileRefs[fieldName]?.current) {
             fileRefs[fieldName].current.value = '';
         }
+    };
+
+    // ============================================
+    // MODE SWITCH
+    // ============================================
+    const handleModeSwitch = (name, mode) => {
+        setFileModes(prev => ({ ...prev, [name]: mode }));
+
+        // Clear values that don't apply
+        if (mode === 'keep') {
+            removeFile(name);
+            setFileUrls(prev => ({ ...prev, [name]: '' }));
+        } else if (mode === 'upload') {
+            setFileUrls(prev => ({ ...prev, [name]: '' }));
+        } else if (mode === 'url') {
+            removeFile(name);
+        }
+        setErrors(prev => ({ ...prev, [name]: '' }));
+    };
+
+    // ============================================
+    // URL CHANGE
+    // ============================================
+    const handleUrlChange = (name, value) => {
+        setFileUrls(prev => ({ ...prev, [name]: value }));
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
     // ============================================
@@ -367,53 +358,222 @@ const AdminEditApplication = () => {
     };
 
     // ============================================
-    // FILE UPLOAD RENDERER
+    // ✅ RENDER FILE UPLOAD — 3 MODES (keep | upload | url)
     // ============================================
     const renderFileUpload = (label, name) => {
+        const existingDoc = getExistingDoc(name);
         const newFile = formData[name];
-        const oldFile = originalData?.documents?.[name];
+        const urlValue = fileUrls[name];
+        const mode = getFieldMode(name);
+
+        const isExistingUrl = isExternalUrl(existingDoc);
 
         return (
             <div className="form-group">
                 <label>{label}</label>
-                {!newFile ? (
+
+                {/* Mode Toggle */}
+                <div className="file-mode-toggle">
+                    {existingDoc && (
+                        <button
+                            type="button"
+                            className={mode === 'keep' ? 'active' : ''}
+                            onClick={() => handleModeSwitch(name, 'keep')}
+                        >
+                            <FaCheckCircle /> Keep
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        className={mode === 'upload' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'upload')}
+                    >
+                        <FaUpload /> Upload
+                    </button>
+                    <button
+                        type="button"
+                        className={mode === 'url' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'url')}
+                    >
+                        <FaLink /> URL
+                    </button>
+                </div>
+
+                {/* KEEP MODE — show existing */}
+                {mode === 'keep' && existingDoc && (
+                    <div className="file-preview-simple existing">
+                        <FaFileAlt />
+                        <a
+                            href={getFileUrl(existingDoc)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="existing-file-link"
+                        >
+                            {isExistingUrl ? <FaLink /> : null}
+                            {isExistingUrl ? 'Current URL (click to open)' : 'Current file (click to view)'}
+                        </a>
+                    </div>
+                )}
+
+                {/* UPLOAD MODE */}
+                {mode === 'upload' && (
+                    newFile ? (
+                        <div className="file-preview-simple">
+                            <FaFileAlt />
+                            <span>{newFile.name}</span>
+                            <button
+                                type="button"
+                                className="remove-file-btn"
+                                onClick={() => removeFile(name)}
+                            >
+                                <FaTrash />
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="file-drop-zone">
+                            <input
+                                type="file"
+                                name={name}
+                                ref={fileRefs[name]}
+                                onChange={handleChange}
+                                accept=".jpg,.jpeg,.png,.pdf"
+                            />
+                            <FaUpload className="upload-icon" />
+                            <p>Upload New File</p>
+                            <small>JPG, PNG, PDF (Max 5MB)</small>
+                        </div>
+                    )
+                )}
+
+                {/* URL MODE */}
+                {mode === 'url' && (
+                    <div className="url-input-wrap">
+                        <FaLink className="url-input-icon" />
+                        <input
+                            type="url"
+                            className="url-input"
+                            placeholder="https://drive.google.com/..."
+                            value={urlValue || ''}
+                            onChange={(e) => handleUrlChange(name, e.target.value)}
+                        />
+                        {urlValue && (
+                            <button
+                                type="button"
+                                className="remove-file-btn"
+                                onClick={() => handleUrlChange(name, '')}
+                                title="Clear URL"
+                            >
+                                <FaTrash />
+                            </button>
+                        )}
+                    </div>
+                )}
+
+                {errors[name] && <span className="error-text">{errors[name]}</span>}
+            </div>
+        );
+    };
+
+    // ============================================
+    // ✅ RENDER PROFILE PHOTO — 3 MODES
+    // ============================================
+    const renderProfilePhotoUpload = () => {
+        const name = 'profilePhoto';
+        const existingDoc = getExistingDoc(name);
+        const mode = getFieldMode(name);
+        const newPreview = formData.profilePhotoPreview;
+        const urlValue = fileUrls[name];
+        const isExistingUrl = isExternalUrl(existingDoc);
+
+        // Preview source
+        let preview = null;
+        if (mode === 'upload') preview = newPreview;
+        else if (mode === 'url' && urlValue) preview = urlValue;
+        else if (mode === 'keep' && existingDoc) preview = getFileUrl(existingDoc);
+
+        return (
+            <div className="form-group">
+                <label>Profile Photo</label>
+
+                {/* Mode Toggle */}
+                <div className="file-mode-toggle">
+                    {existingDoc && (
+                        <button
+                            type="button"
+                            className={mode === 'keep' ? 'active' : ''}
+                            onClick={() => handleModeSwitch(name, 'keep')}
+                        >
+                            <FaCheckCircle /> Keep
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        className={mode === 'upload' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'upload')}
+                    >
+                        <FaUpload /> Upload
+                    </button>
+                    <button
+                        type="button"
+                        className={mode === 'url' ? 'active' : ''}
+                        onClick={() => handleModeSwitch(name, 'url')}
+                    >
+                        <FaLink /> URL
+                    </button>
+                </div>
+
+                {/* KEEP / URL / UPLOAD — preview */}
+                {preview && (
+                    <div className="file-preview">
+                        <img
+                            src={preview}
+                            alt="Preview"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                        {mode !== 'keep' && (
+                            <button
+                                type="button"
+                                className="remove-file-btn"
+                                onClick={() => {
+                                    if (mode === 'upload') removeFile(name);
+                                    else if (mode === 'url') handleUrlChange(name, '');
+                                }}
+                            >
+                                <FaTrash />
+                            </button>
+                        )}
+                    </div>
+                )}
+
+                {/* UPLOAD MODE (no preview yet) */}
+                {mode === 'upload' && !newPreview && (
                     <div className="file-drop-zone">
                         <input
                             type="file"
                             name={name}
                             ref={fileRefs[name]}
                             onChange={handleChange}
-                            accept=".jpg,.jpeg,.png,.pdf"
+                            accept="image/*"
                         />
-                        <FaUpload className="upload-icon" />
-                        <p>Upload</p>
-                        <small>JPG, PNG, PDF (Max 5MB)</small>
-                        {oldFile && (
-                            <a
-                                href={getFileUrl(oldFile)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="existing-file-link"
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                ✅ Already uploaded - Click to view
-                            </a>
-                        )}
-                    </div>
-                ) : (
-                    <div className="file-preview-simple">
-                        <FaFileAlt />
-                        <span>{newFile.name}</span>
-                        <button
-                            type="button"
-                            className="remove-file-btn"
-                            onClick={() => removeFile(name)}
-                        >
-                            <FaTrash />
-                        </button>
+                        <FaImage className="upload-icon" />
+                        <p>Upload Photo</p>
+                        <small>JPG, PNG (Max 5MB)</small>
                     </div>
                 )}
-                {errors[name] && <span className="error-text">{errors[name]}</span>}
+
+                {/* URL MODE — input */}
+                {mode === 'url' && (
+                    <div className="url-input-wrap" style={{ marginTop: '8px' }}>
+                        <FaLink className="url-input-icon" />
+                        <input
+                            type="url"
+                            className="url-input"
+                            placeholder="https://example.com/photo.jpg"
+                            value={urlValue || ''}
+                            onChange={(e) => handleUrlChange(name, e.target.value)}
+                        />
+                    </div>
+                )}
             </div>
         );
     };
@@ -434,8 +594,7 @@ const AdminEditApplication = () => {
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            const firstError = document.querySelector('.error-text');
-            firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.querySelector('.error-text')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
@@ -449,23 +608,14 @@ const AdminEditApplication = () => {
             dataToSend.append('program', formData.program);
 
             dataToSend.append('student', JSON.stringify({
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email,
-                phone: formData.phone,
-                dateOfBirth: formData.dateOfBirth,
-                gender: formData.gender,
-                nationality: formData.nationality,
-                category: formData.category,
-                address: formData.address,
-                city: formData.city,
-                state: formData.state,
-                pincode: formData.pincode,
-                country: formData.country,
-                fatherName: formData.fatherName,
-                motherName: formData.motherName,
-                guardianPhone: formData.guardianPhone,
-                annualIncome: formData.annualIncome
+                firstName: formData.firstName, lastName: formData.lastName,
+                email: formData.email, phone: formData.phone,
+                dateOfBirth: formData.dateOfBirth, gender: formData.gender,
+                nationality: formData.nationality, category: formData.category,
+                address: formData.address, city: formData.city, state: formData.state,
+                pincode: formData.pincode, country: formData.country,
+                fatherName: formData.fatherName, motherName: formData.motherName,
+                guardianPhone: formData.guardianPhone, annualIncome: formData.annualIncome
             }));
 
             dataToSend.append('academic', JSON.stringify({
@@ -489,34 +639,25 @@ const AdminEditApplication = () => {
                 branchName: formData.branchName
             }));
 
-            const fileFields = [
-                'profilePhoto', 'idProof', 'marksheet',
-                'incomeCertificate', 'previousCertificate', 'bankPassbook',
-                'dependentPassport1', 'sponsorDetails', 'bankStatementLetter',
-                'visaCopies', 'pendingDocument', 'visaDocument',
-                'studyContinuousLetter', 'dependentPassport2', 'transferStudents',
-                'signedCAL', 'paymentInvoice',
-                'applicationFeeReceipt', 'englishExamReceipt',
-                'internalAdmissionFee', 'bankCheckDraft',
-                'insuranceFee', 'tuitionFee',
-                'finalSignedCAL', 'finalPaymentInvoice',
-                'initialAdmissionPortfolio', 'deferralAdmissionPortfolio'
-            ];
+            // ===== FILES + URLs =====
+            ALL_FILE_FIELDS.forEach(field => {
+                const mode = getFieldMode(field);
 
-            fileFields.forEach(field => {
-                if (formData[field]) {
+                if (mode === 'upload' && formData[field]) {
                     dataToSend.append(field, formData[field]);
+                } else if (mode === 'url' && fileUrls[field]?.trim()) {
+                    dataToSend.append(`${field}Url`, fileUrls[field].trim());
                 }
+                // mode === 'keep' → कुछ नहीं भेजेंगे, backend पुरानी value रखेगा
             });
 
+            console.log('📤 Submitting update...');
             const response = await adminApi.applications.update(id, dataToSend);
             console.log('📥 Update response:', response);
 
             if (response.success) {
                 setSuccessMessage('✅ Application updated successfully!');
-                setTimeout(() => {
-                    navigate(`/admin/applications/${id}`);
-                }, 1500);
+                setTimeout(() => navigate(`/admin/applications/${id}`), 1500);
             }
         } catch (error) {
             console.error('❌ Update error:', error);
@@ -541,9 +682,6 @@ const AdminEditApplication = () => {
         );
     }
 
-    // ============================================
-    // ERROR
-    // ============================================
     if (serverError && !originalData) {
         return (
             <div className="AdminEditApplication">
@@ -568,10 +706,7 @@ const AdminEditApplication = () => {
 
                 {/* HEADER */}
                 <div className="edit-header">
-                    <button
-                        className="back-icon-btn"
-                        onClick={() => navigate(`/admin/applications/${id}`)}
-                    >
+                    <button className="back-icon-btn" onClick={() => navigate(`/admin/applications/${id}`)}>
                         <FaArrowLeft />
                     </button>
                     <div className="header-info">
@@ -582,15 +717,10 @@ const AdminEditApplication = () => {
 
                 {/* MESSAGES */}
                 {successMessage && (
-                    <div className="success-message">
-                        <FaCheckCircle /> {successMessage}
-                    </div>
+                    <div className="success-message"><FaCheckCircle /> {successMessage}</div>
                 )}
-
                 {serverError && (
-                    <div className="error-message">
-                        <FaExclamationTriangle /> {serverError}
-                    </div>
+                    <div className="error-message"><FaExclamationTriangle /> {serverError}</div>
                 )}
 
                 {/* FORM */}
@@ -602,15 +732,10 @@ const AdminEditApplication = () => {
                             <FaUniversity className="section-icon" />
                             University & Program
                         </h3>
-
                         <div className="form-row">
                             <div className="form-group">
                                 <label>Select University *</label>
-                                <select
-                                    name="university"
-                                    value={formData.university}
-                                    onChange={handleUniversityChange}
-                                >
+                                <select name="university" value={formData.university} onChange={handleUniversityChange}>
                                     <option value="">-- Select University --</option>
                                     {universities.map(uni => (
                                         <option key={uni._id} value={uni._id}>
@@ -620,7 +745,6 @@ const AdminEditApplication = () => {
                                 </select>
                                 {errors.university && <span className="error-text">{errors.university}</span>}
                             </div>
-
                             <div className="form-group">
                                 <label>Select Program *</label>
                                 <select
@@ -630,18 +754,12 @@ const AdminEditApplication = () => {
                                     disabled={!formData.university || loadingPrograms}
                                 >
                                     <option value="">
-                                        {loadingPrograms
-                                            ? 'Loading...'
-                                            : !formData.university
-                                                ? '-- Select university first --'
-                                                : programs.length === 0
-                                                    ? '-- No programs --'
-                                                    : '-- Select Program --'}
+                                        {loadingPrograms ? 'Loading...' :
+                                            !formData.university ? '-- Select university first --' :
+                                                programs.length === 0 ? '-- No programs --' : '-- Select Program --'}
                                     </option>
                                     {programs.map(prog => (
-                                        <option key={prog._id} value={prog._id}>
-                                            {prog.name}
-                                        </option>
+                                        <option key={prog._id} value={prog._id}>{prog.name}</option>
                                     ))}
                                 </select>
                                 {errors.program && <span className="error-text">{errors.program}</span>}
@@ -651,11 +769,7 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 2: STUDENT INFO */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaUser className="section-icon" />
-                            Student Personal Information
-                        </h3>
-
+                        <h3 className="section-title"><FaUser className="section-icon" /> Student Personal Information</h3>
                         <div className="form-row">
                             <div className="form-group">
                                 <label>First Name *</label>
@@ -668,7 +782,6 @@ const AdminEditApplication = () => {
                                 {errors.lastName && <span className="error-text">{errors.lastName}</span>}
                             </div>
                         </div>
-
                         <div className="form-row">
                             <div className="form-group">
                                 <label>Email *</label>
@@ -681,7 +794,6 @@ const AdminEditApplication = () => {
                                 {errors.phone && <span className="error-text">{errors.phone}</span>}
                             </div>
                         </div>
-
                         <div className="form-row">
                             <div className="form-group">
                                 <label>Date of Birth</label>
@@ -697,7 +809,6 @@ const AdminEditApplication = () => {
                                 </select>
                             </div>
                         </div>
-
                         <div className="form-row">
                             <div className="form-group">
                                 <label>Category</label>
@@ -719,34 +830,24 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 3: ADDRESS */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaMapMarkerAlt className="section-icon" />
-                            Address
-                        </h3>
-
+                        <h3 className="section-title"><FaMapMarkerAlt className="section-icon" /> Address</h3>
                         <div className="form-group">
                             <label>Full Address</label>
                             <textarea name="address" rows="2" value={formData.address} onChange={handleChange} />
                         </div>
-
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>City</label>
+                            <div className="form-group"><label>City</label>
                                 <input type="text" name="city" value={formData.city} onChange={handleChange} />
                             </div>
-                            <div className="form-group">
-                                <label>State</label>
+                            <div className="form-group"><label>State</label>
                                 <input type="text" name="state" value={formData.state} onChange={handleChange} />
                             </div>
                         </div>
-
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>Pincode</label>
+                            <div className="form-group"><label>Pincode</label>
                                 <input type="text" name="pincode" maxLength="6" value={formData.pincode} onChange={handleChange} />
                             </div>
-                            <div className="form-group">
-                                <label>Country</label>
+                            <div className="form-group"><label>Country</label>
                                 <input type="text" name="country" value={formData.country} onChange={handleChange} />
                             </div>
                         </div>
@@ -754,29 +855,20 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 4: FAMILY */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaUser className="section-icon" />
-                            Family Information
-                        </h3>
-
+                        <h3 className="section-title"><FaUser className="section-icon" /> Family Information</h3>
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>Father's Name</label>
+                            <div className="form-group"><label>Father's Name</label>
                                 <input type="text" name="fatherName" value={formData.fatherName} onChange={handleChange} />
                             </div>
-                            <div className="form-group">
-                                <label>Mother's Name</label>
+                            <div className="form-group"><label>Mother's Name</label>
                                 <input type="text" name="motherName" value={formData.motherName} onChange={handleChange} />
                             </div>
                         </div>
-
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>Guardian Phone</label>
+                            <div className="form-group"><label>Guardian Phone</label>
                                 <input type="tel" name="guardianPhone" maxLength="10" value={formData.guardianPhone} onChange={handleChange} />
                             </div>
-                            <div className="form-group">
-                                <label>Annual Income (₹)</label>
+                            <div className="form-group"><label>Annual Income (₹)</label>
                                 <input type="number" name="annualIncome" value={formData.annualIncome} onChange={handleChange} />
                             </div>
                         </div>
@@ -784,50 +876,33 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 5: ACADEMIC */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaGraduationCap className="section-icon" />
-                            Academic Information
-                        </h3>
-
-                        <div className="form-group">
-                            <label>Previous Education</label>
+                        <h3 className="section-title"><FaGraduationCap className="section-icon" /> Academic Information</h3>
+                        <div className="form-group"><label>Previous Education</label>
                             <input type="text" name="previousEducation" value={formData.previousEducation} onChange={handleChange} />
                         </div>
-
-                        <div className="form-group">
-                            <label>Previous Institute</label>
+                        <div className="form-group"><label>Previous Institute</label>
                             <input type="text" name="previousInstitute" value={formData.previousInstitute} onChange={handleChange} />
                         </div>
-
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>Passing Year</label>
+                            <div className="form-group"><label>Passing Year</label>
                                 <input type="number" name="passingYear" value={formData.passingYear} onChange={handleChange} />
                             </div>
-                            <div className="form-group">
-                                <label>Percentage</label>
+                            <div className="form-group"><label>Percentage</label>
                                 <input type="number" name="percentage" step="0.01" value={formData.percentage} onChange={handleChange} />
                             </div>
                         </div>
-
-                        <div className="form-group">
-                            <label>GPA</label>
+                        <div className="form-group"><label>GPA</label>
                             <input type="number" name="gpa" step="0.01" value={formData.gpa} onChange={handleChange} />
                         </div>
                     </div>
 
                     {/* SECTION 6: STATEMENT */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaFileAlt className="section-icon" />
-                            Statement
-                        </h3>
-
+                        <h3 className="section-title"><FaFileAlt className="section-icon" /> Statement</h3>
                         <div className="form-group">
                             <label>Why does this student deserve this scholarship?</label>
                             <textarea name="whyDeserve" rows="5" value={formData.whyDeserve} onChange={handleChange} />
                         </div>
-
                         <div className="form-group">
                             <label>Achievements</label>
                             <textarea name="achievements" rows="3" value={formData.achievements} onChange={handleChange} />
@@ -836,95 +911,39 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 7: BANK */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaMoneyBillWave className="section-icon" />
-                            Bank Details
-                        </h3>
-
+                        <h3 className="section-title"><FaMoneyBillWave className="section-icon" /> Bank Details</h3>
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>Account Holder Name</label>
+                            <div className="form-group"><label>Account Holder Name</label>
                                 <input type="text" name="accountHolderName" value={formData.accountHolderName} onChange={handleChange} />
                             </div>
-                            <div className="form-group">
-                                <label>Account Number</label>
+                            <div className="form-group"><label>Account Number</label>
                                 <input type="text" name="accountNumber" value={formData.accountNumber} onChange={handleChange} />
                             </div>
                         </div>
-
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>IFSC Code</label>
+                            <div className="form-group"><label>IFSC Code</label>
                                 <input type="text" name="ifscCode" value={formData.ifscCode} onChange={handleChange} />
                             </div>
-                            <div className="form-group">
-                                <label>Bank Name</label>
+                            <div className="form-group"><label>Bank Name</label>
                                 <input type="text" name="bankName" value={formData.bankName} onChange={handleChange} />
                             </div>
                         </div>
-
-                        <div className="form-group">
-                            <label>Branch Name</label>
+                        <div className="form-group"><label>Branch Name</label>
                             <input type="text" name="branchName" value={formData.branchName} onChange={handleChange} />
                         </div>
                     </div>
 
                     {/* SECTION 8: BASIC DOCUMENTS */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaFolderOpen className="section-icon" />
-                            Basic Documents
-                        </h3>
-
+                        <h3 className="section-title"><FaFolderOpen className="section-icon" /> Basic Documents</h3>
                         <div className="form-row">
-                            <div className="form-group">
-                                <label>Profile Photo</label>
-                                {!formData.profilePhotoPreview ? (
-                                    <div className="file-drop-zone">
-                                        <input
-                                            type="file"
-                                            name="profilePhoto"
-                                            ref={fileRefs.profilePhoto}
-                                            onChange={handleChange}
-                                            accept="image/*"
-                                        />
-                                        <FaUpload className="upload-icon" />
-                                        <p>Upload Photo</p>
-                                        <small>JPG, PNG (Max 5MB)</small>
-                                        {originalData?.student?.profileImage && (
-                                            <a
-                                                href={getFileUrl(originalData.student.profileImage)}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="existing-file-link"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                ✅ View Current Photo
-                                            </a>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="file-preview">
-                                        <img src={formData.profilePhotoPreview} alt="Preview" />
-                                        <button
-                                            type="button"
-                                            className="remove-file-btn"
-                                            onClick={() => removeFile('profilePhoto')}
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
+                            {renderProfilePhotoUpload()}
                             {renderFileUpload('ID Proof', 'idProof')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Marksheet', 'marksheet')}
                             {renderFileUpload('Income Certificate', 'incomeCertificate')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Previous Certificate', 'previousCertificate')}
                             {renderFileUpload('Bank Passbook', 'bankPassbook')}
@@ -933,31 +952,23 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 9: ADDITIONAL DOCUMENTS */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaFolderOpen className="section-icon" />
-                            Additional Documents
-                        </h3>
-
+                        <h3 className="section-title"><FaFolderOpen className="section-icon" /> Additional Documents</h3>
                         <div className="form-row">
                             {renderFileUpload('Dependent Passport', 'dependentPassport1')}
                             {renderFileUpload('Visa Document', 'visaDocument')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Sponsor Details', 'sponsorDetails')}
                             {renderFileUpload('Study Continuous Letter', 'studyContinuousLetter')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Bank Statement Letter', 'bankStatementLetter')}
                             {renderFileUpload('Dependent Passport 2', 'dependentPassport2')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Visa Copies', 'visaCopies')}
                             {renderFileUpload('Transfer Students', 'transferStudents')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Pending Document', 'pendingDocument')}
                             <div></div>
@@ -966,11 +977,7 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 10: CONDITIONAL */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaFileContract className="section-icon" />
-                            Conditional Letter & Invoice
-                        </h3>
-
+                        <h3 className="section-title"><FaFileContract className="section-icon" /> Conditional Letter & Invoice</h3>
                         <div className="form-row">
                             {renderFileUpload('Signed CAL', 'signedCAL')}
                             {renderFileUpload('Payment Invoice', 'paymentInvoice')}
@@ -979,21 +986,15 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 11: PAYMENT RECEIPTS */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaReceipt className="section-icon" />
-                            Payment Receipts
-                        </h3>
-
+                        <h3 className="section-title"><FaReceipt className="section-icon" /> Payment Receipts</h3>
                         <div className="form-row">
                             {renderFileUpload('Application Fee Receipt', 'applicationFeeReceipt')}
                             {renderFileUpload('English Exam Receipt', 'englishExamReceipt')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Internal Admission Fee', 'internalAdmissionFee')}
                             {renderFileUpload('Bank Check / Draft', 'bankCheckDraft')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Insurance Fee', 'insuranceFee')}
                             {renderFileUpload('Tuition Fee', 'tuitionFee')}
@@ -1002,16 +1003,11 @@ const AdminEditApplication = () => {
 
                     {/* SECTION 12: FINAL PORTFOLIO */}
                     <div className="form-section">
-                        <h3 className="section-title">
-                            <FaGraduationCap className="section-icon" />
-                            Final Admission Portfolio
-                        </h3>
-
+                        <h3 className="section-title"><FaGraduationCap className="section-icon" /> Final Admission Portfolio</h3>
                         <div className="form-row">
                             {renderFileUpload('Signed CAL', 'finalSignedCAL')}
                             {renderFileUpload('Payment Invoice', 'finalPaymentInvoice')}
                         </div>
-
                         <div className="form-row">
                             {renderFileUpload('Initial Admission Portfolio', 'initialAdmissionPortfolio')}
                             {renderFileUpload('Deferral Admission Portfolio', 'deferralAdmissionPortfolio')}
@@ -1028,22 +1024,11 @@ const AdminEditApplication = () => {
                         >
                             <FaArrowLeft /> Cancel
                         </button>
-
-                        <button
-                            type="submit"
-                            className="submit-btn"
-                            disabled={submitLoading}
-                        >
+                        <button type="submit" className="submit-btn" disabled={submitLoading}>
                             {submitLoading ? (
-                                <>
-                                    <FaSpinner className="spinner" />
-                                    Saving...
-                                </>
+                                <><FaSpinner className="spinner" /> Saving...</>
                             ) : (
-                                <>
-                                    <FaSave />
-                                    Save Changes
-                                </>
+                                <><FaSave /> Save Changes</>
                             )}
                         </button>
                     </div>

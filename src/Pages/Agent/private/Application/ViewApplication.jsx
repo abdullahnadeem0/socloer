@@ -3,14 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ViewApplication.css';
 import agentApi from '../../../../api/agentApi';
-import api, { API_URL, SERVER_URL, getFileUrl } from '../../../../api/config';
+import api, { API_URL, SERVER_URL, getFileUrl as configGetFileUrl } from '../../../../api/config';
 import {
     FaArrowLeft, FaEdit, FaUserGraduate, FaUniversity,
     FaGraduationCap, FaFileAlt, FaMoneyBillWave,
     FaCheckCircle, FaClock, FaTimesCircle, FaSpinner,
     FaExclamationTriangle, FaCalendarAlt, FaMapMarkerAlt,
     FaPhone, FaEnvelope, FaFolderOpen,
-    FaDownload, FaPrint, FaHourglassHalf, FaUser, FaBook
+    FaDownload, FaPrint, FaHourglassHalf, FaUser, FaBook,
+    FaLink, FaExternalLinkAlt, FaImage, FaFilePdf, FaTimes,
+    FaCloudDownloadAlt
 } from 'react-icons/fa';
 
 const ViewApplication = () => {
@@ -22,9 +24,13 @@ const ViewApplication = () => {
     const [loading, setLoading] = useState(true);
     const [serverError, setServerError] = useState('');
 
-    // ============================================
-    // ✅ FIXED: BACKEND URL (Hardcoded for now)
-    // ============================================
+    // Download states
+    const [downloadingAll, setDownloadingAll] = useState(false);
+    const [downloadProgress, setDownloadProgress] = useState({ current: 0, total: 0 });
+    const [downloadingField, setDownloadingField] = useState(null);
+
+    // Image preview modal
+    const [previewImage, setPreviewImage] = useState(null);
 
     // ============================================
     // FETCH APPLICATION
@@ -50,7 +56,7 @@ const ViewApplication = () => {
     };
 
     // ============================================
-    // ✅ FIXED: getFileUrl Function
+    // GET FILE URL
     // ============================================
     const getFileUrl = (path) => {
         if (!path) return null;
@@ -60,13 +66,212 @@ const ViewApplication = () => {
             return path;
         }
 
-        // Windows backslash ko forward slash karo
+        // Windows backslash → forward slash
         const cleanPath = path.replace(/\\/g, '/');
-
-        // Extra slash handle karo
         const finalPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
 
         return `${API_URL}${finalPath}`;
+    };
+
+    // ============================================
+    // CHECK IF FILE IS EXTERNAL URL
+    // ============================================
+    const isExternalUrl = (path) => {
+        if (!path) return false;
+        return path.startsWith('http://') || path.startsWith('https://');
+    };
+
+    // ============================================
+    // CHECK IF FILE IS IMAGE
+    // ============================================
+    const isImageFile = (path) => {
+        if (!path) return false;
+        const lower = path.toLowerCase();
+        return (
+            lower.endsWith('.jpg') ||
+            lower.endsWith('.jpeg') ||
+            lower.endsWith('.png') ||
+            lower.endsWith('.gif') ||
+            lower.endsWith('.webp') ||
+            lower.includes('.jpg?') ||
+            lower.includes('.jpeg?') ||
+            lower.includes('.png?') ||
+            lower.includes('.webp?')
+        );
+    };
+
+    // ============================================
+    // GENERATE SAFE FILENAME
+    // ============================================
+    const generateFileName = (label, path) => {
+        const studentName = `${application?.student?.firstName || 'Student'}_${application?.student?.lastName || ''}`.trim();
+        const appNumber = application?.applicationNumber || 'App';
+        const safeLabel = label.replace(/[^a-zA-Z0-9]/g, '_');
+
+        // Try to get extension from path
+        let ext = '';
+        if (path && !isExternalUrl(path)) {
+            const parts = path.split('.');
+            if (parts.length > 1) {
+                ext = '.' + parts.pop().split('?')[0];
+            }
+        }
+
+        if (!ext) ext = '.pdf'; // default
+
+        return `${appNumber}_${studentName}_${safeLabel}${ext}`;
+    };
+
+    // ============================================
+    // DOWNLOAD A SINGLE FILE TO LOCAL STORAGE
+    // ============================================
+    const downloadFile = async (label, path, isDownloadAll = false) => {
+        if (!path) return;
+
+        const fileName = generateFileName(label, path);
+
+        try {
+            if (!isDownloadAll) {
+                setDownloadingField(label);
+            }
+
+            // ===== EXTERNAL URL =====
+            if (isExternalUrl(path)) {
+                // For Google Drive links, convert to direct download
+                let downloadUrl = path;
+
+                // Google Drive: /file/d/ID/view → /file/d/ID/export?download
+                const driveMatch = path.match(/\/file\/d\/([^/]+)/);
+                if (driveMatch) {
+                    downloadUrl = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+                }
+
+                // Try to fetch as blob for download
+                try {
+                    const response = await fetch(downloadUrl, { mode: 'cors' });
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        triggerDownload(blob, fileName);
+                    } else {
+                        // Fallback: open in new tab
+                        window.open(path, '_blank');
+                    }
+                } catch (fetchError) {
+                    // CORS blocked → fallback: open in new tab
+                    console.warn('CORS blocked, opening in new tab:', fetchError);
+                    window.open(path, '_blank');
+                }
+                return;
+            }
+
+            // ===== LOCAL FILE =====
+            const fileUrl = getFileUrl(path);
+            const response = await fetch(fileUrl);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const blob = await response.blob();
+
+            // If it's a JSON error response, don't download
+            if (blob.type === 'application/json') {
+                throw new Error('File not found on server');
+            }
+
+            triggerDownload(blob, fileName);
+
+        } catch (error) {
+            console.error(`❌ Download failed for ${label}:`, error);
+
+            // Fallback: open in new tab
+            const url = isExternalUrl(path) ? path : getFileUrl(path);
+            window.open(url, '_blank');
+        } finally {
+            if (!isDownloadAll) {
+                setTimeout(() => setDownloadingField(null), 500);
+            }
+        }
+    };
+
+    // ============================================
+    // TRIGGER BROWSER DOWNLOAD
+    // ============================================
+    const triggerDownload = (blob, fileName) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    };
+
+    // ============================================
+    // DOWNLOAD ALL DOCUMENTS
+    // ============================================
+    const downloadAllDocuments = async () => {
+        if (!application?.documents) return;
+
+        const docs = application.documents;
+
+        // Build list of all available docs
+        const docList = [
+            { label: 'Profile Photo', path: docs.profilePhoto },
+            { label: 'ID Proof', path: docs.idProof },
+            { label: 'Marksheet', path: docs.marksheet },
+            { label: 'Income Certificate', path: docs.incomeCertificate },
+            { label: 'Previous Certificate', path: docs.previousCertificate },
+            { label: 'Bank Passbook', path: docs.bankPassbook },
+            { label: 'Dependent Passport', path: docs.dependentPassport1 },
+            { label: 'Sponsor Details', path: docs.sponsorDetails },
+            { label: 'Bank Statement Letter', path: docs.bankStatementLetter },
+            { label: 'Visa Copies', path: docs.visaCopies },
+            { label: 'Pending Document', path: docs.pendingDocument },
+            { label: 'Visa Document', path: docs.visaDocument },
+            { label: 'Study Continuous Letter', path: docs.studyContinuousLetter },
+            { label: 'Dependent Passport 2', path: docs.dependentPassport2 },
+            { label: 'Transfer Students', path: docs.transferStudents },
+            { label: 'Signed CAL', path: docs.signedCAL },
+            { label: 'Payment Invoice', path: docs.paymentInvoice },
+            { label: 'Application Fee Receipt', path: docs.applicationFeeReceipt },
+            { label: 'English Exam Receipt', path: docs.englishExamReceipt },
+            { label: 'Internal Admission Fee', path: docs.internalAdmissionFee },
+            { label: 'Bank Check Draft', path: docs.bankCheckDraft },
+            { label: 'Insurance Fee', path: docs.insuranceFee },
+            { label: 'Tuition Fee', path: docs.tuitionFee },
+            { label: 'Final Signed CAL', path: docs.finalSignedCAL },
+            { label: 'Final Payment Invoice', path: docs.finalPaymentInvoice },
+            { label: 'Initial Admission Portfolio', path: docs.initialAdmissionPortfolio },
+            { label: 'Deferral Admission Portfolio', path: docs.deferralAdmissionPortfolio }
+        ].filter(d => d.path); // Only available docs
+
+        if (docList.length === 0) {
+            alert('No documents available to download');
+            return;
+        }
+
+        setDownloadingAll(true);
+        setDownloadProgress({ current: 0, total: docList.length });
+
+        // Download sequentially with delay (avoid browser blocking)
+        for (let i = 0; i < docList.length; i++) {
+            const doc = docList[i];
+            setDownloadProgress({ current: i + 1, total: docList.length });
+
+            try {
+                await downloadFile(doc.label, doc.path, true);
+            } catch (err) {
+                console.error(`Failed: ${doc.label}`, err);
+            }
+
+            // Small delay between downloads
+            await new Promise(resolve => setTimeout(resolve, 400));
+        }
+
+        setDownloadingAll(false);
+        setDownloadProgress({ current: 0, total: 0 });
     };
 
     // ============================================
@@ -101,7 +306,7 @@ const ViewApplication = () => {
     };
 
     // ============================================
-    // DOCUMENT RENDERER
+    // ✅ RENDER DOCUMENT (with download + preview)
     // ============================================
     const renderDoc = (label, path) => {
         if (!path) {
@@ -116,22 +321,62 @@ const ViewApplication = () => {
             );
         }
 
+        const external = isExternalUrl(path);
+        const isImage = isImageFile(path);
+        const fileUrl = getFileUrl(path);
+        const isDownloading = downloadingField === label;
+
         return (
-            <a
-                href={getFileUrl(path)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="doc-item uploaded"
-            >
-                <FaFileAlt className="doc-icon" />
+            <div className="doc-item uploaded">
+                <div className="doc-icon-wrap">
+                    {isImage ? <FaImage className="doc-icon" /> : <FaFilePdf className="doc-icon" />}
+                    {external && <FaLink className="doc-link-badge" title="External URL" />}
+                </div>
                 <div className="doc-info">
                     <span className="doc-label">{label}</span>
                     <span className="doc-status uploaded-text">
-                        <FaCheckCircle /> Uploaded
+                        <FaCheckCircle /> {external ? 'URL Provided' : 'Uploaded'}
                     </span>
                 </div>
-                <FaDownload className="download-icon" />
-            </a>
+                <div className="doc-actions">
+                    {/* PREVIEW */}
+                    {isImage ? (
+                        <button
+                            type="button"
+                            className="doc-btn preview"
+                            onClick={() => setPreviewImage({ url: fileUrl, label })}
+                            title="Preview"
+                        >
+                            <FaImage />
+                        </button>
+                    ) : (
+                        <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="doc-btn preview"
+                            title="Open in new tab"
+                        >
+                            <FaExternalLinkAlt />
+                        </a>
+                    )}
+
+                    {/* DOWNLOAD */}
+                    <button
+                        type="button"
+                        className="doc-btn download"
+                        onClick={() => downloadFile(label, path)}
+                        disabled={isDownloading}
+                        title="Download to device"
+                    >
+                        {isDownloading ? (
+                            <FaSpinner className="spinner-small" />
+                        ) : (
+                            <FaDownload />
+                        )}
+                    </button>
+                </div>
+            </div>
         );
     };
 
@@ -173,15 +418,29 @@ const ViewApplication = () => {
     const statusInfo = getStatusInfo(application.status);
     const canEdit = !['approved', 'scholarship-disbursed'].includes(application.status);
 
+    // Count available documents
+    const docs = application.documents || {};
+    const availableDocsCount = [
+        docs.profilePhoto, docs.idProof, docs.marksheet, docs.incomeCertificate,
+        docs.previousCertificate, docs.bankPassbook, docs.dependentPassport1,
+        docs.sponsorDetails, docs.bankStatementLetter, docs.visaCopies,
+        docs.pendingDocument, docs.visaDocument, docs.studyContinuousLetter,
+        docs.dependentPassport2, docs.transferStudents, docs.signedCAL,
+        docs.paymentInvoice, docs.applicationFeeReceipt, docs.englishExamReceipt,
+        docs.internalAdmissionFee, docs.bankCheckDraft, docs.insuranceFee,
+        docs.tuitionFee, docs.finalSignedCAL, docs.finalPaymentInvoice,
+        docs.initialAdmissionPortfolio, docs.deferralAdmissionPortfolio
+    ].filter(Boolean).length;
+
     // ============================================
     // RENDER
     // ============================================
     return (
         <div className="ViewApplication">
-            <div className="view-container">
+            <div className="view-container" id="printable-area">
 
                 {/* ===== HEADER ===== */}
-                <div className="view-header">
+                <div className="view-header no-print">
                     <button
                         className="back-icon-btn"
                         onClick={() => navigate('/agent/my-applications')}
@@ -209,10 +468,19 @@ const ViewApplication = () => {
                         <button
                             className="print-action-btn"
                             onClick={() => window.print()}
+                            title="Print this page"
                         >
                             <FaPrint /> Print
                         </button>
                     </div>
+                </div>
+
+                {/* Print-only header */}
+                <div className="print-only-header">
+                    <h1>Student Scholarship Application</h1>
+                    <p><strong>Application No:</strong> {application.applicationNumber}</p>
+                    <p><strong>Status:</strong> {statusInfo.label}</p>
+                    <p><strong>Printed On:</strong> {new Date().toLocaleString('en-IN')}</p>
                 </div>
 
                 {/* ===== TIMELINE ===== */}
@@ -247,6 +515,11 @@ const ViewApplication = () => {
                                 src={getFileUrl(application.student.profileImage)}
                                 alt="Profile"
                                 className="student-photo"
+                                onClick={() => setPreviewImage({
+                                    url: getFileUrl(application.student.profileImage),
+                                    label: 'Profile Photo'
+                                })}
+                                style={{ cursor: 'pointer' }}
                             />
                         ) : (
                             <div className="student-photo placeholder">
@@ -301,7 +574,6 @@ const ViewApplication = () => {
                         </div>
                     </div>
 
-                    {/* Address */}
                     <div className="address-section">
                         <span className="section-subtitle">
                             <FaMapMarkerAlt /> Address
@@ -431,9 +703,35 @@ const ViewApplication = () => {
 
                 {/* ===== DOCUMENTS ===== */}
                 <div className="info-card">
-                    <div className="card-header">
-                        <FaFolderOpen className="card-icon" />
-                        <h2>Documents</h2>
+                    <div className="card-header between">
+                        <div className="header-left">
+                            <FaFolderOpen className="card-icon" />
+                            <h2>Documents</h2>
+                            {availableDocsCount > 0 && (
+                                <span className="docs-count-badge">{availableDocsCount} available</span>
+                            )}
+                        </div>
+
+                        {availableDocsCount > 0 && (
+                            <button
+                                type="button"
+                                className="download-all-btn no-print"
+                                onClick={downloadAllDocuments}
+                                disabled={downloadingAll}
+                            >
+                                {downloadingAll ? (
+                                    <>
+                                        <FaSpinner className="spinner-small" />
+                                        Downloading {downloadProgress.current}/{downloadProgress.total}...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaCloudDownloadAlt />
+                                        Download All
+                                    </>
+                                )}
+                            </button>
+                        )}
                     </div>
 
                     {/* Basic Documents */}
@@ -518,7 +816,7 @@ const ViewApplication = () => {
                 )}
 
                 {/* ===== FOOTER ACTIONS ===== */}
-                <div className="footer-actions">
+                <div className="footer-actions no-print">
                     <button
                         className="back-btn"
                         onClick={() => navigate('/agent/my-applications')}
@@ -536,6 +834,55 @@ const ViewApplication = () => {
                     )}
                 </div>
             </div>
+
+            {/* ===== IMAGE PREVIEW MODAL ===== */}
+            {previewImage && (
+                <div
+                    className="image-preview-modal no-print"
+                    onClick={() => setPreviewImage(null)}
+                >
+                    <div className="preview-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="preview-header">
+                            <h3>{previewImage.label}</h3>
+                            <div className="preview-actions">
+                                <button
+                                    type="button"
+                                    className="preview-btn download"
+                                    onClick={() => downloadFile(previewImage.label, previewImage.url)}
+                                    title="Download"
+                                >
+                                    <FaDownload />
+                                </button>
+                                <a
+                                    href={previewImage.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="preview-btn open"
+                                    title="Open in new tab"
+                                >
+                                    <FaExternalLinkAlt />
+                                </a>
+                                <button
+                                    type="button"
+                                    className="preview-btn close"
+                                    onClick={() => setPreviewImage(null)}
+                                >
+                                    <FaTimes />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="preview-body">
+                            <img
+                                src={previewImage.url}
+                                alt={previewImage.label}
+                                onError={(e) => {
+                                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk5OSIgc3Ryb2tlLXdpZHRoPSIyIj48cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHJ4PSIyIi8+PHBhdGggZD0iTTkuNSA5LjVhMS41IDEuNSAwIDEgMCAwLTMgMS41IDEuNSAwIDAgMCAwIDN6Ii8+PHBhdGggZD0iTTIxIDE1bC01LTVMMiAyMSIvPjwvc3ZnPg==';
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
