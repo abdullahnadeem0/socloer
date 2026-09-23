@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // ✅ Vite ke environment variables use karein
-export const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:5000/api';
-export const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://localhost:5000';
+export const API_URL = import.meta.env.VITE_API_URL || 'https://newsoloer.vercel.app/api';
+export const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://newsoloer.vercel.app/';
 
 // ✅ Helper to get full file URL (for images/logos)
 export const getFileUrl = (filePath) => {
