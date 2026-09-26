@@ -1,0 +1,859 @@
+/* src/Pages/Agent/private/AgentCertificate.css */
+/* White + Blue Premium Theme — matching website */
+
+/* ============================================
+   PAGE
+   ============================================ */
+.agent-cert-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 30px 20px 60px;
+    position: relative;
+    overflow-x: hidden;
+    background: #f8fafc;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.agent-cert-page::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 35%, #eef2ff 70%, #faf5ff 100%);
+    background-size: 200% 200%;
+    animation: certBgShift 20s ease infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes certBgShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+
+/* Floating circles */
+.agent-cert-page::after {
+    content: '';
+    position: fixed;
+    top: -10%;
+    right: -5%;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.28), transparent 70%);
+    filter: blur(40px);
+    animation: certFloat 22s ease-in-out infinite alternate;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes certFloat {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(-40px, 50px) scale(1.1); }
+    100% { transform: translate(30px, -30px) scale(0.95); }
+}
+
+/* ============================================
+   LOADING
+   ============================================ */
+.agent-cert-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    color: #1e293b;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.agent-cert-spinner {
+    font-size: 3rem;
+    color: #2563eb;
+    animation: certSpin 1s linear infinite;
+}
+
+.spin {
+    animation: certSpin 1s linear infinite;
+}
+
+@keyframes certSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   STATUS CARD (Pending / Rejected)
+   ============================================ */
+.agent-cert-status-card {
+    max-width: 520px;
+    margin: 80px auto;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 45px 35px;
+    text-align: center;
+    box-shadow:
+        0 30px 80px rgba(37, 99, 235, 0.10),
+        0 8px 24px rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(37, 99, 235, 0.08);
+    position: relative;
+    z-index: 1;
+    animation: certCardIn 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes certCardIn {
+    from { opacity: 0; transform: translateY(40px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.agent-cert-status-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 25px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #ffffff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    animation: certFloatIcon 4s ease-in-out infinite;
+}
+
+@keyframes certFloatIcon {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-8px) rotate(3deg); }
+}
+
+.agent-cert-status-icon.pending {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.35);
+}
+
+.agent-cert-status-icon.rejected,
+.agent-cert-status-icon.error {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 12px 30px rgba(220, 38, 38, 0.35);
+}
+
+.agent-cert-status-card h2 {
+    font-size: 1.7rem;
+    color: #0f172a;
+    margin-bottom: 12px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+}
+
+.agent-cert-status-card p {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.agent-cert-back-btn {
+    padding: 12px 26px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+    font-family: inherit;
+}
+
+.agent-cert-back-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.45);
+}
+
+/* ============================================
+   ACTION BAR
+   ============================================ */
+.agent-cert-actions {
+    max-width: 1100px;
+    margin: 0 auto 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.agent-cert-action-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.agent-cert-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: inherit;
+}
+
+.agent-cert-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.agent-cert-action-btn.back {
+    background: #ffffff;
+    color: #1e293b;
+    border: 1.5px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.agent-cert-action-btn.back:hover:not(:disabled) {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+.agent-cert-action-btn.print {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.agent-cert-action-btn.img {
+    background: linear-gradient(135deg, #0891b2, #06b6d4);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(8, 145, 178, 0.3);
+}
+
+.agent-cert-action-btn.pdf {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+}
+
+.agent-cert-action-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   CERTIFICATE WRAPPER
+   ============================================ */
+.agent-cert-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   MAIN CERTIFICATE — WHITE + BLUE PREMIUM
+   ============================================ */
+.agent-cert {
+    position: relative;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 55px 60px 45px;
+    box-shadow:
+        0 30px 80px rgba(37, 99, 235, 0.12),
+        0 8px 24px rgba(15, 23, 42, 0.06),
+        0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    border: 1px solid rgba(37, 99, 235, 0.10);
+    overflow: hidden;
+    color: #0f172a;
+}
+
+/* Top blue gradient bar */
+.agent-cert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, #2563eb, #7c3aed, #2563eb);
+    background-size: 200% 100%;
+    animation: certTopBar 6s ease infinite;
+}
+
+@keyframes certTopBar {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+
+/* Bottom blue gradient bar */
+.agent-cert::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, #2563eb, #7c3aed, #2563eb);
+    background-size: 200% 100%;
+    animation: certTopBar 6s ease infinite reverse;
+}
+
+/* Decorative frame */
+.agent-cert-frame {
+    position: absolute;
+    inset: 20px;
+    border: 1.5px solid rgba(37, 99, 235, 0.18);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+/* Corner ornaments */
+.agent-cert-corner {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border: 3px solid #2563eb;
+    pointer-events: none;
+    opacity: 0.35;
+}
+
+.agent-cert-corner.top-left {
+    top: 32px; left: 32px;
+    border-right: none; border-bottom: none;
+    border-top-left-radius: 14px;
+}
+
+.agent-cert-corner.top-right {
+    top: 32px; right: 32px;
+    border-left: none; border-bottom: none;
+    border-top-right-radius: 14px;
+}
+
+.agent-cert-corner.bottom-left {
+    bottom: 32px; left: 32px;
+    border-right: none; border-top: none;
+    border-bottom-left-radius: 14px;
+}
+
+.agent-cert-corner.bottom-right {
+    bottom: 32px; right: 32px;
+    border-left: none; border-top: none;
+    border-bottom-right-radius: 14px;
+}
+
+/* Watermark */
+.agent-cert-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-18deg);
+    font-size: 28rem;
+    color: rgba(37, 99, 235, 0.04);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.agent-cert-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(37, 99, 235, 0.12);
+}
+
+.agent-cert-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.agent-cert-logo-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+    animation: certFloatIcon 4s ease-in-out infinite;
+}
+
+.agent-cert-logo-text h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #0f172a;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.agent-cert-logo-text small {
+    font-size: 0.72rem;
+    color: #64748b;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.agent-cert-seal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    border-radius: 14px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+.agent-cert-seal-icon {
+    font-size: 1.5rem;
+}
+
+/* ============================================
+   TITLE
+   ============================================ */
+.agent-cert-title-section {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.agent-cert-eyebrow {
+    font-size: 0.85rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #2563eb;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.agent-cert-title {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #0f172a 0%, #2563eb 50%, #0f172a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 18px;
+    letter-spacing: -1px;
+    font-family: Georgia, serif;
+    line-height: 1.1;
+}
+
+.agent-cert-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 0 auto 18px;
+    max-width: 400px;
+}
+
+.agent-cert-divider .line {
+    flex: 1;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, #2563eb, transparent);
+}
+
+.agent-cert-divider-icon {
+    font-size: 1.6rem;
+    color: #2563eb;
+}
+
+.agent-cert-subtitle {
+    font-size: 0.95rem;
+    color: #64748b;
+    font-style: italic;
+    margin: 0;
+}
+
+/* ============================================
+   AGENT NAME
+   ============================================ */
+.agent-cert-name-block {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.agent-cert-avatar {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 18px;
+}
+
+.agent-cert-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #2563eb;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+}
+
+.agent-cert-avatar-check {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: #10b981;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    border: 3px solid #ffffff;
+    display: flex;
+}
+
+.agent-cert-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 8px;
+    font-family: Georgia, serif;
+    letter-spacing: -0.5px;
+}
+
+.agent-cert-role {
+    font-size: 1rem;
+    color: #2563eb;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* ============================================
+   BODY TEXT
+   ============================================ */
+.agent-cert-body-text {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto 32px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #475569;
+    font-style: italic;
+}
+
+.agent-cert-body-text strong {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+/* ============================================
+   DETAILS GRID
+   ============================================ */
+.agent-cert-details-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+    padding: 22px;
+    background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    border-radius: 16px;
+    border: 1px solid rgba(37, 99, 235, 0.12);
+}
+
+.agent-cert-detail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.agent-cert-detail-icon {
+    font-size: 1.3rem;
+    color: #2563eb;
+    min-width: 22px;
+}
+
+.agent-cert-detail small {
+    display: block;
+    font-size: 0.68rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.agent-cert-detail span {
+    font-size: 0.9rem;
+    color: #0f172a;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+/* ============================================
+   SKILLS
+   ============================================ */
+.agent-cert-skills {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.agent-cert-skills-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.agent-cert-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.agent-cert-skill-tag {
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #2563eb;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.agent-cert-footer {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(37, 99, 235, 0.12);
+    margin-bottom: 22px;
+}
+
+.agent-cert-footer-block {
+    text-align: left;
+}
+
+.agent-cert-footer-block.center {
+    text-align: center;
+}
+
+.agent-cert-footer-block.right {
+    text-align: right;
+}
+
+.agent-cert-footer-block small {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.agent-cert-footer-block strong,
+.agent-cert-id {
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+.agent-cert-signature-img {
+    max-height: 55px;
+    max-width: 180px;
+    object-fit: contain;
+    margin-bottom: 4px;
+}
+
+.agent-cert-signature-placeholder {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #cbd5e1;
+    margin-bottom: 4px;
+}
+
+.agent-cert-signature-line {
+    width: 160px;
+    height: 1.5px;
+    background: #2563eb;
+    margin: 4px auto 6px;
+}
+
+/* ============================================
+   VERIFY LINE
+   ============================================ */
+.agent-cert-verify-line {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    border: 1px dashed rgba(37, 99, 235, 0.4);
+    border-radius: 12px;
+    font-size: 0.82rem;
+    color: #1e40af;
+}
+
+.agent-cert-verify-icon {
+    color: #2563eb;
+    font-size: 1.1rem;
+}
+
+.agent-cert-verify-line strong {
+    color: #1e40af;
+    font-family: 'Courier New', monospace;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+    .agent-cert {
+        padding: 40px 30px 32px;
+    }
+
+    .agent-cert-title {
+        font-size: 2.2rem;
+    }
+
+    .agent-cert-name {
+        font-size: 1.9rem;
+    }
+
+    .agent-cert-details-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .agent-cert-footer {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .agent-cert-footer-block,
+    .agent-cert-footer-block.center,
+    .agent-cert-footer-block.right {
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .agent-cert-page {
+        padding: 20px 12px 40px;
+    }
+
+    .agent-cert {
+        padding: 30px 22px 26px;
+    }
+
+    .agent-cert-title {
+        font-size: 1.7rem;
+    }
+
+    .agent-cert-name {
+        font-size: 1.5rem;
+    }
+
+    .agent-cert-details-grid {
+        grid-template-columns: 1fr;
+        padding: 18px;
+    }
+
+    .agent-cert-corner {
+        width: 45px;
+        height: 45px;
+    }
+
+    .agent-cert-watermark {
+        font-size: 16rem;
+    }
+
+    .agent-cert-action-btn {
+        padding: 10px 14px;
+        font-size: 0.82rem;
+    }
+}
+
+/* ============================================
+   PRINT
+   ============================================ */
+@media print {
+    .no-print,
+    .agent-cert-actions {
+        display: none !important;
+    }
+
+    .agent-cert-page {
+        background: #ffffff;
+        padding: 0;
+    }
+
+    .agent-cert-page::before,
+    .agent-cert-page::after {
+        display: none;
+    }
+
+    .agent-cert {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 20px;
+        page-break-inside: avoid;
+        border: 2px solid #2563eb;
+    }
+
+    .agent-cert-frame {
+        opacity: 0.4;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    .agent-cert-page::before,
+    .agent-cert-page::after,
+    .agent-cert-logo-icon,
+    .agent-cert-status-icon,
+    .agent-cert::before,
+    .agent-cert::after {
+        animation: none !important;
+    }
+}

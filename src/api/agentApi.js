@@ -337,7 +337,20 @@ payments: {
     }
 },// src/api/agentApi.js
 // Add to agentApi object
-
+// ===== CERTIFICATE =====
+getCertificate: async () => {
+    try {
+        console.log("🎓 API - GET CERTIFICATE");
+        const token = localStorage.getItem('agentToken');
+        const response = await api.get('/agent/certificate', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('❌ Certificate Error:', error.response?.data);
+        throw error;
+    }
+},
 getDashboardStats: async () => {
     try {
         console.log("📊 API - AGENT DASHBOARD STATS");

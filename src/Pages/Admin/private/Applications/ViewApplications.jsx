@@ -8,7 +8,8 @@ import {
     FaIdCard, FaBriefcase, FaGraduationCap,
     FaSpinner, FaChevronLeft, FaChevronRight,
     FaExclamationTriangle, FaCheckCircle, FaClock,
-    FaFileAlt, FaTimes as FaClose, FaRedo
+    FaFileAlt, FaTimes as FaClose, FaRedo,
+    FaFileSignature
 } from 'react-icons/fa';
 import './ViewApplications.css';
 
@@ -39,6 +40,37 @@ const ViewApplications = () => {
     // ===== PAGINATION =====
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
+
+    // ============================================
+    // ⭐ HELPER: Get file URL (direct)
+    // ============================================
+    const getDirectFileUrl = (filePath) => {
+        if (!filePath) return '';
+        // Already full URL
+        if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+            return filePath;
+        }
+        // Add SERVER_URL
+        const cleanPath = filePath.startsWith('/') ? filePath : `/${filePath}`;
+        return `${SERVER_URL}${cleanPath}`;
+    };
+
+    // ============================================
+    // ⭐ HELPER: Get Signature URL (supports upload OR url)
+    // ============================================
+    const getSignatureUrl = (agent) => {
+        if (!agent) return '';
+        
+        // Priority 1: Uploaded file
+        if (agent.signature && agent.signature.trim()) {
+            return getDirectFileUrl(agent.signature);
+        }
+        // Priority 2: URL
+        if (agent.signatureUrl && agent.signatureUrl.trim()) {
+            return agent.signatureUrl;
+        }
+        return '';
+    };
 
     // ============================================
     // FETCH AGENTS
@@ -149,7 +181,6 @@ const ViewApplications = () => {
                         : a
                 ));
 
-                // Update stats
                 const oldAgent = agents.find(a => a._id === agentId);
                 if (oldAgent) {
                     setStats(prev => ({
@@ -210,7 +241,6 @@ const ViewApplications = () => {
                         : a
                 ));
 
-                // Update stats
                 const oldStatus = selectedAgent.approvalStatus;
                 setStats(prev => ({
                     ...prev,
@@ -242,12 +272,11 @@ const ViewApplications = () => {
     };
 
     // ============================================
-    // ✅ CHANGE STATUS (Approve / Reject / Pending)
+    // ✅ CHANGE STATUS
     // ============================================
     const handleChangeStatus = async () => {
         if (!selectedAgent || !newStatus) return;
 
-        // If rejected, need reason
         if (newStatus === 'rejected' && !rejectionReason.trim()) {
             showToast('Please provide a rejection reason', 'error');
             return;
@@ -268,7 +297,6 @@ const ViewApplications = () => {
                     token
                 );
             } else if (newStatus === 'pending') {
-                // ✅ NEW: Set back to pending
                 response = await adminApi.setPendingStatus(selectedAgent._id, token);
             }
 
@@ -282,7 +310,6 @@ const ViewApplications = () => {
                 };
                 showToast(statusMessages[newStatus], 'success');
 
-                // Update local state
                 setAgents(prev => prev.map(a => 
                     a._id === selectedAgent._id 
                         ? { 
@@ -295,7 +322,6 @@ const ViewApplications = () => {
                         : a
                 ));
 
-                // Update stats
                 setStats(prev => ({
                     ...prev,
                     [oldStatus]: Math.max(0, prev[oldStatus] - 1),
@@ -375,7 +401,6 @@ const ViewApplications = () => {
 
     return (
         <div className="applications-page">
-            {/* ===== TOAST ===== */}
             {toast.show && (
                 <div className={`app-toast ${toast.type}`}>
                     <div className="toast-body">
@@ -385,7 +410,6 @@ const ViewApplications = () => {
                 </div>
             )}
 
-            {/* ===== PAGE HEADER ===== */}
             <div className="page-header">
                 <div>
                     <h1>View Applications</h1>
@@ -396,7 +420,6 @@ const ViewApplications = () => {
                 </button>
             </div>
 
-            {/* ===== STATS CARDS ===== */}
             <div className="stats-row">
                 <div className="stat-box total">
                     <div className="stat-icon"><FaUser /></div>
@@ -428,7 +451,6 @@ const ViewApplications = () => {
                 </div>
             </div>
 
-            {/* ===== FILTERS ===== */}
             <div className="filters-bar">
                 <div className="search-wrapper">
                     <FaSearch className="search-icon" />
@@ -468,7 +490,6 @@ const ViewApplications = () => {
                 </div>
             </div>
 
-            {/* ===== ERROR ===== */}
             {error && (
                 <div className="error-banner">
                     <FaExclamationTriangle />
@@ -476,7 +497,6 @@ const ViewApplications = () => {
                 </div>
             )}
 
-            {/* ===== APPLICATIONS TABLE ===== */}
             {paginatedAgents.length > 0 ? (
                 <div className="applications-table-wrapper">
                     <table className="applications-table">
@@ -534,7 +554,6 @@ const ViewApplications = () => {
                                                 <FaEye />
                                             </button>
                                             
-                                            {/* ✅ Pending: Show Approve/Reject */}
                                             {agent.approvalStatus === 'pending' && (
                                                 <>
                                                     <button 
@@ -554,7 +573,6 @@ const ViewApplications = () => {
                                                 </>
                                             )}
 
-                                            {/* ✅ Approved/Rejected: Show Change Status button */}
                                             {agent.approvalStatus !== 'pending' && (
                                                 <button 
                                                     className="btn-change-status"
@@ -583,7 +601,6 @@ const ViewApplications = () => {
                 </div>
             )}
 
-            {/* ===== PAGINATION ===== */}
             {totalPages > 1 && (
                 <div className="pagination">
                     <button 
@@ -673,25 +690,40 @@ const ViewApplications = () => {
                                     </div>
                                 </div>
                                 
-                                {selectedAgent.idFile && (
+                                {/* ✅ ID Document — Upload OR URL */}
+                                {(selectedAgent.idFile || selectedAgent.idFileUrl) && (
                                     <div className="id-document">
                                         <label>ID Document</label>
                                         <div className="document-preview">
-                                            {selectedAgent.idFile.match(/\.(jpg|jpeg|png)$/i) ? (
+                                            {/* Priority 1: Uploaded file */}
+                                            {selectedAgent.idFile && selectedAgent.idFile.match(/\.(jpg|jpeg|png)$/i) ? (
                                                 <img 
-                                                    src={`${SERVER_URL}${selectedAgent.idFile}`}
+                                                    src={getDirectFileUrl(selectedAgent.idFile)}
                                                     alt="ID Document"
-                                                    onClick={() => window.open(`${SERVER_URL}${selectedAgent.idFile}`, '_blank')}
+                                                    onClick={() => window.open(getDirectFileUrl(selectedAgent.idFile), '_blank')}
                                                 />
-                                            ) : (
+                                            ) : selectedAgent.idFile ? (
                                                 <a 
-                                                    href={`${SERVER_URL}${selectedAgent.idFile}`}
+                                                    href={getDirectFileUrl(selectedAgent.idFile)}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="document-link"
                                                 >
                                                     <FaFileAlt />
                                                     View Document (PDF)
+                                                </a>
+                                            ) : null}
+
+                                            {/* Priority 2: URL */}
+                                            {!selectedAgent.idFile && selectedAgent.idFileUrl && (
+                                                <a 
+                                                    href={selectedAgent.idFileUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="document-link"
+                                                >
+                                                    <FaFileAlt />
+                                                    View Document (URL)
                                                 </a>
                                             )}
                                         </div>
@@ -787,6 +819,96 @@ const ViewApplications = () => {
                                 </div>
                             )}
 
+                            {/* ⭐ Signature & Agreement */}
+                            <div className="detail-section">
+                                <h3><FaFileSignature /> Signature & Agreement</h3>
+                                
+                                <div className="detail-grid">
+                                    <div className="detail-item">
+                                        <label>Terms Accepted</label>
+                                        <p>
+                                            {selectedAgent.agreeTerms ? (
+                                                <span style={{color: '#16a34a', fontWeight: '600'}}>✅ Yes</span>
+                                            ) : (
+                                                <span style={{color: '#dc2626', fontWeight: '600'}}>❌ No</span>
+                                            )}
+                                        </p>
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Read Properly</label>
+                                        <p>
+                                            {selectedAgent.hasReadTerms ? (
+                                                <span style={{color: '#16a34a', fontWeight: '600'}}>✅ Yes</span>
+                                            ) : (
+                                                <span style={{color: '#dc2626', fontWeight: '600'}}>❌ No</span>
+                                            )}
+                                        </p>
+                                    </div>
+                                    {selectedAgent.termsAcceptedAt && (
+                                        <div className="detail-item">
+                                            <label>Accepted At</label>
+                                            <p>{formatDateTime(selectedAgent.termsAcceptedAt)}</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* ✅ Signature — Upload OR URL */}
+                                <div className="detail-item" style={{marginTop: '16px'}}>
+                                    <label>Signature</label>
+                                    {getSignatureUrl(selectedAgent) ? (
+                                        <div className="signature-preview" style={{
+                                            marginTop: '8px',
+                                            padding: '16px',
+                                            background: '#f8fafc',
+                                            borderRadius: '10px',
+                                            border: '1px solid #e2e8f0',
+                                            textAlign: 'center'
+                                        }}>
+                                            <img 
+                                                src={getSignatureUrl(selectedAgent)}
+                                                alt="Agent Signature"
+                                                style={{
+                                                    maxWidth: '250px',
+                                                    maxHeight: '120px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: '6px',
+                                                    background: 'white',
+                                                    padding: '8px',
+                                                    border: '1px solid #cbd5e1',
+                                                    cursor: 'pointer'
+                                                }}
+                                                onClick={() => window.open(getSignatureUrl(selectedAgent), '_blank')}
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.nextSibling.style.display = 'block';
+                                                }}
+                                            />
+                                            <p style={{display: 'none', color: '#dc2626', fontSize: '13px'}}>
+                                                ⚠️ Signature not found
+                                            </p>
+                                            <p style={{
+                                                marginTop: '8px',
+                                                fontSize: '12px',
+                                                color: '#64748b'
+                                            }}>
+                                                {selectedAgent.signature ? '📎 Uploaded File' : '🔗 URL'} — Click to view full size
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <p style={{
+                                            padding: '12px',
+                                            background: '#f1f5f9',
+                                            borderRadius: '8px',
+                                            color: '#64748b',
+                                            fontSize: '14px',
+                                            marginTop: '8px'
+                                        }}>
+                                            ⭕ No signature uploaded (Optional)
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
                             {selectedAgent.approvalStatus === 'rejected' && (
                                 <div className="detail-section rejection-info">
                                     <h3>Rejection Details</h3>
@@ -812,7 +934,6 @@ const ViewApplications = () => {
                             )}
                         </div>
 
-                        {/* ===== FOOTER - SHOW ALL STATUS OPTIONS ===== */}
                         <div className="modal-footer">
                             {selectedAgent.approvalStatus === 'pending' ? (
                                 <>
@@ -883,7 +1004,6 @@ const ViewApplications = () => {
                             </p>
                         </div>
 
-                        {/* Status Options */}
                         <div className="status-options">
                             <button
                                 type="button"
@@ -911,7 +1031,6 @@ const ViewApplications = () => {
                             </button>
                         </div>
 
-                        {/* Rejection Reason */}
                         {newStatus === 'rejected' && (
                             <div className="status-body">
                                 <label>Rejection Reason *</label>
@@ -926,7 +1045,6 @@ const ViewApplications = () => {
                             </div>
                         )}
 
-                        {/* Info Message */}
                         <div className={`status-info ${newStatus}`}>
                             {newStatus === 'approved' && (
                                 <>
@@ -982,7 +1100,7 @@ const ViewApplications = () => {
                 </div>
             )}
 
-            {/* ===== REJECT MODAL (from table) ===== */}
+            {/* ===== REJECT MODAL ===== */}
             {showRejectModal && selectedAgent && (
                 <div className="modal-overlay" onClick={() => setShowRejectModal(false)}>
                     <div className="modal-content reject-modal" onClick={(e) => e.stopPropagation()}>

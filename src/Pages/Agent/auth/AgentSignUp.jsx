@@ -9,11 +9,16 @@ import {
     FaClock, FaEnvelopeOpen, FaCheckCircle, FaIdCard,
     FaCalendarAlt, FaBriefcase, FaMapMarkerAlt,
     FaGraduationCap, FaPhone, FaUpload, FaTrash, FaFileAlt,
-    FaTimes, FaUserTie, FaLink
+    FaTimes, FaUserTie, FaLink, FaFilePdf, FaSignature
 } from 'react-icons/fa';
 
 // ============================================
-// FLOATING CIRCLES BACKGROUND - WHITE THEME
+// DEMO PDF LINK — Testing ke liye
+// ============================================
+const DEMO_TERMS_PDF_URL = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+
+// ============================================
+// FLOATING CIRCLES BACKGROUND
 // ============================================
 const FloatingCircles = () => {
     const circles = [
@@ -55,21 +60,25 @@ const AgentSignUp = () => {
     const navigate = useNavigate();
     const otpInputs = useRef([]);
     const fileInputRef = useRef(null);
+    const signatureInputRef = useRef(null);
 
     const [formData, setFormData] = useState({
         name: '', email: '', phone: '', password: '', confirmPassword: '',
         dateOfBirth: '', gender: '', nationality: '',
         idType: 'aadhar', idNumber: '', idFile: null, idFilePreview: null,
-        // ✅ NEW: URL for ID document
         idFileUrl: '',
         jobTitle: '', company: '', experience: '', education: '', specialization: '',
         address: '', city: '', state: '', pincode: '', country: 'India', bio: '',
-        languages: [], skills: [], agreeTerms: false
+        languages: [], skills: [], 
+        agreeTerms: false,
+        hasReadTerms: false,
+        signature: null,
+        signaturePreview: null,
+        signatureUrl: '',              // ⭐ URL کے لیے
     });
 
-    // ✅ NEW: ID document input mode (upload | url)
     const [idFileMode, setIdFileMode] = useState('upload');
-
+    const [signatureMode, setSignatureMode] = useState('upload');   // ⭐ نیا
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [serverError, setServerError] = useState('');
@@ -130,7 +139,7 @@ const AgentSignUp = () => {
     const handleBlur = (e) => setTouched(prev => ({ ...prev, [e.target.name]: true }));
 
     // ============================================
-    // ✅ FILE CHANGE
+    // FILE CHANGE — ID Document
     // ============================================
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -142,7 +151,7 @@ const AgentSignUp = () => {
             ...prev,
             idFile: file,
             idFilePreview: URL.createObjectURL(file),
-            idFileUrl: '' // URL clear कर दें जब file upload हो
+            idFileUrl: ''
         }));
         if (errors.idFile) setErrors(prev => ({ ...prev, idFile: '' }));
         showToast('File uploaded successfully!', 'success');
@@ -154,7 +163,59 @@ const AgentSignUp = () => {
     };
 
     // ============================================
-    // ✅ URL CHANGE
+    // SIGNATURE UPLOAD
+    // ============================================
+    const handleSignatureChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!validTypes.includes(file.type)) {
+            return showToast('Please upload JPG or PNG image for signature', 'error');
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            return showToast('Signature image should be less than 2MB', 'error');
+        }
+        setFormData(prev => ({
+            ...prev,
+            signature: file,
+            signaturePreview: URL.createObjectURL(file),
+            signatureUrl: ''           // URL clear
+        }));
+        showToast('Signature uploaded successfully!', 'success');
+    };
+
+    const removeSignature = () => {
+        setFormData(prev => ({ ...prev, signature: null, signaturePreview: null }));
+        if (signatureInputRef.current) signatureInputRef.current.value = '';
+    };
+
+    // ============================================
+    // SIGNATURE URL CHANGE
+    // ============================================
+    const handleSignatureUrlChange = (value) => {
+        setFormData(prev => ({
+            ...prev,
+            signatureUrl: value,
+            signature: null,
+            signaturePreview: null
+        }));
+        if (signatureInputRef.current) signatureInputRef.current.value = '';
+    };
+
+    // ============================================
+    // SIGNATURE MODE SWITCH (upload | url)
+    // ============================================
+    const handleSignatureModeSwitch = (mode) => {
+        setSignatureMode(mode);
+        if (mode === 'upload') {
+            setFormData(prev => ({ ...prev, signatureUrl: '' }));
+        } else {
+            removeSignature();
+        }
+    };
+
+    // ============================================
+    // ID URL CHANGE
     // ============================================
     const handleIdUrlChange = (value) => {
         setFormData(prev => ({
@@ -167,15 +228,11 @@ const AgentSignUp = () => {
         if (errors.idFile) setErrors(prev => ({ ...prev, idFile: '' }));
     };
 
-    // ============================================
-    // ✅ MODE SWITCH (upload | url)
-    // ============================================
     const handleIdModeSwitch = (mode) => {
         setIdFileMode(mode);
         if (mode === 'upload') {
             setFormData(prev => ({ ...prev, idFileUrl: '' }));
         } else {
-            // URL mode — file clear
             removeFile();
         }
         if (errors.idFile) setErrors(prev => ({ ...prev, idFile: '' }));
@@ -227,7 +284,7 @@ const AgentSignUp = () => {
     };
 
     // ============================================
-    // ✅ VALIDATE FORM — ID file/URL optional
+    // VALIDATE FORM
     // ============================================
     const validateForm = () => {
         const newErrors = {};
@@ -236,7 +293,7 @@ const AgentSignUp = () => {
         if (!formData.email.trim()) newErrors.email = 'Email is required';
         else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email';
         if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
-        else if (!/^[0-9]{10}$/.test(formData.phone)) newErrors.phone = 'Please enter a valid 10-digit phone number';
+        else if (!/^[0-9]{11}$/.test(formData.phone)) newErrors.phone = 'Please enter a valid 11-digit phone number';
         if (!formData.password) newErrors.password = 'Password is required';
         else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
         if (!formData.confirmPassword) newErrors.confirmPassword = 'Please confirm your password';
@@ -246,8 +303,6 @@ const AgentSignUp = () => {
         if (!formData.idType) newErrors.idType = 'ID type is required';
         if (!formData.idNumber.trim()) newErrors.idNumber = 'ID number is required';
 
-        // ✅ ID document अब OPTIONAL है — कोई validation नहीं
-
         if (!formData.jobTitle) newErrors.jobTitle = 'Job title is required';
         if (!formData.experience) newErrors.experience = 'Experience is required';
         if (!formData.education) newErrors.education = 'Education is required';
@@ -256,7 +311,9 @@ const AgentSignUp = () => {
         if (!formData.state.trim()) newErrors.state = 'State is required';
         if (!formData.pincode.trim()) newErrors.pincode = 'Pincode is required';
         else if (!/^[0-9]{6}$/.test(formData.pincode)) newErrors.pincode = 'Please enter a valid 6-digit pincode';
+
         if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to the terms and conditions';
+        if (!formData.hasReadTerms) newErrors.hasReadTerms = 'You must confirm that you have read the Terms and Conditions';
 
         const firstKey = Object.keys(newErrors)[0];
         if (firstKey) showToast(newErrors[firstKey], 'error');
@@ -292,16 +349,23 @@ const AgentSignUp = () => {
                 country: formData.country || 'India', bio: formData.bio || '',
                 languages: JSON.stringify(formData.languages),
                 skills: JSON.stringify(formData.skills),
+                agreeTerms: formData.agreeTerms,
+                hasReadTerms: formData.hasReadTerms,
             }).forEach(([k, v]) => fd.append(k, v));
 
-            // ✅ ID file (if uploaded)
             if (formData.idFile) {
                 fd.append('idFile', formData.idFile);
             }
-
-            // ✅ ID URL (if provided)
             if (formData.idFileUrl && formData.idFileUrl.trim()) {
                 fd.append('idFileUrl', formData.idFileUrl.trim());
+            }
+
+            // ⭐ Signature — Upload OR URL
+            if (formData.signature) {
+                fd.append('signature', formData.signature);
+            }
+            if (formData.signatureUrl && formData.signatureUrl.trim()) {
+                fd.append('signatureUrl', formData.signatureUrl.trim());
             }
 
             const response = await agentApi.signup(fd);
@@ -476,9 +540,10 @@ const AgentSignUp = () => {
                                     <div className="agent-signup-form-row">
                                         <div className="agent-signup-form-group">
                                             <label htmlFor="phone">Phone Number *</label>
-                                            <input type="tel" id="phone" name="phone" placeholder="10-digit phone number"
+                                            <input type="tel" id="phone" name="phone" placeholder="11-digit phone number"
                                                 value={formData.phone} onChange={handleChange} onBlur={handleBlur}
-                                                className={touched.phone && errors.phone ? 'error' : ''} disabled={loading} />
+                                                className={touched.phone && errors.phone ? 'error' : ''}
+                                                maxLength="11" disabled={loading} />
                                             {touched.phone && errors.phone && <span className="agent-signup-error-text">{errors.phone}</span>}
                                         </div>
                                     </div>
@@ -545,9 +610,7 @@ const AgentSignUp = () => {
                                     </div>
                                 </div>
 
-                                {/* ============================================ */}
-                                {/* ✅ IDENTIFICATION — Updated with URL support */}
-                                {/* ============================================ */}
+                                {/* IDENTIFICATION */}
                                 <div className="agent-signup-form-section">
                                     <h3 className="agent-signup-section-title">
                                         <FaIdCard className="agent-signup-section-icon" /> Identification
@@ -572,11 +635,9 @@ const AgentSignUp = () => {
                                         </div>
                                     </div>
 
-                                    {/* ID DOCUMENT — Optional with Upload/URL toggle */}
+                                    {/* ID DOCUMENT */}
                                     <div className="agent-signup-form-group">
                                         <label>ID Document (Optional)</label>
-
-                                        {/* Mode Toggle */}
                                         <div className="agent-signup-file-mode-toggle">
                                             <button
                                                 type="button"
@@ -596,7 +657,6 @@ const AgentSignUp = () => {
                                             </button>
                                         </div>
 
-                                        {/* UPLOAD MODE */}
                                         {idFileMode === 'upload' && (
                                             <div className="agent-signup-file-upload">
                                                 {!formData.idFilePreview ? (
@@ -625,7 +685,6 @@ const AgentSignUp = () => {
                                             </div>
                                         )}
 
-                                        {/* URL MODE */}
                                         {idFileMode === 'url' && (
                                             <div className="agent-signup-url-input-wrap">
                                                 <FaLink className="agent-signup-url-icon" />
@@ -649,8 +708,6 @@ const AgentSignUp = () => {
                                                 )}
                                             </div>
                                         )}
-
-                                        {/* ✅ कोई error message नहीं — optional है */}
                                     </div>
                                 </div>
 
@@ -801,13 +858,147 @@ const AgentSignUp = () => {
                                     </div>
                                 </div>
 
+                                {/* ⭐ SIGNATURE — Upload OR URL */}
+                                <div className="agent-signup-form-section">
+                                    <h3 className="agent-signup-section-title">
+                                        <FaSignature className="agent-signup-section-icon" /> Signature (Optional)
+                                    </h3>
+                                    <div className="agent-signup-form-group">
+                                        <label>Your Signature (Optional)</label>
+
+                                        {/* Mode Toggle */}
+                                        <div className="agent-signup-file-mode-toggle">
+                                            <button
+                                                type="button"
+                                                className={signatureMode === 'upload' ? 'active' : ''}
+                                                onClick={() => handleSignatureModeSwitch('upload')}
+                                                disabled={loading}
+                                            >
+                                                <FaUpload /> Upload
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={signatureMode === 'url' ? 'active' : ''}
+                                                onClick={() => handleSignatureModeSwitch('url')}
+                                                disabled={loading}
+                                            >
+                                                <FaLink /> URL
+                                            </button>
+                                        </div>
+
+                                        {/* UPLOAD MODE */}
+                                        {signatureMode === 'upload' && (
+                                            <div className="agent-signup-file-upload">
+                                                {!formData.signaturePreview ? (
+                                                    <div className="agent-signup-file-drop">
+                                                        <input 
+                                                            type="file" 
+                                                            id="signature" 
+                                                            name="signature" 
+                                                            ref={signatureInputRef}
+                                                            onChange={handleSignatureChange} 
+                                                            accept=".jpg,.jpeg,.png"
+                                                            disabled={loading} 
+                                                        />
+                                                        <FaSignature className="agent-signup-upload-icon" />
+                                                        <p>Click to upload your signature</p>
+                                                        <small>JPG, PNG (Max 2MB) — Optional</small>
+                                                    </div>
+                                                ) : (
+                                                    <div className="agent-signup-file-preview">
+                                                        <img 
+                                                            src={formData.signaturePreview} 
+                                                            alt="Signature Preview" 
+                                                            className="agent-signup-preview-image" 
+                                                        />
+                                                        <button 
+                                                            type="button" 
+                                                            className="agent-signup-remove-file"
+                                                            onClick={removeSignature} 
+                                                            disabled={loading}
+                                                        >
+                                                            <FaTrash />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* URL MODE */}
+                                        {signatureMode === 'url' && (
+                                            <div className="agent-signup-url-input-wrap">
+                                                <FaLink className="agent-signup-url-icon" />
+                                                <input
+                                                    type="url"
+                                                    className="agent-signup-url-input"
+                                                    placeholder="https://example.com/signature.jpg"
+                                                    value={formData.signatureUrl || ''}
+                                                    onChange={(e) => handleSignatureUrlChange(e.target.value)}
+                                                    disabled={loading}
+                                                />
+                                                {formData.signatureUrl && (
+                                                    <button
+                                                        type="button"
+                                                        className="agent-signup-url-clear"
+                                                        onClick={() => handleSignatureUrlChange('')}
+                                                        disabled={loading}
+                                                    >
+                                                        <FaTimes />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* TERMS & CONDITIONS */}
                                 <div className="agent-signup-form-group agent-signup-terms-group">
+                                    
+                                    {/* PDF DOWNLOAD LINK */}
+                                    <div className="agent-signup-terms-pdf">
+                                        <a 
+                                            href={DEMO_TERMS_PDF_URL}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            download="Terms-and-Conditions.pdf"
+                                            className="agent-signup-pdf-link"
+                                        >
+                                            <FaFilePdf /> Download Terms & Conditions (PDF)
+                                        </a>
+                                        <small className="agent-signup-demo-note">
+                                            (This is for demo)
+                                        </small>
+                                    </div>
+
+                                    {/* Agree Terms */}
                                     <label className="agent-signup-checkbox-label">
-                                        <input type="checkbox" name="agreeTerms" checked={formData.agreeTerms}
-                                            onChange={handleChange} className={errors.agreeTerms ? 'error' : ''} disabled={loading} />
-                                        <span>I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a> *</span>
+                                        <input 
+                                            type="checkbox" 
+                                            name="agreeTerms" 
+                                            checked={formData.agreeTerms}
+                                            onChange={handleChange} 
+                                            className={errors.agreeTerms ? 'error' : ''} 
+                                            disabled={loading} 
+                                        />
+                                        <span>
+                                            I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a> *
+                                        </span>
                                     </label>
                                     {errors.agreeTerms && <span className="agent-signup-error-text">{errors.agreeTerms}</span>}
+
+                                    {/* Read Properly */}
+                                    <label className="agent-signup-checkbox-label agent-signup-read-check">
+                                        <input 
+                                            type="checkbox" 
+                                            name="hasReadTerms" 
+                                            checked={formData.hasReadTerms}
+                                            onChange={handleChange} 
+                                            className={errors.hasReadTerms ? 'error' : ''} 
+                                            disabled={loading} 
+                                        />
+                                        <span>I have read the Terms and Conditions properly *</span>
+                                    </label>
+                                    {errors.hasReadTerms && <span className="agent-signup-error-text">{errors.hasReadTerms}</span>}
                                 </div>
 
                                 <button type="submit" className="agent-signup-submit-btn" disabled={loading || isSubmitting}>

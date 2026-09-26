@@ -45,6 +45,7 @@ import './App.css';
 import ReceivePayment from './Pages/Admin/private/Payments/ReceivePayment';
 import AgentPayments from './Pages/Agent/Payments/AgentPayments';
 import Home from './Home/Home';
+import AgentCertificate from './Pages/Agent/private/AgentCertificate/AgentCertificate';
 
 function App() {
     return (
@@ -122,6 +123,7 @@ function App() {
                         <Route path="my-applications" element={<MyApplications />} />
                         <Route path="view-application/:id" element={<ViewApplication />} />
                         <Route path="payments" element={<AgentPayments />} />
+                        <Route path="certificate" element={<AgentCertificate />} />
                         {/* Future Pages */}
                         {/* <Route path="edit-application/:id" element={<EditApplication />} /> */}
                         {/* <Route path="students" element={<AgentStudents />} /> */}

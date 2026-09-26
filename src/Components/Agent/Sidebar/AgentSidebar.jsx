@@ -11,7 +11,8 @@ import {
     FaChevronRight,
     FaTimes,
     FaUserTie,
-    FaPlusCircle
+    FaPlusCircle,
+    FaCertificate          // ⭐ NEW — certificate icon
 } from 'react-icons/fa';
 import './AgentSidebar.css';
 
@@ -65,6 +66,13 @@ const AgentSidebar = ({ isOpen, onClose, isMobile }) => {
             submenu: [
                 { title: 'My Payments', path: '/agent/payments', exact: true }
             ]
+        },
+        // ⭐ NEW — Certificate menu item
+        {
+            title: 'Certificate',
+            icon: <FaCertificate />,
+            path: '/agent/certificate',
+            exact: true
         }
     ];
 
